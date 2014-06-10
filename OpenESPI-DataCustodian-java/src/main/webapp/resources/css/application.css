@@ -1,0 +1,182 @@
+body {
+	padding-top: 0px;
+	padding-bottom: 40px;
+}
+
+.error {
+	color: red;
+}
+
+.controls input {
+	float: left;
+}
+
+.controls span.error {
+	float: left;
+	padding-left: 10px;
+}
+
+.label-note {
+	color: #333333;
+}
+
+.badge a {
+	color: #ffffff;
+}
+
+.badge a:visited {
+	color: #ffffff;
+}
+
+.nav-group .active {
+	background-color: #2d6ca2 !important;
+}
+
+.slide-menu a:hover {
+	text-decoration: none;
+	color: none;
+}
+
+.status-active {
+	color: green;
+	font-weight: bold;
+}
+
+.status-inactive {
+	color: red;
+}
+
+.table-striped-double>tbody>tr:nth-child(4n+1)>td,.table-striped-double>tbody>tr:nth-child(4n+2)>td
+	{
+	background-color: #f5f5f5;
+}
+
+.table-striped-double>tbody>tr:nth-child(4n+3)>td,.table-striped-double>tbody>tr:nth-child(4n+4)>td
+	{
+	background-color: #fff;
+}
+
+.feedback {
+	background: url("../images/gallery/letmeevaluate_april7.png") no-repeat
+		scroll;
+	height: 90px;
+	line-height: 0;
+	padding: 5px;
+	width: 200px; left =-20px;
+	z-index: 1000;
+}
+
+body>a#feedbackright {
+	background: url("../images/gallery/letmeevaluate_april7.png") no-repeat
+		scroll;
+	display: block;
+	height: 90px;
+	line-height: 0;
+	padding: 5px;
+	position: fixed;
+	right: 0;
+	/*left:0;*/
+	text-indent: -99999px;
+	bottom: -40px;
+	width: 260px;
+	z-index: 1000;
+}
+
+.menu .icon-home:before {
+	width: 60px;
+	height: 50px;
+	left: 9px;
+	/* background-position:-2px -144px; */
+	background: url("../images/navigation/home.png") no-repeat;
+}
+
+.menu .icon-home:hover:before,.menu .active .icon-home:before {
+	/* background-position:-34px -144px; */
+	background: url("../images/navigation/home_active.png") no-repeat;
+}
+
+.menu .icon-home:hover,.menu .active .icon-home {
+	background: #bd4045;
+}
+
+.menu .icon-cmd:before {
+	width: 60px;
+	height: 50px;
+	left: 9px;
+	/* background-position:-2px -144px; */
+	background: url("../images/navigation/cmd.png") no-repeat;
+}
+
+.menu .icon-cmd:hover:before,.menu .active .icon-cmd:before {
+	/* background-position:-34px -144px; */
+	background: url("../images/navigation/cmd_active.png") no-repeat;
+	background-color: transparent;
+}
+
+.menu .icon-cmd:hover,.menu .active .icon-cmd {
+	background: #45ad9b;
+}
+
+.menu .icon-dmd:before {
+	width: 22px;
+	height: 24px;
+	left: 9px;
+	/* background-position:-2px -144px; */
+	background: url("../images/navigation/dmd.png") no-repeat;
+}
+
+.menu .icon-dmd:hover:before,.menu .active .icon-dmd:before {
+	/*background-position:-34px -144px;*/
+	background: url("../images/navigation/dmd_active.png") no-repeat;
+}
+
+.menu .icon-dmd:hover,.menu .active .icon-dmd {
+	/* background: #3f9c25; */
+	color: #3f9c25;
+	border: 1px solid #3f9c25;
+	background: #ffffff;
+}
+
+.menu .icon-feedback:before {
+	width: 60px;
+	height: 50px;
+	left: 9px;
+	/* background-position:-2px -144px; */
+	background: url("../images/navigation/feedback.png") no-repeat;
+}
+
+.menu .icon-feedback:hover:before,.menu .active .icon-feedback:before {
+	/*background-position:-34px -144px;*/
+	background: url("../images/navigation/feedback_active.png") no-repeat;
+	background-color: transparent;
+}
+
+.menu .icon-feedback:hover,.menu .active .icon-feedback {
+	background: #3399c9;
+}
+
+.banner {
+	background: url("../images/navigation/mcirositebanner.png");
+	width: 60px;
+	width: 100%;
+}
+
+.nowrap {
+	white-space: nowrap;
+}
+
+.datetimepicker {
+	z-index: 9999;
+	top: 0;
+	left: 0;
+	padding: 4px;
+	margin-top: 1px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	background-color: red;
+}
+
+.datepicker {
+	z-index: 1151 !important;
+}
