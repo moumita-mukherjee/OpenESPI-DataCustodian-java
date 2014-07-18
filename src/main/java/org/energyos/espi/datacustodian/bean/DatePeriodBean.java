@@ -1,0 +1,39 @@
+package org.energyos.espi.datacustodian.bean;
+
+public class DatePeriodBean {
+	private int period=1;
+	public int getPeriod() {
+		return period;
+	}
+	public void setPeriod(int period) {
+		this.period = period;
+	}
+	private long prevUsagetimeMin;
+	public long getPrevUsagetimeMin() {
+		return prevUsagetimeMin;
+	}
+	public void setPrevUsagetimeMin(long prevUsagetimeMin) {
+		this.prevUsagetimeMin = prevUsagetimeMin;
+	}
+	public long getPrevUsagetimeMax() {
+		return prevUsagetimeMax;
+	}
+	public void setPrevUsagetimeMax(long prevUsagetimeMax) {
+		this.prevUsagetimeMax = prevUsagetimeMax;
+	}
+	public long getNextUsagetimeMin() {
+		return nextUsagetimeMin;
+	}
+	public void setNextUsagetimeMin(long nextUsagetimeMin) {
+		this.nextUsagetimeMin = nextUsagetimeMin;
+	}
+	public long getNextUsagetimeMax() {
+		return nextUsagetimeMax;
+	}
+	public void setNextUsagetimeMax(long nextUsagetimeMax) {
+		this.nextUsagetimeMax = nextUsagetimeMax;
+	}
+	private long prevUsagetimeMax;
+	private long nextUsagetimeMin;
+	private long nextUsagetimeMax;
+}

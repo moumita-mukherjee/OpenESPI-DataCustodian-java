@@ -1,0 +1,44 @@
+.panel-heading .accordion-toggle:after {
+	/* symbol for "opening" panels */
+	font-family: 'Glyphicons Halflings';
+	/* essential for enabling glyphicon */
+	content: "\e114"; /* adjust as needed, taken from bootstrap.css */
+	float: right; /* adjust as needed */
+	color: grey; /* adjust as needed */
+}
+
+.panel-heading .accordion-toggle.collapsed:after {
+	/* symbol for "collapsed" panels */
+	content: "\e080"; /* adjust as needed, taken from bootstrap.css */
+}
+
+div.2col {
+	border:1px solid red !important;
+	-webkit-column-count: 2;
+	-webkit-column-gap: 10px;
+	-moz-column-count: 2;
+	-moz-column-gap: 10px;
+	column-count: 2;
+	column-gap: 10px;
+}
+
+
+.boxes2 {
+	overflow:hidden;
+	margin:0 -2px 9px;
+	padding:0px 0 0;
+}
+.boxes2 .box {
+	float:left;
+	clear:right;
+	width:50%;
+	min-height:154px;
+	position:relative;
+	color:#565f5f;
+	font-size:15px;
+	line-height:20px;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	padding:35px 18px 0;
+}

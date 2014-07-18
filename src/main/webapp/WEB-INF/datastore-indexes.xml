@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<datastore-indexes autoGenerate="true">
+	<datastore-index kind="interval_blocks" ancestor="false">
+		<property name="usagePointId" direction="asc" />
+		<property name="start" direction="asc" />
+	</datastore-index>
+	<datastore-index kind="interval_blocks" ancestor="false">
+		<property name="usagePointId" direction="asc" />
+		<property name="published" direction="asc" />
+	</datastore-index>
+	<datastore-index kind="interval_blocks" ancestor="false">
+		<property name="usagePointId" direction="asc" />
+		<property name="updated" direction="asc" />
+	</datastore-index>
+
+
+
+	<datastore-index kind="interval_blocks" ancestor="false">
+		<property name="meterReadingId" direction="asc" />
+		<property name="start" direction="asc" />
+	</datastore-index>
+	<datastore-index kind="interval_blocks" ancestor="false">
+		<property name="meterReadingId" direction="asc" />
+		<property name="published" direction="asc" />
+	</datastore-index>
+	<datastore-index kind="interval_blocks" ancestor="false">
+		<property name="meterReadingId" direction="asc" />
+		<property name="updated" direction="asc" />
+	</datastore-index>
+	
+	
+	
+	
+
+<datastore-index kind="interval_blocks_ds" ancestor="false">
+		<property name="usagepoint_id" direction="asc" />
+		<property name="start" direction="asc" />
+	</datastore-index>
+	<datastore-index kind="interval_blocks_ds" ancestor="false">
+		<property name="usagepoint_id" direction="asc" />
+		<property name="published" direction="asc" />
+	</datastore-index>
+	<datastore-index kind="interval_blocks_ds" ancestor="false">
+		<property name="usagepoint_id" direction="asc" />
+		<property name="updated" direction="asc" />
+	</datastore-index>
+
+
+	<datastore-index kind="interval_blocks_ds" ancestor="false">
+		<property name="meter_reading_id" direction="asc" />
+		<property name="start" direction="asc" />
+	</datastore-index>
+	<datastore-index kind="interval_blocks_ds" ancestor="false">
+		<property name="meter_reading_id" direction="asc" />
+		<property name="published" direction="asc" />
+	</datastore-index>
+	<datastore-index kind="interval_blocks_ds" ancestor="false">
+		<property name="meter_reading_id" direction="asc" />
+		<property name="updated" direction="asc" />
+	</datastore-index>
+
+</datastore-indexes>

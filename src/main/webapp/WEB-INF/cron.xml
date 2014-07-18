@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+	<cron>
+		<url>/_ah/sessioncleanup?clear</url>
+		<description>Clean up sessions</description>
+		<schedule>every 2 hours</schedule>
+		<target>2</target>
+	</cron>
+</cronentries>
