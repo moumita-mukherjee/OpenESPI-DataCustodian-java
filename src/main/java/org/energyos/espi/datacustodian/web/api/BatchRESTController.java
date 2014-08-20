@@ -98,7 +98,7 @@ public class BatchRESTController {
 			@PathVariable Long retailCustomerId,
 			@RequestParam Map<String, String> params) throws IOException,
 			FeedException {
-		
+
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		response.addHeader("Content-Disposition",
 				"attachment; filename=GreenButtonDownload.xml");
@@ -125,7 +125,7 @@ public class BatchRESTController {
 		response.addHeader("Content-Disposition",
 				"attachment; filename=GreenButtonDownload.xml");
 		try {
-			
+
 			// TODO -- need authorization hook
 			exportService.exportUsagePointFull(0L,retailCustomerId, usagePointId,
 					response.getOutputStream(), new ExportFilter(params));
@@ -135,8 +135,8 @@ public class BatchRESTController {
 		}
 
 	}
-	
-	
+
+
 
 	//DJ 
 	//@Transactional(readOnly = true)
@@ -162,10 +162,10 @@ public class BatchRESTController {
 
 	@RequestMapping(value = Routes.BATCH_BULK_MEMBER, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
-	public void bulk(HttpServletResponse response, @PathVariable Long bulkId,
+	public void bulk(HttpServletResponse response, @PathVariable long bulkId,
 			@RequestParam Map<String, String> params) throws IOException,
 			FeedException {
-
+		
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		response.addHeader("Content-Disposition",
 				"attachment; filename=GreenButtonDownload.xml");

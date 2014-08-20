@@ -15,24 +15,29 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
-	<!-- <import resource="datasource-config.xml" /> -->
+	<import resource="datasource-config.xml" />
 	<context:property-placeholder
 		location="classpath:spring/${database}-data-access.properties" />
 
 	<tx:annotation-driven />
 
-	<beans profile="default">
+	<beans>
+
 
 		<bean id="entityManagerFactory"
-			class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean" >
+			class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+			p:dataSource-ref="appldbDataSource">
 			<property name="persistenceUnitName" value="pu-energy" />
+
 		</bean>
 		<bean name="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 			<property name="entityManagerFactory" ref="entityManagerFactory" />
 		</bean>
+
 		<bean
 			class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
-
+	</beans>
+	<beans>
 		<bean id="dsentityManagerFactory"
 			class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
 			<property name="persistenceUnitName" value="pu-usage" />
@@ -40,50 +45,17 @@
 		<bean name="dstransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 			<property name="entityManagerFactory" ref="dsentityManagerFactory" />
 		</bean>
-		<!-- <bean id="entityManagerFactoryReading" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean" 
-			lazy-init="true"> <property name="persistenceUnitName" value="energy_reading" 
-			/> </bean> <bean name="transactionManagerReading" class="org.springframework.orm.jpa.JpaTransactionManager"> 
-			<property name="entityManagerFactory" ref="entityManagerFactoryReading" /> 
-			</bean> -->
-		<bean
-			class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
 	</beans>
-	<beans profile="default_ignore">
-		<bean id="entityManagerFactory"
+	<beans profile="authserver">
+		<bean id="lhentityManagerFactory"
 			class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
-			p:dataSource-ref="dataSource">
-			<property name="jpaVendorAdapter">
-				<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
-					p:database="${jpa.database}" p:showSql="${jpa.showSql}" />
-			</property>
-			<property name="jpaProperties">
-				<props>
-					<prop key="hibernate.connection.driver_class">com.google.appengine.api.rdbms.AppEngineDriver
-					</prop>
-					<prop key="hibernate.hbm2ddl.auto">${hbm2ddl_auto}</prop>
-					<prop key="hibernate.hbm2ddl.import_files">db/import.sql,db/${profile}-populateDB.sql</prop>
-					<!--<prop key="hibernate.cache.use_second_level_cache">true</prop> -->
-					<!--<prop key="hibernate.cache.use_query_cache">true</prop> -->
-					<!--<prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop> -->
-					<!--<prop key="hibernate.generate_statistics">true</prop> -->
-					<!--<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop> -->
-				</props>
-			</property>
-			<property name="persistenceUnitName" value="energy1" />
-			<property name="packagesToScan" value="org.energyos.espi.common.domain" />
+			p:dataSource-ref="lhdbDataSource">
+			<property name="persistenceUnitName" value="pu-mylh" />
 		</bean>
-
-		<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
-			p:entityManagerFactory-ref="entityManagerFactory" />
-
-		<bean
-			class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+		<bean name="lhtransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+			<property name="entityManagerFactory" ref="lhentityManagerFactory" />
+		</bean>
 	</beans>
-	<!-- <beans profile="default"> <context:component-scan base-package="org.energyos.espi.datacustodian.service.impl" 
-		/> <context:component-scan base-package="org.energyos.espi.common.repositories.jpa" 
-		/> <context:component-scan base-package="org.energyos.espi.common.utils" 
-		/> </beans> -->
-
 
 	<beans>
 		<bean id="restTemplate" name="restTemplate"

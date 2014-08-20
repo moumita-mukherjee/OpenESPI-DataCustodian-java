@@ -19,6 +19,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.energyos.espi.common.domain.ApplicationInformation;
 import org.energyos.espi.common.domain.ApplicationInformationScope;
 import org.energyos.espi.common.domain.UsagePoint;
@@ -37,6 +39,7 @@ import org.springframework.security.oauth2.provider.approval.Approval;
 import org.springframework.security.oauth2.provider.approval.Approval.ApprovalStatus;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -69,8 +72,9 @@ public class AccessConfirmationController extends BaseController {
 	}
 
 	private ClientDetailsService clientDetailsService;
-	
-	private ApprovalStore approvalStore;	//Spring Security OAuth2 2.0.0.M2 change
+
+	private ApprovalStore approvalStore; // Spring Security OAuth2 2.0.0.M2
+											// change
 
 	@Autowired
 	private UsagePointService usagePointService;
@@ -105,19 +109,17 @@ public class AccessConfirmationController extends BaseController {
 	}
 
 	@RequestMapping(value = "/accessconfirm/setdate", method = RequestMethod.POST)
-	public ModelAndView getAccessConfirmation1(@ModelAttribute("usage_point") Long usagePointId,
-			@ModelAttribute("authorizationEndDate") String authorizationEndDate, Map<String, Object> model,
-			Principal principal) throws Exception {
-		System.out.println("POST  authorizationEndDate authorizationEndDate authorizationEndDate " + usagePointId);
+	public ModelAndView getAccessConfirmation1(@ModelAttribute("authorizationEndDate") String authorizationEndDate,
+			ModelMap model, Principal principal, HttpSession sessionObj) throws Exception {
 
 		System.out.println("POST  authorizationEndDate authorizationEndDate authorizationEndDate "
 				+ authorizationEndDate);
-		return getAccessConfirmation(usagePointId, model, principal);
+		return getAccessConfirmation(model, principal, sessionObj);
 	}
 
 	@RequestMapping("/oauth/confirm_access")
-	public ModelAndView getAccessConfirmation(@RequestParam(value = "usage_point", required = false) Long usagePointId,
-			Map<String, Object> model, Principal principal) throws Exception {
+	public ModelAndView getAccessConfirmation(ModelMap model, Principal principal, HttpSession sessionObj)
+			throws Exception {
 
 		try {
 			System.err.println(" authorizationEndDate authorizationEndDate authorizationEndDate "
@@ -129,35 +131,28 @@ public class AccessConfirmationController extends BaseController {
 
 			ApplicationInformation thirdParty = applicationInformationService.findByClientId(clientAuth.getClientId());
 
-			ApplicationInformation datacustodian = applicationInformationService.findById(1l);
 			model.put("auth_request", clientAuth);
 			model.put("client", client);
 			model.put("thirdParty", thirdParty);
 
+			Long usagePointId = (Long) sessionObj.getAttribute("usagePointId");
+			System.err.println(" session usagePointId " + usagePointId);
+
 			Map<String, String> scopes = new LinkedHashMap<String, String>();
-			List<ApplicationInformationScope> scopeForApproval = new ArrayList<ApplicationInformationScope>();
 			System.err.println("clientAuth.getScope() " + clientAuth.getScope());
 			for (String scope : clientAuth.getScope()) {
-				for (ApplicationInformationScope dcscope : datacustodian.getScope()) {
-					if (dcscope.getScope().equals(scope)) {
-						dcscope.setSelected(false);
-						scopeForApproval.add(dcscope);
-					}
-				}
-			scopes.put(OAuth2Utils.SCOPE_PREFIX + scope, "false");  //Spring Security OAuth2 2.0.0.M2 change
+				scopes.put(OAuth2Utils.SCOPE_PREFIX + scope, "false"); // Spring
+																		// Security
+																		// OAuth2
+																		// 2.0.0.M2
+																		// change
 			}
 			for (Approval approval : approvalStore.getApprovals(principal.getName(), client.getClientId())) {
 				if (clientAuth.getScope().contains(approval.getScope())) {
 					scopes.put(OAuth2Utils.SCOPE_PREFIX + approval.getScope(),
 							approval.getStatus() == ApprovalStatus.APPROVED ? "true" : "false");
 				}
-				for (ApplicationInformationScope dcscope : scopeForApproval) {
-					if (approval.getScope().equals(dcscope.getScope())) {
-						dcscope.setSelected(true);
-					}
-				}
 			}
-			model.put("scopeForApproval", scopeForApproval);
 			model.put("scopes", scopes);
 			model.put("scope", scopes.get(0));
 			List<UsagePoint> usagePoints = null;
@@ -166,34 +161,22 @@ public class AccessConfirmationController extends BaseController {
 				UsagePoint up = usagePointService.findById(usagePointId);
 				usagePoints = new ArrayList<UsagePoint>(1);
 				usagePoints.add(up);
-			} else {
-				usagePoints = usagePoints(principal);
-			}
-			populateExternalDetail(currentUser(principal).getCustomerId(), usagePoints);
 
-			if (usagePoints.size() == 1 || (usagePointId != null && usagePointId == 0)) {
+				populateExternalDetail(currentUser(principal).getCustomerId(), usagePoints);
+
 				Date authEndDate = new Date((24 * 3600 * 1000 * 365l + System.currentTimeMillis()));
-				if (usagePointId != null && usagePointId > 0) {
-					UsagePoint selectedUsagePoint = usagePoints.get(0);
-					model.put("selectedUsagePoint", selectedUsagePoint);
-					clientAuth.getExtensions().put("usagepoint", selectedUsagePoint.getId());
-				} else {
-					model.put("selectedUsagePoints", usagePoints);
-					clientAuth.getExtensions().put("usagepoint", 0l);
-				}
-				if (usagePoints.size() == 1) {
-					// model.put("selectedUsagePoint", usagePoints.get(0));
-				}
+
+				UsagePoint selectedUsagePoint = usagePoints.get(0);
+				model.put("selectedUsagePoint", selectedUsagePoint);
+				clientAuth.getExtensions().put("usagepoint", selectedUsagePoint.getId());
+
 				clientAuth.getExtensions().put("authorizationEndDate", authEndDate);
 
-				model.put("usagePointId", usagePointId);
 				model.put("authorizationEndDate", authEndDate);
 				model.remove("authorizationRequest");
 				return new ModelAndView("/access_confirmation", model);
 			}
-			model.put("usagePointList", usagePoints);
 
-			return new ModelAndView("/access_confirmation_multi_up", model);
 		} catch (Exception ex) {
 			ex.printStackTrace(System.err);
 		}
@@ -202,7 +185,8 @@ public class AccessConfirmationController extends BaseController {
 
 	@RequestMapping("oauth/error")
 	public String handleError(Map<String, Object> model) throws Exception {
-		// We can add more stuff to the model here for JSP rendering.  If the client was a machine then
+		// We can add more stuff to the model here for JSP rendering. If the
+		// client was a machine then
 		// the JSON will already have been rendered.
 		model.put("message", "There was a problem with the OAuth2 protocol");
 		return "oauth_error";

@@ -302,7 +302,7 @@ public class IntervalBlockRESTController {
 	private Long getSubscriptionId(HttpServletRequest request) {
 		String token = request.getHeader("authorization");
 		Long subscriptionId = 0L;
-
+		try {
 		if (token != null) {
 			token = token.replace("Bearer ", "");
 			Authorization authorization = authorizationService.findByAccessToken(token);
@@ -312,6 +312,9 @@ public class IntervalBlockRESTController {
 					subscriptionId = subscription.getId();
 				}
 			}
+		}
+		}catch(RuntimeException ignore) {
+			
 		}
 
 		return subscriptionId;

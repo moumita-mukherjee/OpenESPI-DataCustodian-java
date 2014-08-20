@@ -7,6 +7,7 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
+
 	<mvc:annotation-driven />
 
 	<mvc:default-servlet-handler />
@@ -17,11 +18,13 @@
 	<context:property-placeholder
 		location="classpath:spring/${database}-oauth-access.properties" />
 
-	
-	
 
-	<bean id="resourceValidationFilter" class="org.energyos.espi.datacustodian.web.filter.ResourceValidationFilter" />
-	
+
+	<import resource="classpath:spring/business-config.xml" />
+
+	<bean id="resourceValidationFilter"
+		class="org.energyos.espi.datacustodian.web.filter.ResourceValidationFilter" />
+
 	<bean id="accessToken" class="org.energyos.espi.common.domain.AccessToken" />
 	<bean id="applicationInformation" class="org.energyos.espi.common.domain.ApplicationInformation" />
 	<bean id="applicationInformationScope"
@@ -48,7 +51,7 @@
 	<bean id="readingType" class="org.energyos.espi.common.domain.ReadingType" />
 	<bean id="resource" class="org.energyos.espi.common.domain.Resource" />
 	<bean id="retailCustomer" class="org.energyos.espi.common.domain.RetailCustomer" />
-	<bean id="routes" class="org.energyos.espi.common.domain.Routes" />
+
 	<bean id="serviceCategory" class="org.energyos.espi.common.domain.ServiceCategory" />
 	<bean id="serviceDeliveryPoint" class="org.energyos.espi.common.domain.ServiceDeliveryPoint" />
 	<bean id="serviceStatus" class="org.energyos.espi.common.domain.ServiceStatus" />
@@ -82,9 +85,9 @@
 	<bean id="espiMarshaller" class="org.energyos.espi.common.utils.EspiMarshaller" />
 	<bean id="sHA1PasswordEncoder" class="org.energyos.espi.common.utils.SHA1PasswordEncoder" />
 	<bean id="stringToLongFilter" class="org.energyos.espi.common.utils.StringToLongFilter" />
-	
-	
-	
+
+
+
 
 
 
@@ -95,7 +98,6 @@
 
 
 
-	<import resource="classpath:spring/business-config.xml" />
 	<import resource="classpath:spring/business-jaxb-config.xml" />
 	<import resource="classpath:spring/data-config.xml" />
 
@@ -209,149 +211,155 @@
 		lazy-init="true" scope="prototype" />
 
 
+	<beans profile="authserver">
 
-	<bean id="dateUtil" class="org.energyos.espi.datacustodian.utils.DateUtil" />
-	<bean id="uRLHelper" class="org.energyos.espi.datacustodian.utils.URLHelper" />
-	<bean id="dateController" class="org.energyos.espi.datacustodian.utils.DateController"
-		scope="prototype" />
+		<bean id="dateUtil" class="org.energyos.espi.datacustodian.utils.DateUtil" />
+		<bean id="uRLHelper" class="org.energyos.espi.datacustodian.utils.URLHelper" />
+		<bean id="dateController" class="org.energyos.espi.datacustodian.utils.DateController"
+			scope="prototype" />
 
 
 
 
-	<bean id="baseController" class="org.energyos.espi.datacustodian.web.BaseController"
-		lazy-init="true">
-		<property name="retailCustomerService">
-			<ref bean="retailCustomerService" />
-		</property>
-	</bean>
-	<bean id="defaultController" class="org.energyos.espi.datacustodian.web.DefaultController"
-		lazy-init="true" />
-	<bean id="homeController" class="org.energyos.espi.datacustodian.web.HomeController"
-		lazy-init="true">
-		<property name="retailCustomerService">
-			<ref bean="retailCustomerService" />
-		</property>
+		<bean id="baseController" class="org.energyos.espi.datacustodian.web.BaseController"
+			lazy-init="true">
+			<property name="retailCustomerService">
+				<ref bean="retailCustomerService" />
+			</property>
+		</bean>
+		<bean id="defaultController" class="org.energyos.espi.datacustodian.web.DefaultController"
+			lazy-init="true" />
+		<bean id="homeController" class="org.energyos.espi.datacustodian.web.HomeController"
+			lazy-init="true">
+			<property name="retailCustomerService">
+				<ref bean="retailCustomerService" />
+			</property>
 
-	</bean>
-	<bean id="loginController" class="org.energyos.espi.datacustodian.web.LoginController"
-		lazy-init="true" scope="prototype" />
-	<bean id="versionRESTController"
-		class="org.energyos.espi.datacustodian.web.VersionRESTController"
-		lazy-init="true" />
+		</bean>
+		<bean id="loginController" class="org.energyos.espi.datacustodian.web.LoginController"
+			lazy-init="true" scope="prototype" />
 
-	<bean id="authorizedThirdPartiesController"
-		class="org.energyos.espi.datacustodian.web.customer.AuthorizedThirdPartiesController"
-		lazy-init="true" />
-	<bean id="customerHomeController"
-		class="org.energyos.espi.datacustodian.web.customer.CustomerHomeController"
-		lazy-init="true" />
-	<bean id="connectMyDataController"
-		class="org.energyos.espi.datacustodian.web.customer.ConnectMyDataController"
-		lazy-init="true" />
-	<bean id="downloadMyDataController"
-		class="org.energyos.espi.datacustodian.web.customer.DownloadMyDataController"
-		lazy-init="true" />
-	<bean id="meterReadingController"
-		class="org.energyos.espi.datacustodian.web.customer.MeterReadingController"
-		lazy-init="true" />
-	<bean id="scopeSelectionController"
-		class="org.energyos.espi.datacustodian.web.customer.ScopeSelectionController"
-		lazy-init="true" />
-	<bean id="thirdPartyController"
-		class="org.energyos.espi.datacustodian.web.customer.ThirdPartyController"
-		lazy-init="true" />
-	<bean id="usagePointController"
-		class="org.energyos.espi.datacustodian.web.customer.UsagePointController"
-		lazy-init="true" />
+		<bean id="authorizedThirdPartiesController"
+			class="org.energyos.espi.datacustodian.web.customer.AuthorizedThirdPartiesController"
+			lazy-init="true" />
+		<bean id="customerHomeController"
+			class="org.energyos.espi.datacustodian.web.customer.CustomerHomeController"
+			lazy-init="true" />
+		<bean id="connectMyDataController"
+			class="org.energyos.espi.datacustodian.web.customer.ConnectMyDataController"
+			lazy-init="true" />
+		<bean id="downloadMyDataController"
+			class="org.energyos.espi.datacustodian.web.customer.DownloadMyDataController"
+			lazy-init="true" />
+		<bean id="meterReadingController"
+			class="org.energyos.espi.datacustodian.web.customer.MeterReadingController"
+			lazy-init="true" />
+		<bean id="scopeSelectionController"
+			class="org.energyos.espi.datacustodian.web.customer.ScopeSelectionController"
+			lazy-init="true" />
+		<bean id="thirdPartyController"
+			class="org.energyos.espi.datacustodian.web.customer.ThirdPartyController"
+			lazy-init="true" />
+		<bean id="usagePointController"
+			class="org.energyos.espi.datacustodian.web.customer.UsagePointController"
+			lazy-init="true" />
 
 
 
 
 
-	<bean id="associateUsagePointController"
-		class="org.energyos.espi.datacustodian.web.custodian.AssociateUsagePointController"
-		lazy-init="true" />
-	<bean id="custodianHomeController"
-		class="org.energyos.espi.datacustodian.web.custodian.CustodianHomeController"
-		lazy-init="true" />
-	<bean id="custodianThirdPartyController"
-		class="org.energyos.espi.datacustodian.web.custodian.CustodianThirdPartyController"
-		lazy-init="true" />
-	<bean id="managementController"
-		class="org.energyos.espi.datacustodian.web.custodian.ManagementController"
-		lazy-init="true" />
-	<bean id="retailCustomerController"
-		class="org.energyos.espi.datacustodian.web.custodian.RetailCustomerController"
-		lazy-init="true" />
-	<bean id="uploadController"
-		class="org.energyos.espi.datacustodian.web.custodian.UploadController"
-		lazy-init="true" />
-	<bean id="uploadForm"
-		class="org.energyos.espi.datacustodian.web.custodian.UploadForm"
-		lazy-init="true" />
+		<bean id="associateUsagePointController"
+			class="org.energyos.espi.datacustodian.web.custodian.AssociateUsagePointController"
+			lazy-init="true" />
+		<bean id="custodianHomeController"
+			class="org.energyos.espi.datacustodian.web.custodian.CustodianHomeController"
+			lazy-init="true" />
+		<bean id="custodianThirdPartyController"
+			class="org.energyos.espi.datacustodian.web.custodian.CustodianThirdPartyController"
+			lazy-init="true" />
+		<bean id="managementController"
+			class="org.energyos.espi.datacustodian.web.custodian.ManagementController"
+			lazy-init="true" />
+		<bean id="retailCustomerController"
+			class="org.energyos.espi.datacustodian.web.custodian.RetailCustomerController"
+			lazy-init="true" />
+		<bean id="uploadController"
+			class="org.energyos.espi.datacustodian.web.custodian.UploadController"
+			lazy-init="true" />
+		<bean id="uploadForm"
+			class="org.energyos.espi.datacustodian.web.custodian.UploadForm"
+			lazy-init="true" />
 
-	<bean id="registrationController"
-		class="org.energyos.espi.datacustodian.web.thirdparty.RegistrationController"
-		lazy-init="true">
-	</bean>
+		<bean id="registrationController"
+			class="org.energyos.espi.datacustodian.web.thirdparty.RegistrationController"
+			lazy-init="true">
+		</bean>
 
-	<bean id="retailCustomerServiceImpl"
-		class="org.energyos.espi.common.service.impl.RetailCustomerServiceImpl"
-		lazy-init="true" />
+		<bean id="retailCustomerServiceImpl"
+			class="org.energyos.espi.common.service.impl.RetailCustomerServiceImpl"
+			lazy-init="true" />
 
-	<bean id="service"
-		class="org.energyos.espi.common.service.impl.RetailCustomerServiceImpl"
-		lazy-init="true" />
-		
-		
-		
-		
-	<bean id="applicationInformationRESTController"
-		class="org.energyos.espi.datacustodian.web.api.ApplicationInformationRESTController"
-		lazy-init="true" />
-		
-
-	<bean id="batchRESTController"
-		class="org.energyos.espi.datacustodian.web.api.BatchRESTController"
-		lazy-init="true" />
-
-	<bean id="retailCustomerRESTController"
-		class="org.energyos.espi.datacustodian.web.api.RetailCustomerRESTController"
-		lazy-init="true" />
+		<bean id="service"
+			class="org.energyos.espi.common.service.impl.RetailCustomerServiceImpl"
+			lazy-init="true" />
 
 
-	<bean id="usagePointRESTController"
-		class="org.energyos.espi.datacustodian.web.api.UsagePointRESTController"
-		lazy-init="true" />
+
+		<bean id="tokenEnhancer"
+			class="org.energyos.espi.datacustodian.oauth.EspiTokenEnhancer"
+			lazy-init="true">
+			<property name="baseURL" value="${datacustodian.base.url}" />
+		</bean>
+	</beans>
+
+	<beans profile="resourceserver">
+		<bean id="versionRESTController"
+			class="org.energyos.espi.datacustodian.web.VersionRESTController"
+			lazy-init="true" />
 
 
-	<bean id="meterReadingRESTController"
-		class="org.energyos.espi.datacustodian.web.api.MeterReadingRESTController"
-		lazy-init="true" />
+		<bean id="applicationInformationRESTController"
+			class="org.energyos.espi.datacustodian.web.api.ApplicationInformationRESTController"
+			lazy-init="true" />
 
 
-	<bean id="intervalBlockRESTController"
-		class="org.energyos.espi.datacustodian.web.api.IntervalBlockRESTController"
-		lazy-init="true" />
+		<bean id="batchRESTController"
+			class="org.energyos.espi.datacustodian.web.api.BatchRESTController"
+			lazy-init="true" />
 
-	<bean id="serviceStatusRESTController"
-		class="org.energyos.espi.datacustodian.web.api.ServiceStatusRESTController"
-		lazy-init="true" />
-
-
-	<bean id="authorizationStatusRESTController"
-		class="org.energyos.espi.datacustodian.web.api.AuthorizationStatusRESTController"
-		lazy-init="true" />
-
-	<bean id="authorizationRESTController"
-		class="org.energyos.espi.datacustodian.web.api.AuthorizationRESTController"
-		lazy-init="true" />
+		<bean id="retailCustomerRESTController"
+			class="org.energyos.espi.datacustodian.web.api.RetailCustomerRESTController"
+			lazy-init="true" />
 
 
-	<bean id="tokenEnhancer" class="org.energyos.espi.datacustodian.oauth.EspiTokenEnhancer"
-		lazy-init="true">
-		<property name="baseURL" value="${datacustodian.base.url}" />
-	</bean>
+		<bean id="usagePointRESTController"
+			class="org.energyos.espi.datacustodian.web.api.UsagePointRESTController"
+			lazy-init="true" />
+
+
+		<bean id="meterReadingRESTController"
+			class="org.energyos.espi.datacustodian.web.api.MeterReadingRESTController"
+			lazy-init="true" />
+
+
+		<bean id="intervalBlockRESTController"
+			class="org.energyos.espi.datacustodian.web.api.IntervalBlockRESTController"
+			lazy-init="true" />
+
+		<bean id="serviceStatusRESTController"
+			class="org.energyos.espi.datacustodian.web.api.ServiceStatusRESTController"
+			lazy-init="true" />
+
+
+		<bean id="authorizationStatusRESTController"
+			class="org.energyos.espi.datacustodian.web.api.AuthorizationStatusRESTController"
+			lazy-init="true" />
+
+		<bean id="authorizationRESTController"
+			class="org.energyos.espi.datacustodian.web.api.AuthorizationRESTController"
+			lazy-init="true" />
+	</beans>
+
 
 
 	<!-- <context:component-scan base-package="org.energyos.espi.common.repositories" 
@@ -361,36 +369,63 @@
 		/> -->
 	<!-- do at the end -->
 
+	<beans>
+		<import resource="classpath:spring/oauth-common-config.xml" />
+	</beans>
+	<beans profile="authserver">
+		<import resource="classpath:spring/oauth-AS-config.xml" />
+	</beans>
+	<beans profile="resourceserver">
+		<import resource="classpath:spring/oauth-RS-config.xml" />
+	</beans>
+	<beans profile="authserver">
+		<import resource="classpath:spring/security-config.xml" />
+	</beans>
+	<beans profile="authserver">
+		<bean id="messageSource"
+			class="org.springframework.context.support.ResourceBundleMessageSource">
+			<property name="basename" value="msg/datacustodian" />
+		</bean>
+		<bean id="viewResolver"
+			class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+			<property name="viewResolvers">
+				<bean
+					class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+					<property name="prefix" value="/WEB-INF/jsp/lh"></property>
+					<property name="suffix" value=".jsp"></property>
+				</bean>
+			</property>
+			<property name="defaultViews">
+				<!-- TODO: Migrate to MappingJackson2JsonView -->
+				<bean
+					class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
+					<property name="extractValueFromSingleKeyModel" value="true" />
+				</bean>
+			</property>
+		</bean>
 
-	<import resource="classpath:spring/oauth-AS-config.xml" />
-	<import resource="classpath:spring/oauth-RS-config.xml" />
-	<import resource="classpath:spring/security-config.xml" />
-
-
-	<bean id="messageSource"
-		class="org.springframework.context.support.ResourceBundleMessageSource">
-		<property name="basename" value="msg/datacustodian" />
-	</bean>
-	<bean id="viewResolver"
-		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
-		<property name="viewResolvers">
-			<bean
-				class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-				<property name="prefix" value="/WEB-INF/jsp/lh"></property>
-				<property name="suffix" value=".jsp"></property>
+		<bean id="multipartResolver"
+			class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+			<property name="maxUploadSize" value="10000000000" />
+		</bean>
+		<bean
+			class="org.springframework.web.context.support.ServletContextAttributeExporter">
+			<property name="attributes">
+				<map>
+					<entry key="apiBaseUrl" value="${api.base.url}" />
+					<entry key="corporateBaseUrl" value="${corporateUrl}" />
+					<entry key="corporateUrl" value="${corporateUrl}/site" />
+				</map>
+			</property>
+		</bean>
+		<mvc:interceptors>
+			<bean id="webContentInterceptor"
+				class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+				<property name="cacheSeconds" value="0" />
+				<property name="useExpiresHeader" value="true" />
+				<property name="useCacheControlHeader" value="true" />
+				<property name="useCacheControlNoStore" value="true" />
 			</bean>
-		</property>
-		<property name="defaultViews">
-			<!-- TODO: Migrate to MappingJackson2JsonView -->
-			<bean
-				class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
-				<property name="extractValueFromSingleKeyModel" value="true" />
-			</bean>
-		</property>
-	</bean>
-
-	<bean id="multipartResolver"
-		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-		<property name="maxUploadSize" value="10000000000" />
-	</bean>
+		</mvc:interceptors>
+	</beans>
 </beans>

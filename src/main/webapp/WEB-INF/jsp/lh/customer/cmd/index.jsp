@@ -32,6 +32,13 @@ table.bor {
 table.bor td {
 	border: 1px soldi red !important;
 }
+
+.commentBox {
+	display: none;
+	position: absolute;
+	z-index: 9999;
+	font-size: 80%;
+}
 </style>
 
 
@@ -131,20 +138,25 @@ table.bor td {
 												</tfoot>
 												<tbody>
 													<c:forEach var="authorization" items="${authorizationList}">
-														<tr>
+														<tr app_id="${authorization.applicationInformation.id}" current_login_id="${currentuser.id}">
 															<td><span> <img alt="logo" width="120"
 																	class="img-rounded-2"
 																	src="${authorization.applicationInformation.logoUri}"
 																	title="${authorization.applicationInformation.thirdPartyApplicationName}"
 																	data-toggle="tooltip" />
-															</span></td>
-															<td><span class="rating-input"><span
-																	class="glyphicon glyphicon-star-empty" data-value="1"></span><span
-																	class="glyphicon glyphicon-star-empty" data-value="2"></span><span
-																	class="glyphicon glyphicon-star-empty" data-value="3"></span><span
-																	class="glyphicon glyphicon-star-empty" data-value="4"></span><span
-																	class="glyphicon glyphicon-star-empty" data-value="5"></span>
-															</span></td>
+															</span></td>															
+																<td><span class="rating-input" app_id="${authorization.applicationInformation.id}" current_login_id="${currentUser.id}">
+ 																<input type="number" class="rating" id="ratingValue" name="test" data-min="1" data-max="5" data-value="0">
+ 																</span>
+ 																<div class="comments-input"><a  href="javascript:void(0)" id="commentsLink">Comment</a>
+ 																							<a  href="javascript:void(0)" id="commentsHideLink" style="display:none;" >Hide</a>
+ 																
+ 																<div class="commentBox"  class="popupContainer" style="display:none;">
+ 																	<span><textarea style="width:250px;height:40px" id="comments"></textarea></span>
+ 																	<span style="line-height:20px;"><a class="badge active" href="javascript:void(0)" id="saveComment" app_id="${authorization.applicationInformation.id}" current_login_id="${currentUser.id}">Comment</a></span>
+ 																</div>
+ 																</div>
+ 															</td>
 															<td><a
 																href="${authorization.applicationInformation.clientUri}"
 																target="_new"><c:out
@@ -279,17 +291,9 @@ table.bor td {
 																								src="${subscription.authorization.applicationInformation.logoUri}"
 																								title="${subscription.authorization.applicationInformation.thirdPartyApplicationName}" />
 																						</span></td>
-																						<td><span class="rating-input"><span
-																								class="glyphicon glyphicon-star-empty"
-																								data-value="1"></span><span
-																								class="glyphicon glyphicon-star-empty"
-																								data-value="2"></span><span
-																								class="glyphicon glyphicon-star-empty"
-																								data-value="3"></span><span
-																								class="glyphicon glyphicon-star-empty"
-																								data-value="4"></span><span
-																								class="glyphicon glyphicon-star-empty"
-																								data-value="5"></span> </span></td>
+																						<td><span class="rating-input" app_id="${subscription.authorization.applicationInformation.id}" app_type="average">
+																						<input type="number" class="rating" id="ratingValue" name="test" data-min="1" data-max="5" data-value="0">
+																						</span></td>
 																						<td><a
 																							href="${subscription.authorization.applicationInformation.clientUri}"
 																							target="_new"><c:out
@@ -502,6 +506,7 @@ table.bor td {
 							</section>
 						</c:when>
 						<c:otherwise>
+						<section srckey="let-me-participate"><!--  
 							<p>
 								<img alt="green button connect my data" width="100%"
 									src="https://www.londonhydro.com/site/binaries/content/gallery/londonhydrohippo/corporate/residential/landing-page/greenbutton_leaf.png">
@@ -515,6 +520,8 @@ table.bor td {
 								will help you better understand your electricity consumption and
 								manage your bills. All of these solutions are free for the
 								entire duration of the pilot.</p>
+						-->		
+						</section>
 						</c:otherwise>
 					</c:choose>
 
@@ -581,12 +588,16 @@ table.bor td {
 																	value="${applicationInformation.published.time.time}" />
 																<span class="lable-note"> Since</span> <fmt:formatDate
 																	value="${dateValue}" pattern="MMM dd, yyyy" /></span> <br />
-															<span class="nowrap"> <span
-																class="glyphicon glyphicon-star-empty" data-value="1"></span><span
-																class="glyphicon glyphicon-star-empty" data-value="2"></span><span
-																class="glyphicon glyphicon-star-empty" data-value="3"></span><span
-																class="glyphicon glyphicon-star-empty" data-value="4"></span><span
-																class="glyphicon glyphicon-star-empty" data-value="5"></span>
+															<span class="nowrap"> <span class="rating-input" app_id="${applicationInformation.id}" app_type="average">
+																						<input type="number" class="rating" id="ratingValue" name="test" data-min="1" data-max="5" data-value="0" data-disabled="true">
+																						</span>
+															</span>
+															<div class="commentsSection" app_id="${applicationInformation.id}">
+																<span> <a id="viewComments"  href="javascript:void(0)" >View Comments</a></span>
+																 <span> <a id="hideComments"  href="javascript:void(0)" style="display: none">Hide Comments</a></span>
+																 <div id="allComments"  style="display: none" >
+																 </div>
+															</div>
 															</span> <span class="lable-note">Used by </span><span
 																class="badge">1000+</span> </span>
 
@@ -632,9 +643,10 @@ table.bor td {
 															test="${not empty dcapplicationInformation}">
 															<a class="btn btn-primary"
 																title="This will take you to vendor's website."
-																href="<c:url value='${applicationInformation.thirdPartyScopeSelectionScreenURI}'/>?DataCustodianID=${dcapplicationInformation.dataCustodianId}&scope=${applicationInformation.scopeQueryString}">Authorize
+																href="<c:url value='/RetailCustomer/ScopeSelectionList'/>?ThirdPartyID=${applicationInformation.clientId}">Authorize
 																<span class="glyphicon glyphicon-new-window"></span>
 															</a>
+															
 
 														</c:if></span></td>
 
@@ -658,4 +670,3 @@ table.bor td {
 </body>
 <jsp:include page="../../gatracking.jsp" />
 </html>
- 

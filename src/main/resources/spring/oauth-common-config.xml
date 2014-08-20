@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       		 http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+			 http://www.springframework.org/schema/security
+			 http://www.springframework.org/schema/security/spring-security-3.2.xsd
+			 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+			 http://www.springframework.org/schema/security/oauth2
+			 http://www.springframework.org/schema/security/spring-security-oauth2-1.0.xsd">
+
+
+
+	<!-- Used by Token store -->
+	<!-- in cloud deployment user & password not required -->
+	<!-- <bean id="mysqlTokenStore" class="org.springframework.jdbc.datasource.SimpleDriverDataSource" 
+		lazy-init="true"> <constructor-arg> <bean class="${oauth.jdbc.driverClassName}" 
+		/> </constructor-arg> <constructor-arg value="${oauth.jdbc.url}" /> <constructor-arg 
+		value="${oauth.jdbc.username}" /> <constructor-arg value="${oauth.jdbc.password}" 
+		/> </bean> -->
+
+	<!-- <bean id="mysqlTokenStore" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
+		<property name="driverClassName" value="${oauth.jdbc.driverClassName}" /> 
+		<property name="url" value="${oauth.jdbc.url}" /> <property name="username" 
+		value="${oauth.jdbc.username}" /> <property name="password" value="${oauth.jdbc.password}" 
+		/> </bean> -->
+	<bean id="mysqlTokenStore" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${oauth.jdbc.driverClassName}" />
+		<property name="url" value="${oauth.jdbc.url}" />
+		<property name="username" value="${oauth.jdbc.username}" />
+		<property name="password" value="${oauth.jdbc.password}" />
+		<property name="initialSize" value="1" />
+		<property name="maxActive" value="2" />
+		<property name="maxIdle" value="1" />
+	</bean>
+
+
+
+	<bean id="tokenStore"
+		class="org.springframework.security.oauth2.provider.token.store.JdbcTokenStore"
+		lazy-init="true">
+		<constructor-arg ref="mysqlTokenStore" />
+	</bean>
+
+	<!-- Used by Client Details Service -->
+	<!-- <bean id="mysqlClientDetails" class="org.springframework.jdbc.datasource.SimpleDriverDataSource" 
+		lazy-init="true"> <constructor-arg> <bean class="${oauth.jdbc.driverClassName}" 
+		/> </constructor-arg> <constructor-arg value="${oauth.jdbc.url}" /> <constructor-arg 
+		value="${oauth.jdbc.username}" /> <constructor-arg value="${oauth.jdbc.password}" 
+		/> </bean> -->
+	<!-- Used by Authorization Code Service -->
+	<!-- <bean id="mysqlAuthorizationCode" class="org.springframework.jdbc.datasource.SimpleDriverDataSource" 
+		lazy-init="true"> <constructor-arg> <bean class="${oauth.jdbc.driverClassName}" 
+		/> </constructor-arg> <constructor-arg value="${oauth.jdbc.url}" /> <constructor-arg 
+		value="${oauth.jdbc.username}" /> <constructor-arg value="${oauth.jdbc.password}" 
+		/> </bean> -->
+
+	<bean id="clientCredentialsTokenEndpointFilter"
+		class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter"
+		lazy-init="true">
+		<property name="authenticationManager" ref="clientAuthenticationManager" />
+	</bean>
+
+
+	<bean id="clientAuthenticationEntryPoint"
+		class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint"
+		lazy-init="true">
+		<property name="realmName" value="DataCustodian" />
+		<property name="typeName" value="Basic" />
+	</bean>
+
+
+	<bean id="oauthAuthenticationEntryPoint"
+		class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint"
+		lazy-init="true">
+		<property name="realmName" value="DataCustodian" />
+	</bean>
+
+	<bean id="accessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased"
+		xmlns="http://www.springframework.org/schema/beans" lazy-init="true">
+		<constructor-arg>
+			<list>
+				<bean class="org.springframework.security.oauth2.provider.vote.ScopeVoter" />
+				<bean class="org.springframework.security.access.vote.RoleVoter" />
+				<bean class="org.springframework.security.access.vote.AuthenticatedVoter" />
+			</list>
+		</constructor-arg>
+	</bean>
+	<bean id="oauthAccessDeniedHandler"
+		class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler"
+		lazy-init="true" />
+
+</beans>
+

@@ -47,6 +47,7 @@ public class UpdateServiceImpl implements UpdateService {
     public void setUsagePointService(UsagePointService usagePointService) {
         this.usagePointService = usagePointService;
     }
+    
     public UsagePointService getUsagePointService() {
         return this.usagePointService;
     }

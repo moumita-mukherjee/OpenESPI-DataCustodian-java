@@ -21,6 +21,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
+    <script type="text/javascript">
+    	apiBaseUrl = "${apiBaseUrl}";
+    	siteBaseUrl = "${corporateBaseUrl}";
+    </script>
 
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
@@ -66,6 +70,7 @@
     <script src="<c:url value='/resources/js/bootstrap-datetimepicker.pt-US.js'/>"></script>
     -->
     <script src="<c:url value='/resources/js/application.js'/>"></script>
+    <script src="<c:url value='/resources/js/rating.js'/>"></script>
     
 	<script src="<c:url value='/resources/js/bootstrap-tooltip.js'/>"></script>
 	<script src="<c:url value='/resources/js/bootstrap-confirmation.js'/>"></script>

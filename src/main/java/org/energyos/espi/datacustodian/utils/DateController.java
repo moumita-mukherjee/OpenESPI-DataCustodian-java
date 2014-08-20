@@ -18,6 +18,7 @@ package org.energyos.espi.datacustodian.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 public class DateController {
 
@@ -25,15 +26,18 @@ public class DateController {
 	private SimpleDateFormat sdf = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss'Z'");
 
+	private Calendar getEstCalendar() {
+		return Calendar.getInstance(TimeZone.getTimeZone("EST"));
+	}
 	public String getDayBegin() {
-		Calendar c = Calendar.getInstance();
+		Calendar c = getEstCalendar();
 		c.set(Calendar.HOUR, 0);
 		c.set(Calendar.MINUTE, 0);
 		return sdf.format(c.getTime());
 	}
 
 	public String getPreviousdayBegin() {
-		Calendar c = Calendar.getInstance();
+		Calendar c = getEstCalendar();
 		c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH) - 1);
 		c.set(Calendar.HOUR, 0);
 		c.set(Calendar.MINUTE, 0);
@@ -41,14 +45,14 @@ public class DateController {
 	}
 
 	public String getDayEnd() {
-		Calendar c = Calendar.getInstance();
+		Calendar c = getEstCalendar();
 		c.set(Calendar.HOUR, 24);
 		c.set(Calendar.MINUTE, 0);
 		return sdf.format(c.getTime());
 	}
 
 	public String getWeekBegin() {
-		Calendar c = Calendar.getInstance();
+		Calendar c = getEstCalendar();
 		c.set(Calendar.DAY_OF_WEEK, 0);
 		c.set(Calendar.HOUR, 0);
 		c.set(Calendar.MINUTE, 0);
@@ -56,7 +60,7 @@ public class DateController {
 	}
 
 	public String getWeekEnd() {
-		Calendar c = Calendar.getInstance();
+		Calendar c = getEstCalendar();
 		c.set(Calendar.DAY_OF_WEEK, 6);
 		c.set(Calendar.HOUR, 24);
 		c.set(Calendar.MINUTE, 0);
@@ -64,7 +68,7 @@ public class DateController {
 	}
 
 	public String getMonthBegin() {
-		Calendar c = Calendar.getInstance();
+		Calendar c = getEstCalendar();
 		c.set(Calendar.DAY_OF_MONTH, 1);
 		c.set(Calendar.HOUR, 0);
 		c.set(Calendar.MINUTE, 0);
@@ -72,19 +76,19 @@ public class DateController {
 	}
 
 	public String getNow() {
-		Calendar c = Calendar.getInstance();
+		Calendar c = getEstCalendar();
 		return sdf.format(c.getTime());
 	}
 
 	public long getDayBeginUtc() {
-		Calendar c = Calendar.getInstance();
+		Calendar c = getEstCalendar();
 		c.set(Calendar.HOUR, 0);
 		c.set(Calendar.MINUTE, 0);
 		return c.getTimeInMillis() / 1000;
 	}
 
 	public long getPreviousdayBeginUtc() {
-		Calendar c = Calendar.getInstance();
+		Calendar c = getEstCalendar();
 		c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH) - 1);
 		c.set(Calendar.HOUR, 0);
 		c.set(Calendar.MINUTE, 0);
@@ -92,14 +96,14 @@ public class DateController {
 	}
 
 	public long getDayEndUtc() {
-		Calendar c = Calendar.getInstance();
+		Calendar c = getEstCalendar();
 		c.set(Calendar.HOUR, 24);
 		c.set(Calendar.MINUTE, 0);
 		return c.getTimeInMillis() / 1000;
 	}
 
 	public long getWeekBeginUtc() {
-		Calendar c = Calendar.getInstance();
+		Calendar c = getEstCalendar();
 		c.set(Calendar.DAY_OF_WEEK, 0);
 		c.set(Calendar.HOUR, 0);
 		c.set(Calendar.MINUTE, 0);
@@ -107,7 +111,7 @@ public class DateController {
 	}
 
 	public long getWeekEndUtc() {
-		Calendar c = Calendar.getInstance();
+		Calendar c = getEstCalendar();
 		c.set(Calendar.DAY_OF_WEEK, 6);
 		c.set(Calendar.HOUR, 24);
 		c.set(Calendar.MINUTE, 0);
@@ -115,7 +119,7 @@ public class DateController {
 	}
 
 	public long getMonthBeginUtc() {
-		Calendar c = Calendar.getInstance();
+		Calendar c = getEstCalendar();
 		c.set(Calendar.DAY_OF_MONTH, 1);
 		c.set(Calendar.HOUR, 0);
 		c.set(Calendar.MINUTE, 0);
@@ -123,21 +127,21 @@ public class DateController {
 	}
 	
 	public long getThreeMonthBeginUtc() {
-		Calendar c = Calendar.getInstance();
+		Calendar c = getEstCalendar();
 		c.add(Calendar.MONTH, -3);
 		c.set(Calendar.HOUR, 0);
 		c.set(Calendar.MINUTE, 0);
 		return c.getTimeInMillis() / 1000;
 	}
 	public long getSixMonthBeginUtc() {
-		Calendar c = Calendar.getInstance();
+		Calendar c = getEstCalendar();
 		c.add(Calendar.MONTH, -6);
 		c.set(Calendar.HOUR, 0);
 		c.set(Calendar.MINUTE, 0);
 		return c.getTimeInMillis() / 1000;
 	}
 	public long getTwelveMonthBeginUtc() {
-		Calendar c = Calendar.getInstance();
+		Calendar c = getEstCalendar();
 		c.add(Calendar.MONTH, -12);
 		c.set(Calendar.HOUR, 0);
 		c.set(Calendar.MINUTE, 0);
@@ -145,7 +149,7 @@ public class DateController {
 	}
 
 	public long getNowUtc() {
-		Calendar c = Calendar.getInstance();
+		Calendar c = getEstCalendar();
 		return c.getTimeInMillis() / 1000;
 	}
 }

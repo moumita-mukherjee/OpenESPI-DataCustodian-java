@@ -21,7 +21,7 @@
 <html lang="en">
 
 <jsp:include page="../tiles/head.jsp" />
-<c:set var="menu" scope="session" value="home"/>
+<c:set var="menu" scope="session" value="home" />
 <body>
 	<div id="wrapper">
 		<jsp:include page="../tiles/header.jsp" />
@@ -32,7 +32,11 @@
 				<div class="content">
 					<section class="content-container">
 						<div class="balance-section">
-<article class="post-box"><div class="text-container"><div data-ng-bind-html-unsafe="content.body" class="ng-binding">
+							<article class="post-box">
+								<div class="text-container">
+									<div data-ng-bind-html-unsafe="content.body" class="ng-binding"
+										srckey="educateme">
+										<!--
 
 <img alt="educateme" width="100%" src="https://www.londonhydro.com/site/binaries/content/gallery/londonhydrohippo/corporate/residential/landing-page/educateme.png">
 <p>&nbsp;</p>
@@ -102,9 +106,11 @@ portal.&nbsp;</p>
 
 <p>&nbsp;</p>
 
+-->
+									</div>
+								</div>
+							</article>
 
-</div></div></article>
-							
 						</div>
 					</section>
 				</div>
@@ -115,5 +121,3 @@ portal.&nbsp;</p>
 	</div>
 </body>
 </html>
-
-

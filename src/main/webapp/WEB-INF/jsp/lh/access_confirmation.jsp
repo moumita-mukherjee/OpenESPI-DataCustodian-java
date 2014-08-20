@@ -301,22 +301,22 @@
 
 										</thead>
 										<tbody>
-											<c:forEach items="${scopeForApproval}" var="scope">
+											<c:forEach items="${scopes}" var="scope">
 												<c:set var="approved">
-													<c:if test="${scope.selected}"> checked</c:if>
+													<c:if test="${scope.value}"> checked</c:if>
 												</c:set>
 												<c:set var="denied">
-													<c:if test="${!scope.selected}"> checked</c:if>
+													<c:if test="${!scope.value}"> checked</c:if>
 												</c:set>
 
 												<tr>
 
 													<td>I authorize the Third-Party application to access
 														my energy data. <input type="submit"
-														class="btn btn-success" name="scope.${scope.scope}"
+														class="btn btn-success" name="${scope.key}"
 														value="Approve" data-toggle="modal" data-target="#myModal">
 													</input><input type="submit" class="btn btn-danger"
-														name="scope.${scope.scope}" value="Deny"></input>
+														name="${scope.key}" value="Deny"></input>
 													</td>
 
 													<div class="modal fade" id="myModal" tabindex="-1"
@@ -340,7 +340,7 @@
 																<div class="modal-footer">
 																	<button type="button" class="btn btn-default"
 																		data-dismiss="modal">Close</button>
-																	<input type="submit" name="scope.${scope.scope}"
+																	<input type="submit" name="${scope.key}"
 																		value="Approve" class="btn btn-success" />
 																</div>
 															</div>

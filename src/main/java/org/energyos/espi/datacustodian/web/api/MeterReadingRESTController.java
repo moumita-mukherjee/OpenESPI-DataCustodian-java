@@ -20,6 +20,8 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -37,9 +39,13 @@ import org.energyos.espi.common.service.RetailCustomerService;
 import org.energyos.espi.common.service.SubscriptionService;
 import org.energyos.espi.common.service.UsagePointService;
 import org.energyos.espi.common.utils.ExportFilter;
+import org.hibernate.PersistentObjectException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.orm.jpa.JpaSystemException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -99,17 +105,15 @@ public class MeterReadingRESTController {
 			@RequestParam Map<String, String> params) throws IOException, FeedException {
 
 		try {
+			Long subscriptionId = 0l;// getSubscriptionId(request);
 
-			Long subscriptionId = 0l;//getSubscriptionId(request);
-
-		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
-
+			response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 
 			MeterReading mr = meterReadingService.findByUUID(UUID.fromString(uuid));
-			System.err.print(" mr ...."+mr);
-			exportService.exportMeterReadingFull(subscriptionId, mr.getId(),mr.getUsagePoint().getId(),mr.getUsagePoint().getRetailCustomer().getId(), response.getOutputStream(),
-					new ExportFilter(params));
-			
+
+			System.err.print(" mr ...." + mr);
+			exportService.exportMeterReadingFull(subscriptionId, mr.getId(), mr.getUsagePoint().getId(), mr
+					.getUsagePoint().getRetailCustomer().getId(), response.getOutputStream(), new ExportFilter(params));
 
 		} catch (Exception e) {
 			e.printStackTrace(System.err);

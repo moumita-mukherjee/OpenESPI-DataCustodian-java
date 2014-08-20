@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
-	<application>${appengine.application}</application>
-	<version>1</version>
+	<application>${appengine.application.name}</application>
+	<module>${appengine.application.module}</module>
+	<version>${appengine.application.version}</version>
 	<threadsafe>true</threadsafe>
 	<use-google-connector-j>true</use-google-connector-j>
-	<sessions-enabled>true</sessions-enabled>
-	<!-- for DEV environment with modules -->
-	<!-- <instance-class>F2</instance-class> <automatic-scaling> <min-idle-instances>automatic</min-idle-instances> 
-		<max-idle-instances>1</max-idle-instances> <min-pending-latency>automatic</min-pending-latency> 
-		<max-pending-latency>30ms</max-pending-latency> <max-concurrent-requests>50</max-concurrent-requests> 
-		</automatic-scaling> -->
+	<sessions-enabled>true</sessions-enabled>	
+	<instance-class>F2</instance-class>
+	<automatic-scaling>
+		<min-idle-instances>automatic</min-idle-instances>
+		<max-idle-instances>1</max-idle-instances>
+		<min-pending-latency>automatic</min-pending-latency>
+		<max-pending-latency>automatic</max-pending-latency>
+		<max-concurrent-requests>1</max-concurrent-requests>
+	</automatic-scaling>
 	<admin-console>
 		<page name="Appstats" url="/appstats" />
 	</admin-console>
 	<system-properties>
 		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties" />
+		<property name="spring.profiles.active" value="${spring.profile}" />
+		<property
+			name="com.sun.xml.internal.bind.v2.runtime.JAXBContextImpl.fastBoot"
+			value="true" />
 	</system-properties>
 
 	<warmup-requests-enabled>true</warmup-requests-enabled>
@@ -23,6 +31,8 @@
 		<include path="/resources/js/**.js" expiration="1d 1h" />
 		<include path="/resources/images/**.*" expiration="1d 1h" />
 	</static-files>
+	<precompilation-enabled>false</precompilation-enabled>
+	
 
 	<!-- <static-error-handlers> <handler file="/error/default_error.html" /> 
 		<handler file="/error/over_quota.html" error-code="over_quota" /> <handler 

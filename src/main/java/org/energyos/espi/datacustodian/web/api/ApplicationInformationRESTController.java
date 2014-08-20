@@ -171,4 +171,6 @@ public class ApplicationInformationRESTController {
    public ResourceService getResourceService () {
         return this.resourceService;
    }
+
+
 }

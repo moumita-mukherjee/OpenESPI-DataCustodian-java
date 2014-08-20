@@ -33,8 +33,8 @@
 
 
 			<!-- Main hero unit for a primary marketing message or call to action -->
-			<div class="balance-section">
-				<h2>Welcome to the London Hydro Green Button Portal</h2>
+			<div class="balance-section" srckey="greenbuttonlandingpage">
+				<!-- 				<h2>Welcome to the London Hydro Green Button Portal</h2>
 				<br> <br>
 				<div class="row">
 					<div class="col-xs-6 col-md-3">
@@ -64,6 +64,7 @@
 						</article>
 					</div>
 				</div>
+ -->
 			</div>
 			<br> <br>
 		</div>

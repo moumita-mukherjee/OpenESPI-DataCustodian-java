@@ -26,8 +26,10 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.util.OAuth2Utils;
+import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +47,9 @@ public class EspiTokenEnhancer implements TokenEnhancer {
 	@Autowired
 	private AuthorizationService authorizationService;
 
+	@Autowired
+	private JdbcClientDetailsService clientDetailsService;
+
 	private String baseURL; // "baseURL" is a "tokenEnhancer" bean property
 							// defined in the oauth-AS-config.xml file
 
@@ -55,7 +60,7 @@ public class EspiTokenEnhancer implements TokenEnhancer {
 
 		DefaultOAuth2AccessToken result = new DefaultOAuth2AccessToken(accessToken);
 
-		System.out.printf("EspiTokenEnhancer: OAuth2Request Parameters = %s\n", authentication.getOAuth2Request()
+		System.err.printf("EspiTokenEnhancer: OAuth2Request Parameters = %s\n", authentication.getOAuth2Request()
 				.getRequestParameters());
 
 		Map<String, String> requestParameters = authentication.getOAuth2Request().getRequestParameters();
@@ -68,22 +73,41 @@ public class EspiTokenEnhancer implements TokenEnhancer {
 			usagePointId = (Long) oAuth2Request.getExtensions().get("usagepoint");
 
 		}
+		// base resource URI of datacustodian resource end-point
+		baseURL = applicationInformationService.getDataCustodianResourceEndpoint().substring(0,
+				applicationInformationService.getDataCustodianResourceEndpoint().lastIndexOf("/espi/"));
 
 		System.err.println(" grantType " + grantType);
 
 		// Is this a "client_credentials" access token grant_type request?
 		if (grantType.contentEquals("client_credentials")) {
+
+			System.err.println("oAuth2Request.getExtensions() " + oAuth2Request.getExtensions());
+			System.err.println("oAuth2Request.getDetails() " + authentication.getDetails());
+			System.err.println("accessToken.getAdditionalInformation() " + accessToken.getAdditionalInformation());
+			System.err.println("accessToken.loadClientByClientId() "
+					+ clientDetailsService.loadClientByClientId(authentication.getOAuth2Request().getClientId())
+							.getAdditionalInformation().get("client_id"));
+			System.err.println("accessToken.getCredentials() " + authentication.getCredentials());
+			System.err.println("accessToken.getPrincipal() " + authentication.getPrincipal());
+
 			// Processing a "client_credentials" access token grant_type
 			// request.
 
 			// Create Subscription and add resourceURI to /oath/token response
-			Subscription subscription = subscriptionService.createSubscription(authentication, usagePointId);
-			result.getAdditionalInformation().put("resourceURI",
-					baseURL + Routes.BATCH_SUBSCRIPTION.replace("{subscriptionId}", subscription.getId().toString()));
+
+			// DJ commented, does this require subscription. all subscription
+			// usage is commented
+			// Subscription subscription =
+			// subscriptionService.createSubscription(authentication,
+			// usagePointId);
+			// result.getAdditionalInformation().put("resourceURI",
+			// baseURL + Routes.BATCH_SUBSCRIPTION.replace("{subscriptionId}",
+			// subscription.getId().toString()));
 
 			// Create Authorization and add authorizationURI to /oath/token
 			// response
-			Authorization authorization = authorizationService.createAuthorization(subscription, result.getValue());
+			Authorization authorization = authorizationService.createAuthorization(null, result.getValue());
 			result.getAdditionalInformation().put(
 					"authorizationURI",
 					baseURL
@@ -91,21 +115,30 @@ public class EspiTokenEnhancer implements TokenEnhancer {
 									.toString()));
 
 			// Update Data Custodian subscription structure
-			subscription.setAuthorization(authorization);
-			subscription.setUpdated(new GregorianCalendar());
-			subscriptionService.merge(subscription);
+			// subscription.setAuthorization(authorization);
+			// subscription.setUpdated(new GregorianCalendar());
+			// subscriptionService.merge(subscription);
 
 			// Update Data Custodian authorization structure
-			String clientIdTmp = authentication.getOAuth2Request().getClientId();
-			if (clientIdTmp.equals("data_custodian_admin")) {
-				authorization.setApplicationInformation(applicationInformationService
-						.findByKind("DATA_CUSTODIAN_ADMIN").get(1));
-			} else if (clientIdTmp.contains("REGISTRATION_")) {
-				clientIdTmp = clientIdTmp.substring("REGISTRATION_".length());
-				authorization.setApplicationInformation(applicationInformationService.findByClientId(clientIdTmp));
-			} else {
-				authorization.setApplicationInformation(applicationInformationService.findByClientId(clientIdTmp));
-			}
+			ClientDetails clintDtl = clientDetailsService.loadClientByClientId(authentication.getOAuth2Request()
+					.getClientId());
+			authorization.setApplicationInformation(applicationInformationService.findByClientId((String) clintDtl
+					.getAdditionalInformation().get("client_id")));
+			/*
+			 * String clientIdTmp =
+			 * authentication.getOAuth2Request().getClientId(); if
+			 * (clientIdTmp.equals("data_custodian_admin")) {
+			 * List<ApplicationInformation> list=applicationInformationService
+			 * .findByKind("DATA_CUSTODIAN_ADMIN");
+			 * authorization.setApplicationInformation(list.get(list.size()-1));
+			 * } else if (clientIdTmp.contains("REGISTRATION_")) { clientIdTmp =
+			 * clientIdTmp.substring("REGISTRATION_".length());
+			 * authorization.setApplicationInformation
+			 * (applicationInformationService.findByClientId(clientIdTmp)); }
+			 * else {
+			 * authorization.setApplicationInformation(applicationInformationService
+			 * .findByClientId(clientIdTmp)); }
+			 */
 
 			authorization.setThirdParty(authentication.getOAuth2Request().getClientId());
 			authorization.setAccessToken(accessToken.getValue());
@@ -141,7 +174,7 @@ public class EspiTokenEnhancer implements TokenEnhancer {
 
 			} else {
 				if (role.contains("ROLE_TP_ADMIN")) {
-					authorization.setResourceURI(baseURL + Routes.BATCH_BULK_MEMBER.replace("{BulkID}", "**"));
+					authorization.setResourceURI(baseURL + Routes.BATCH_BULK_MEMBER.replace("{bulkId}", "**"));
 
 				} else {
 					if (role.contains("ROLE_UL_ADMIN")) {
@@ -262,36 +295,48 @@ public class EspiTokenEnhancer implements TokenEnhancer {
 		return result;
 	}
 
-   public void setBaseURL (String baseURL) {
-	   this.baseURL = baseURL;
-   }
-   
-   public void setApplicationInformationService(ApplicationInformationService applicationInformationService) {
-        this.applicationInformationService = applicationInformationService;
-   }
+	public void setBaseURL(String baseURL) {
+		this.baseURL = baseURL;
+	}
 
-   public ApplicationInformationService getApplicationInformationService () {
-        return this.applicationInformationService;
-   }
-   public void setSubscriptionService(SubscriptionService subscriptionService) {
-        this.subscriptionService = subscriptionService;
-   }
+	public void setApplicationInformationService(ApplicationInformationService applicationInformationService) {
+		this.applicationInformationService = applicationInformationService;
+	}
 
-   public SubscriptionService getSubscriptionService () {
-        return this.subscriptionService;
-   }
-   public void setResourceService(ResourceService resourceService) {
-        this.resourceService = resourceService;
-   }
+	public ApplicationInformationService getApplicationInformationService() {
+		return this.applicationInformationService;
+	}
 
-   public ResourceService getResourceService () {
-        return this.resourceService;
-   }
-   public void setAuthorizationService(AuthorizationService authorizationService) {
-        this.authorizationService = authorizationService;
-   }
+	public void setSubscriptionService(SubscriptionService subscriptionService) {
+		this.subscriptionService = subscriptionService;
+	}
 
-   public AuthorizationService getAuthorizationService () {
-        return this.authorizationService;
-   }
+	public SubscriptionService getSubscriptionService() {
+		return this.subscriptionService;
+	}
+
+	public void setResourceService(ResourceService resourceService) {
+		this.resourceService = resourceService;
+	}
+
+	public ResourceService getResourceService() {
+		return this.resourceService;
+	}
+
+	public void setAuthorizationService(AuthorizationService authorizationService) {
+		this.authorizationService = authorizationService;
+	}
+
+	public AuthorizationService getAuthorizationService() {
+		return this.authorizationService;
+	}
+
+	public JdbcClientDetailsService getClientDetailsService() {
+		return clientDetailsService;
+	}
+
+	public void setClientDetailsService(JdbcClientDetailsService clientDetailsService) {
+		this.clientDetailsService = clientDetailsService;
+	}
+
 }

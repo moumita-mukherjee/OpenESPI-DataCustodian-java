@@ -127,6 +127,7 @@ public class UsagePointRESTController {
 					new ExportFilter(params));
 		} catch (Exception e) {
 			log.warn("Exception", e);
+			e.printStackTrace(System.err);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
 	}
@@ -275,15 +276,19 @@ public class UsagePointRESTController {
 		String token = request.getHeader("authorization");
 		Long subscriptionId = 0L;
 
-		if (token != null) {
-			token = token.replace("Bearer ", "");
-			Authorization authorization = authorizationService.findByAccessToken(token);
-			if (authorization != null) {
-				Subscription subscription = authorization.getSubscription();
-				if (subscription != null) {
-					subscriptionId = subscription.getId();
+		try {
+			if (token != null) {
+				token = token.replace("Bearer ", "");
+				Authorization authorization = authorizationService.findByAccessToken(token);
+				if (authorization != null) {
+					Subscription subscription = authorization.getSubscription();
+					if (subscription != null) {
+						subscriptionId = subscription.getId();
+					}
 				}
 			}
+		} catch (Exception ignore) {
+
 		}
 
 		return subscriptionId;

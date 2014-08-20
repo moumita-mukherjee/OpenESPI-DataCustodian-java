@@ -31,6 +31,7 @@ import org.energyos.espi.common.utils.ExportFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -85,6 +86,7 @@ public class AuthorizationRESTController {
 		try {
 			exportService.exportAuthorization(authorizationId, response.getOutputStream(), new ExportFilter(params));
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
 	}

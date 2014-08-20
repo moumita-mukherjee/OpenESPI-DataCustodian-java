@@ -4,6 +4,6 @@
 		<url>/_ah/sessioncleanup?clear</url>
 		<description>Clean up sessions</description>
 		<schedule>every 2 hours</schedule>
-		<target>2</target>
+		<target>1</target>
 	</cron>
 </cronentries>

@@ -33,9 +33,6 @@
 				<p>Please contact support.</p>
 
 				<pre>
-					<%
-						exception.printStackTrace(new PrintWriter(out));
-					%>
 				</pre>
 			</div>
 		</div>

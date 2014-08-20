@@ -8,20 +8,9 @@
 			 http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
 
-	<http auto-config="true" use-expressions="true" pattern="/lh/**"
-		realm="Inhouse Application" authentication-manager-ref="authenticationManager"
-		disable-url-rewriting="true" xmlns="http://www.springframework.org/schema/security">
-		<intercept-url pattern="/lh/**" access="hasRole('ROLE_TRUESTED_APP')" />
-		<http-basic />
-	</http>
-	<!-- 
-	<http auto-config="true" use-expressions="true" pattern="/appstats/**"
-		realm="Stat Application" authentication-manager-ref="authenticationManager"
-		disable-url-rewriting="true" xmlns="http://www.springframework.org/schema/security">
-		<intercept-url pattern="/appstats/**" access="hasRole('admin')" />
-		<http-basic />
-	</http>
- -->
+
+
+
 	<http auto-config="true" use-expressions="true"
 		authentication-manager-ref="authenticationManager" access-denied-page="/login?authorization_error=true"
 		disable-url-rewriting="true" xmlns="http://www.springframework.org/schema/security">
@@ -30,12 +19,11 @@
 		<intercept-url pattern="/**" />
 		<form-login authentication-failure-url="/login?authentication_error=true"
 			default-target-url="/default" login-page="/login" />
-		<logout logout-success-url="/" logout-url="/logout.do" />
+		<logout logout-success-url="/" logout-url="/logout.do"
+			invalidate-session="true" />
 		<anonymous />
 
 	</http>
-
-
 
 
 
@@ -48,14 +36,6 @@
 				<sec:salt-source user-property="salt" />
 			</sec:password-encoder>
 		</authentication-provider>
-		<authentication-provider>
-			<sec:user-service>
-				<sec:user name="idcuser" authorities="ROLE_TRUESTED_APP"
-					password="idc@user#4o1" />				
-			</sec:user-service>
-		</authentication-provider>
-
 	</authentication-manager>
-
 
 </beans>

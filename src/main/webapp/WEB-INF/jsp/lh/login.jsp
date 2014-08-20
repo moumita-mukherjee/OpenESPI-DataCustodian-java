@@ -37,6 +37,10 @@
 										test="${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.localizedMessage=='Bad credentials'}">
 										<c:out value="Invalid username and/or password." />
 									</c:when>
+									<c:when
+										test="${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.localizedMessage=='UserDetailsService returned null, which is an interface contract violation'}">
+										<c:out value="Invalid username and/or password." />
+									</c:when>									
 									<c:otherwise>
 										<c:out
 											value="${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.localizedMessage}" />

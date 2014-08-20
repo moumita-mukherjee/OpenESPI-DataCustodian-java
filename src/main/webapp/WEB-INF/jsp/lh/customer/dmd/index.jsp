@@ -278,8 +278,7 @@
 																	</thead>
 																	<tfoot>
 																		<tr>
-																			<td colspan=6><c:if
-																					test="${empty usagePoints}">
+																			<td colspan=6><c:if test="${empty usagePoints}">
 																					<c:out value="No usage point available"></c:out>
 																				</c:if></td>
 																		</tr>
@@ -403,8 +402,7 @@
 																	</thead>
 																	<tfoot>
 																		<tr>
-																			<td colspan=6><c:if
-																					test="${empty usagePoints}">
+																			<td colspan=6><c:if test="${empty usagePoints}">
 																					<c:out value="No usage point available"></c:out>
 																				</c:if></td>
 																		</tr>
@@ -500,8 +498,16 @@
 															</div>
 														</c:forEach>
 													</div>
+													<br /> <br /> <br /> <br />
+													<br />
+													<br />
+													<br />
+													<br />
+													<br />
 												</div>
+
 											</div>
+
 										</div>
 									</div>
 								</form>
@@ -513,15 +519,9 @@
 
 				<script type="text/javascript">
 					var baseurl = '${pageContext.request.contextPath}/RetailCustomer/${currentCustomer.id}/UsagePoint/';
-					var d = new Date();
-					d.setHours(0, 0, 0, 0);
-					var usageMin = utcTime(d);
-					var usageMax = utcTime(d);
-
-					var endOfDay = new Date();
-					endOfDay.setHours(0, 0, 0, 0);
-					var begindDay = new Date();
-					begindDay.setHours(0, 0, 0, 0);
+					var d = new Date();					
+					var usageMin = utcDayBeginTime(d);
+					var usageMax = utcDayEndTime(d);
 
 					var startDate = $('#datetimepicker').datepicker({
 						format : 'MM dd, yyyy',
@@ -534,8 +534,7 @@
 						todayBtn : true,
 						todayHighlight : true
 					}).on('changeDate', function(ev) {
-						ev.date.setHours(0, 0, 0, 0);
-						usageMin = utcTime(ev.date);
+						usageMin = utcDayBeginTime(ev.date);
 						buildUrl();
 					});
 
@@ -550,8 +549,7 @@
 						todayBtn : true,
 						todayHighlight : true
 					}).on('changeDate', function(ev) {
-						ev.date.setHours(23, 59, 59, 999);
-						usageMax = utcTime(ev.date);
+						usageMax = utcDayEndTime(ev.date);
 						buildUrl();
 					});
 
@@ -566,8 +564,21 @@
 							buildUrl();
 						});
 					});
+
+					function utcDayBeginTime(date) {						
+						houroffset=5-date.getTimezoneOffset()/60;
+						var nd = new Date(date.getTime());
+						nd.setHours(houroffset, 0, 0, 0);
+						return Math.floor(nd.getTime() / 1000);						
+					}
+					function utcDayEndTime(date) {						
+						var nd = new Date(date.getTime());
+						nd.setHours(23, 59, 59, 59);
+						return Math.floor(nd.getTime() / 1000);												
+					}	
 					function utcTime(date) {
-						var temp = Math.floor(date.getTime() / 1000);
+						time=date.getTime();
+						var temp = Math.floor(time / 1000);
 						;
 						//temp.replace(" T", "T");
 						//temp.replace(" Z", "Z");
@@ -582,7 +593,7 @@
 							url += 'usage-min=' + usageMin;
 						}
 						if (usageMax) {
-							url += '&' + 'usage-max=' + usageMin;
+							url += '&' + 'usage-max=' + usageMax;
 						}
 						//alert(url);
 						$("#downloadMyData").attr('href', url);

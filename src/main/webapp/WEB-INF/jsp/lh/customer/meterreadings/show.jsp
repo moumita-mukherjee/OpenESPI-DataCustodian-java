@@ -34,6 +34,7 @@
 	var plot=null;
 
 	//<![CDATA[
+	var powerOfTenMultiplier= ${meterReading.readingType.multiplier};
 	var _rawdata=[
 	<c:forEach var="intervalBlock" items="${meterReading.intervalBlocks}"
 		varStatus="loopStatusIb">
@@ -60,11 +61,11 @@
 			$.each(_rawdata,
 					function(index, value) {
 						dt = new Date(value[0]);
-						if(minyValue>value[1] / 1000) {
-							minyValue=value[1] / 1000;
+						if(minyValue>value[1] / powerOfTenMultiplier) {
+							minyValue=value[1] / powerOfTenMultiplier;
 						}
 						_chartdataOffPeak.push([ value[0] ,
-													value[1] / 1000 ]);
+													value[1] / powerOfTenMultiplier ]);
 						
 					});
 			//,
@@ -170,7 +171,7 @@
 			        }
 			        if(curridx<_rawdata.length) {
 			        	slicedata.push([ _rawdata[curridx][0] ,
-						               _rawdata[curridx][1] / 1000 ]);
+						               _rawdata[curridx][1] / powerOfTenMultiplier ]);
 			        	curridx++;
 				    }
 			        
@@ -317,8 +318,7 @@
 													mths</a> <a
 													class="badge <c:if test='${dpb.period==180}'> active</c:if>"
 													href="<c:url value='/RetailCustomer/${currentCustomer.id}/UsagePoint/${meterReading.usagePoint.id}/MeterReading/${meterReading.id}/show?period=180&usagetime-min=0&usagetime-max=${dpb.nextUsagetimeMin}'/>">6
-													mths</a>
-													<a
+													mths</a> <a
 													class="badge <c:if test='${dpb.period==365}'> active</c:if>"
 													href="<c:url value='/RetailCustomer/${currentCustomer.id}/UsagePoint/${meterReading.usagePoint.id}/MeterReading/${meterReading.id}/show?period=365&usagetime-min=0&usagetime-max=${dpb.nextUsagetimeMin}'/>">1
 													year</a>
@@ -481,7 +481,7 @@
 																		</thead>
 																		<tbody>
 																			<c:forEach var="intervalReading"
-																				items="${intervalBlock.intervalReadings}" end="20">
+																				items="${intervalBlock.intervalReadings}">
 																				<tr>
 																					<td><jsp:setProperty property="time"
 																							name="dateValue2"
@@ -492,7 +492,7 @@
 																							value="${intervalReading.timePeriod.duration*1000}"
 																							format="2" /></td>
 																					<td><c:out
-																							value="${intervalReading.value/1000}" /></td>
+																							value="${intervalReading.value/meterReading.readingType.multiplier}" /></td>
 																					<td><c:out value="${intervalReading.cost}"
 																							default="-" /></td>
 
