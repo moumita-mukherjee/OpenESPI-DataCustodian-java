@@ -117,10 +117,10 @@
 														minutes</td>
 													<td><fmt:formatDate
 															value="${meterReading['intervalReadingFrom']}"
-															pattern="MMM dd, yyyy HH:mm z" timeZone="EST5EDT" /></td>
+															pattern="MMM dd, yyyy HH:mm z" timeZone="EST" /></td>
 													<td><fmt:formatDate
 															value="${meterReading['intervalReadingTill']}"
-															pattern="MMM dd, yyyy HH:mm z" timeZone="EST5EDT" /></td>
+															pattern="MMM dd, yyyy HH:mm z" timeZone="EST" /></td>
 													<td><spring:message
 															code="readingtype.${meterReading['ReadingType'].description}" /></td>
 													<td><a class="btn btn-primary"

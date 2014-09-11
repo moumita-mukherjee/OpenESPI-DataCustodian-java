@@ -22,7 +22,7 @@
 				<strong class="logo2"><a href="#">London Hydro</a></strong> Powering
 				London. <br />
 				<strong>Empowering you.</strong> <br>
-				<br> <small>Copyright &copy; 2013</small>
+				<br> <small>Copyright &copy; 2013-2014</small>
 			</div>
 		</div>
 		<div class="text-section">

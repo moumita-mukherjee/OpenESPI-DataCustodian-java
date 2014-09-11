@@ -285,6 +285,7 @@ table.bor td {
 																			<tbody>
 																				<c:forEach var="subscription"
 																					items="${usagePoint.subscriptions}">
+																					<c:if test="${subscription.authorization.status==1}">
 																					<tr>
 																						<td><span> <img alt="logo" width="120"
 																								class="img-rounded-2"
@@ -332,6 +333,7 @@ table.bor td {
 
 
 																					</tr>
+																					</c:if>
 																				</c:forEach>
 																			</tbody>
 																		</table>

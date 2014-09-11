@@ -8,7 +8,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%--
   ~ Copyright 2013 EnergyOS.org
   ~
@@ -104,29 +105,30 @@
 							</div>
 
 						</div>
-
-						<form id="scopeselection" name="scopeselection"
-							action="<%=request.getContextPath()%>/RetailCustomer/ScopeSelectionList"
-							method="post">
-							<input name="ThirdPartyID" value="${thirdParty.clientId}"
-								type="hidden" />
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h4>SERVICES</h4>
-								</div>
-								<div class="panel-body">
-									<table class="table table-striped table-hover">
-										<thead>
-											<tr>
-												<th></th>
-												<th>Address</th>
-												<th>Service Number</th>
-												<th>Billing Number</th>
-												<th>Meter</th>
-												<th>Status</th>
-											</tr>
-										</thead>
-										<!-- 
+						<c:choose>
+							<c:when test="${fn:length(usagePoints) gt 0}">
+								<form id="scopeselection" name="scopeselection"
+									action="<%=request.getContextPath()%>/RetailCustomer/ScopeSelectionList"
+									method="post">
+									<input name="ThirdPartyID" value="${thirdParty.clientId}"
+										type="hidden" />
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4>SERVICES</h4>
+										</div>
+										<div class="panel-body">
+											<table class="table table-striped table-hover">
+												<thead>
+													<tr>
+														<th></th>
+														<th>Address</th>
+														<th>Service Number</th>
+														<th>Billing Number</th>
+														<th>Meter</th>
+														<th>Status</th>
+													</tr>
+												</thead>
+												<!-- 
 											<tfoot>
 												<tr>
 													<td colspan=6><c:if test="${empty usagePointList}">
@@ -137,54 +139,72 @@
 												</tr>
 											</tfoot>
 											 -->
-										<tbody>
-											<c:forEach var="usagePoint" items="${usagePoints}">
-												<tr>
-													<td><input type="radio" class="checkbox"
-														name="usage_point" value="${usagePoint.id}" /></td>
-													<td><strong><c:out
-																value="${usagePoint.usagePointDetail.streetUnit}" /> <c:if
-																test="${not empty usagePoint.usagePointDetail.streetUnit}"> -
+												<tbody>
+													<c:forEach var="usagePoint" items="${usagePoints}">
+														<tr>
+															<td><input type="radio" class="checkbox"
+																name="usage_point" value="${usagePoint.id}" /></td>
+															<td><strong><c:out
+																		value="${usagePoint.usagePointDetail.streetUnit}" />
+																	<c:if
+																		test="${not empty usagePoint.usagePointDetail.streetUnit}"> -
 																	</c:if> <c:out
-																value="${usagePoint.usagePointDetail.streetNumber}" />
-															<c:out value="${usagePoint.usagePointDetail.streetName}" /></strong><br />
-														<c:out value="${usagePoint.usagePointDetail.streetCity}" /><br />
-														<c:out value="${usagePoint.usagePointDetail.postalCode}" />
-														<c:out
-															value="${usagePoint.usagePointDetail.streetProvince}" /></td>
-													<td><spring:message
-															code="service.name.${usagePoint.serviceCategory.kind}" /><br />
-														<c:out value="${usagePoint.usagePointDetail.serviceId}" /></td>
-													<td><c:out
-															value="${usagePoint.usagePointDetail.accountId}" /></td>
-													<td><c:out
-															value="${usagePoint.usagePointDetail.meterNumber}" /></td>
-													<td><c:choose>
-															<c:when
-																test="${usagePoint.usagePointDetail.status=='Active'}">
-																<span class="status-active"> <c:out
-																		value="${usagePoint.usagePointDetail.status}"
-																		default="-" />
-																</span>
-															</c:when>
-															<c:otherwise>
-																<span class="status-inactive"> Ended On <br /> <fmt:formatDate
-																		value="${usagePoint.usagePointDetail.endDate}"
-																		pattern="MMM dd, yyyy" /></span>
-															</c:otherwise>
-														</c:choose></td>
+																		value="${usagePoint.usagePointDetail.streetNumber}" />
+																	<c:out
+																		value="${usagePoint.usagePointDetail.streetName}" /></strong><br />
+																<c:out value="${usagePoint.usagePointDetail.streetCity}" /><br />
+																<c:out value="${usagePoint.usagePointDetail.postalCode}" />
+																<c:out
+																	value="${usagePoint.usagePointDetail.streetProvince}" /></td>
+															<td><spring:message
+																	code="service.name.${usagePoint.serviceCategory.kind}" /><br />
+																<c:out value="${usagePoint.usagePointDetail.serviceId}" /></td>
+															<td><c:out
+																	value="${usagePoint.usagePointDetail.accountId}" /></td>
+															<td><c:out
+																	value="${usagePoint.usagePointDetail.meterNumber}" /></td>
+															<td><c:choose>
+																	<c:when
+																		test="${usagePoint.usagePointDetail.status=='Active'}">
+																		<span class="status-active"> <c:out
+																				value="${usagePoint.usagePointDetail.status}"
+																				default="-" />
+																		</span>
+																	</c:when>
+																	<c:otherwise>
+																		<span class="status-inactive"> Ended On <br />
+																			<fmt:formatDate
+																				value="${usagePoint.usagePointDetail.endDate}"
+																				pattern="MMM dd, yyyy" /></span>
+																	</c:otherwise>
+																</c:choose></td>
 
 
-												</tr>
-											</c:forEach>
-										</tbody>
+														</tr>
+													</c:forEach>
+												</tbody>
 
-									</table>
-								</div>
-							</div>
-							<label> <input name="continue" value="Continue"
-								disabled="disabled" type="submit" class="btn btn-primary"></input></label>
-						</form>
+											</table>
+										</div>
+									</div>
+
+									<label> <input name="continue" value="Continue"
+										disabled="disabled" type="submit" class="btn btn-primary"></input></label>
+
+								</form>
+							</c:when>
+							<c:otherwise>
+							You are not able to authorize this third-party because
+							<ul>
+									<li>You have already authorize this third-party
+										application for other service. If you would like add more
+										services into that authorization please edit the
+										authorization.</li>
+									<li>Third-party supported does not support services that
+										currently you have. Please check for other application.</li>
+								</ul>
+							</c:otherwise>
+						</c:choose>
 
 					</div>
 					</section>

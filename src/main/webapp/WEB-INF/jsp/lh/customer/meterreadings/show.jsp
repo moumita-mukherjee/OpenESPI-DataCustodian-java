@@ -34,7 +34,7 @@
 	var plot=null;
 
 	//<![CDATA[
-	var powerOfTenMultiplier= ${meterReading.readingType.multiplier};
+	var powerOfTenMultiplier= 1000;
 	var _rawdata=[
 	<c:forEach var="intervalBlock" items="${meterReading.intervalBlocks}"
 		varStatus="loopStatusIb">
@@ -376,13 +376,13 @@
 													property="time" name="dateValue"
 													value="${dpb.prevUsagetimeMax*1000}" /> <a><strong><fmt:formatDate
 															value="${dateValue}" pattern="EEEE MMM dd, yyyy"
-															timeZone="EST5EDT" /> </strong> <c:if test="${dpb.period gt 1}">
+															timeZone="EST" /> </strong> <c:if test="${dpb.period gt 1}">
 														<span> - </span>
 														<jsp:setProperty property="time" name="dateValue"
 															value="${dpb.nextUsagetimeMin*1000}" />
 														<a><strong><fmt:formatDate
 																	value="${dateValue}" pattern="EEEE MMM dd, yyyy"
-																	timeZone="EST5EDT" />
+																	timeZone="EST" />
 													</c:if></a>
 											</label>
 										</div>
@@ -448,7 +448,7 @@
 																					name="dateValue"
 																					value="${intervalBlock.interval.start*1000}" /> <fmt:formatDate
 																					value="${dateValue}" pattern="MMM dd, yyyy"
-																					timeZone="EST5EDT" /></td>
+																					timeZone="EST" /></td>
 																			<td><dur:duration
 																					value="${intervalBlock.interval.duration*1000}"
 																					format="2" /></td>
@@ -456,10 +456,10 @@
 																			<td></td>
 																			<td><fmt:formatDate
 																					value="${intervalBlock.published.time}"
-																					pattern="MMM dd, yyyy HH:mm z" timeZone="EST5EDT" /></td>
+																					pattern="MMM dd, yyyy HH:mm z" timeZone="EST" /></td>
 																			<td><fmt:formatDate
 																					value="${intervalBlock.updated.time}"
-																					pattern="MMM dd, yyyy HH:mm z" timeZone="EST5EDT" /></td>
+																					pattern="MMM dd, yyyy HH:mm z" timeZone="EST" /></td>
 																		</tr>
 																	</tbody>
 																</table>
@@ -487,12 +487,12 @@
 																							name="dateValue2"
 																							value="${intervalReading.timePeriod.start*1000}" />
 																						<fmt:formatDate value="${dateValue2}"
-																							pattern="MMM dd, yyyy HH:mm z" timeZone="EST5EDT" /></td>
+																							pattern="MMM dd, yyyy HH:mm z" timeZone="EST" /></td>
 																					<td><dur:duration
 																							value="${intervalReading.timePeriod.duration*1000}"
 																							format="2" /></td>
 																					<td><c:out
-																							value="${intervalReading.value/meterReading.readingType.multiplier}" /></td>
+																							value="${intervalReading.value/1000}" /></td>
 																					<td><c:out value="${intervalReading.cost}"
 																							default="-" /></td>
 

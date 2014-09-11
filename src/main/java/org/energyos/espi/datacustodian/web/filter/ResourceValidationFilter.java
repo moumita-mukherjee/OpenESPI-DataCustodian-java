@@ -76,7 +76,7 @@ public class ResourceValidationFilter implements Filter {
 		if (authentication != null) {
 			roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 		} else {
-			System.err.printf("ResourceValidationFilter: doFilter - Access Not Authorized\n");
+			System.err.println("1 ResourceValidationFilter: doFilter - Access Not Authorized:"+request.getHeader("authorization"));
 			throw new AccessDeniedException(String.format("Access Not Authorized"));
 
 		}
@@ -122,7 +122,7 @@ public class ResourceValidationFilter implements Filter {
 							subscription = authorizationFromToken.getSubscription();
 						} else {
 							// authorization not valid now
-							System.err.printf("ResourceValidationFilter: doFilter - Access Not Authorized\n");
+							System.err.printf("2 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 							throw new AccessDeniedException(String.format("Access Not Authorized"));
 
 						}
@@ -234,7 +234,7 @@ public class ResourceValidationFilter implements Filter {
 						invalid = false;
 					} else {
 						// not authorized for this resource
-						System.err.printf("ResourceValidationFilter: doFilter - Access Not Authorized\n");
+						System.err.printf("3 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 						throw new AccessDeniedException(String.format("Access Not Authorized"));
 					}
 				}
@@ -245,7 +245,7 @@ public class ResourceValidationFilter implements Filter {
 						invalid = false;
 					} else {
 						// not authorized for this resource
-						System.err.printf("ResourceValidationFilter: doFilter - Access Not Authorized\n");
+						System.err.printf("4 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 						throw new AccessDeniedException(String.format("Access Not Authorized"));
 					}
 				}
@@ -297,13 +297,18 @@ public class ResourceValidationFilter implements Filter {
 							if (authorizationId != null) {
 								// it is specific ID, see if it authorization
 								// for this third party
+								
 								Authorization requestedAuthorization = authorizationService.findById(authorizationId);
-								if (requestedAuthorization.getApplicationInformation().getId() == authorizationFromToken
-										.getApplicationInformation().getId()) {
+								
+								System.err.println("authorizationId "+authorizationId);
+								System.err.println("requestedAuthorization.getApplicationInformation().getId() "+requestedAuthorization.getApplicationInformation().getId());
+								System.err.println("authorizationFromToken.getApplicationInformation().getId() "+authorizationFromToken.getApplicationInformation().getId());
+								if (requestedAuthorization.getApplicationInformation().getId().equals(authorizationFromToken
+										.getApplicationInformation().getId())) {
 									invalid = false;
 								} else {
 									// not authorized for this resource
-									System.err.printf("ResourceValidationFilter: doFilter - Access Not Authorized\n");
+									System.err.printf("6 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 									throw new AccessDeniedException(String.format("Access Not Authorized"));
 								}
 							} else {
@@ -313,7 +318,7 @@ public class ResourceValidationFilter implements Filter {
 									invalid = false;
 								} else {
 									// not authorized for this resource
-									System.err.printf("ResourceValidationFilter: doFilter - Access Not Authorized\n");
+									System.err.printf("7 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 									throw new AccessDeniedException(String.format("Access Not Authorized"));
 								}
 							}
@@ -326,7 +331,7 @@ public class ResourceValidationFilter implements Filter {
 						invalid = false;
 					} else {
 						// not authorized for this resource
-						System.err.printf("ResourceValidationFilter: doFilter - Access Not Authorized\n");
+						System.err.printf("8 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 						throw new AccessDeniedException(String.format("Access Not Authorized"));
 					}
 				}
@@ -353,7 +358,7 @@ public class ResourceValidationFilter implements Filter {
 						invalid = false;
 					} else {
 						// not authorized for this resource
-						System.err.printf("ResourceValidationFilter: doFilter - Access Not Authorized\n");
+						System.err.printf("9 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 						throw new AccessDeniedException(String.format("Access Not Authorized"));
 					}
 				}
@@ -367,7 +372,7 @@ public class ResourceValidationFilter implements Filter {
 						invalid = false;
 					} else {
 						// not authorized for this resource
-						System.err.printf("ResourceValidationFilter: doFilter - Access Not Authorized\n");
+						System.err.printf("10 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 						throw new AccessDeniedException(String.format("Access Not Authorized"));
 					}
 				}
@@ -394,13 +399,13 @@ public class ResourceValidationFilter implements Filter {
 							invalid = false;
 						} else {
 							// not authorized for this resource
-							System.err.printf("ResourceValidationFilter: doFilter - Access Not Authorized\n");
+							System.err.printf("11 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 							throw new AccessDeniedException(String.format("Access Not Authorized"));
 						}
 					}
 				} else {
 					// not authorized for this resource
-					System.err.printf("ResourceValidationFilter: doFilter - Access Not Authorized\n");
+					System.err.printf("12 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 					throw new AccessDeniedException(String.format("Access Not Authorized"));
 				}
 
@@ -410,7 +415,7 @@ public class ResourceValidationFilter implements Filter {
 						invalid = false;
 					} else {
 						// not authorized for this resource
-						System.err.printf("ResourceValidationFilter: doFilter - Access Not Authorized\n");
+						System.err.printf("13 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 						throw new AccessDeniedException(String.format("Access Not Authorized"));
 					}
 				}
@@ -426,7 +431,7 @@ public class ResourceValidationFilter implements Filter {
 
 		if (invalid) {
 			// not authorized for this resource
-			System.err.printf("ResourceValidationFilter: doFilter - Access Not Authorized\n");
+			System.err.printf("14 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 			throw new AccessDeniedException(String.format("Access Not Authorized"));
 		}
 

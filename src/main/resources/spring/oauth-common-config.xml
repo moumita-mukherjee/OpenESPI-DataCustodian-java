@@ -34,8 +34,11 @@
 		<property name="username" value="${oauth.jdbc.username}" />
 		<property name="password" value="${oauth.jdbc.password}" />
 		<property name="initialSize" value="1" />
-		<property name="maxActive" value="2" />
+		<property name="maxActive" value="3" />
 		<property name="maxIdle" value="1" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="true" />
+		<property name="validationQuery" value="select 1" />
 	</bean>
 
 

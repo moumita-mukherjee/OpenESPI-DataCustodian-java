@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%--
   ~ Copyright 2013 EnergyOS.org
   ~
@@ -127,7 +128,8 @@
 										<th>Billing Number</th>
 										<th>Service</th>
 										<th>Meter</th>
-										<th>Status</th>
+										<th>Service Status</th>
+										<th>Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -165,11 +167,73 @@
 																pattern="MMM dd, yyyy" /></span>
 													</c:otherwise>
 												</c:choose></td>
-
+											<td><c:if
+													test="${authorization.status==1 and fn:length(authorization.subscription.usagePoints) gt 1}">
+													<a
+														href="<c:url value='/RetailCustomer/${currentCustomer.id}/AuthorizedThirdParties/${authorization.id}/UsagePoint/${usagePoint.id}/delete'/>">REVOME</a>
+												</c:if></td>
 										</tr>
 									</c:forEach>
 								</tbody>
 							</table>
+							<c:if test="${fn:length(usagePoints) gt 0}">
+									<p>Below are the list of services which is not included in the authorization. If you would like to include in the authorize, please click on "ADD" button.</p>									
+									<table class="table table-striped" id="authorizations">
+
+										<thead>
+											<tr>
+												<th>Address</th>
+												<th>Billing Number</th>
+												<th>Service</th>
+												<th>Meter</th>
+												<th>Service Status</th>
+												<th>Action</th>
+											</tr>
+										</thead>
+										<tbody>
+											<c:forEach var="usagePoint" items="${usagePoints}">
+												<tr>
+													<td><strong><c:out
+																value="${usagePoint.usagePointDetail.streetUnit}" /> <c:if
+																test="${not empty usagePoint.usagePointDetail.streetUnit}"> - </c:if>
+															<c:out
+																value="${usagePoint.usagePointDetail.streetNumber}" />
+															<c:out value="${usagePoint.usagePointDetail.streetName}" /></strong><br />
+														<c:out value="${usagePoint.usagePointDetail.streetCity}" />
+														<br /> <c:out
+															value="${usagePoint.usagePointDetail.postalCode}" /> <c:out
+															value="${usagePoint.usagePointDetail.streetProvince}" /></td>
+													<td><c:out
+															value="${usagePoint.usagePointDetail.accountId}" /></td>
+													<td><spring:message
+															code="service.name.${usagePoint.serviceCategory.kind}" /><br />
+														<c:out value="${usagePoint.usagePointDetail.serviceId}" /></td>
+													<td><c:out
+															value="${usagePoint.usagePointDetail.meterNumber}" /></td>
+
+													<td><c:choose>
+															<c:when
+																test="${usagePoint.usagePointDetail.status=='Active'}">
+																<span class="status-active"> <c:out
+																		value="${usagePoint.usagePointDetail.status}"
+																		default="-" />
+																</span>
+															</c:when>
+															<c:otherwise>
+																<span class="status-inactive"> Ended On <br /> <fmt:formatDate
+																		value="${usagePoint.usagePointDetail.endDate}"
+																		pattern="MMM dd, yyyy" /></span>
+															</c:otherwise>
+														</c:choose></td>
+													<td><a
+														href="<c:url value='/RetailCustomer/${currentCustomer.id}/AuthorizedThirdParties/${authorization.id}/UsagePoint/${usagePoint.id}/add'/>">ADD</a></td>
+												</tr>
+											</c:forEach>
+										</tbody>
+									</table>
+								
+							</c:if>
+
 							<hr />
 							<p align="right">
 								<a class="btn btn-primary"

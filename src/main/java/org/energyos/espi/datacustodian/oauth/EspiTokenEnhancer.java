@@ -243,8 +243,8 @@ public class EspiTokenEnhancer implements TokenEnhancer {
 					Iterator<Long> it = usagePointIds.iterator();
 					while (it.hasNext()) {
 						UsagePoint up = resourceService.findById(it.next(), UsagePoint.class);
-						up.setSubscription(subscription);
-						resourceService.persist(up); // maybe not needed??
+						//DJ up.setSubscription(subscription);
+						//DJ resourceService.persist(up); // maybe not needed??
 					}
 				}
 

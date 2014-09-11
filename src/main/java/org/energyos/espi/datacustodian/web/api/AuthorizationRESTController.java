@@ -31,7 +31,7 @@ import org.energyos.espi.common.utils.ExportFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,6 +60,9 @@ public class AuthorizationRESTController {
 
 	@Autowired
 	private ResourceService resourceService;
+	
+	@Autowired
+	private DefaultTokenServices tokenService;
 
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -127,21 +130,15 @@ public class AuthorizationRESTController {
 	public void delete(HttpServletResponse response, @PathVariable Long authorizationId,
 			@RequestParam Map<String, String> params, InputStream stream) throws IOException, FeedException {
 		try {
-			Authorization authorization = (Authorization) resourceService
-					.findById(authorizationId, Authorization.class);
-			if (authorization != null) {
-				// delink for subscription
-				if (authorization.getSubscription() != null) {
-					authorization.getSubscription().setAuthorization(null);
-					authorization.setSubscription(null);
-					// subscriptionService.persist(authorization.getSubscription());
-					authorizationService.persist(authorization);
-				}
-				authorizationService.delete(authorization);
-			}
-			// resourceService.deleteById(authorizationId, Authorization.class);
+			Authorization authorization = authorizationService.findById(authorizationId);
+			String accessToken = authorization.getAccessToken();
+			
+			authorizationService.delete(authorization);
+			tokenService.revokeToken(accessToken);
+			//authorizationService.delete(authorization);
+			
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(System.err);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
 	}
@@ -251,6 +248,11 @@ public class AuthorizationRESTController {
 	public ResourceService getResourceService() {
 		return this.resourceService;
 	}
-
+	public DefaultTokenServices getTokenService() {
+		return this.tokenService;
+	}	
+	public void setTokenService(DefaultTokenServices tokenService) {
+		this.tokenService = tokenService;
+	}
 
 }
