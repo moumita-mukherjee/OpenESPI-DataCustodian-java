@@ -164,20 +164,20 @@ table.bor td {
 
 															<td><jsp:setProperty property="time"
 																	name="dateValue"
-																	value="${authorization.authorizedPeriod.start}" /> <fmt:formatDate
-																	value="${dateValue}" pattern="MMM dd, yyyy" /></td>
+																	value="${authorization.authorizedPeriod.start*1000}" /> <fmt:formatDate
+																	value="${dateValue}" pattern="MMM dd, yyyy" timeZone="EST"/></td>
 															<td><jsp:setProperty property="time"
 																	name="dateValue"
-																	value="${authorization.authorizedPeriod.start+authorization.authorizedPeriod.duration}" /><c:choose>
+																	value="${authorization.authorizedPeriod.start*1000+authorization.authorizedPeriod.duration*1000}" /><c:choose>
 																	<c:when test="${authorization.status==1}">
 																		<span class="status-active"> <fmt:formatDate
-																				value="${dateValue}" pattern="MMM dd, yyyy" />
+																				value="${dateValue}" pattern="MMM dd, yyyy"  timeZone="EST"/>
 																		</span>
 																	</c:when>
 																	<c:otherwise>
 																		<span class="status-inactive"> Revoked <br />
 																			<fmt:formatDate value="${dateValue}"
-																				pattern="MMM dd, yyyy" /></span>
+																				pattern="MMM dd, yyyy"  timeZone="EST"/></span>
 																	</c:otherwise>
 																</c:choose></td>
 															<td><c:if test="${authorization.status==1}">
@@ -253,7 +253,7 @@ table.bor td {
 																					<span class="status-inactive"> Ended on <br />
 																						<fmt:formatDate
 																							value="${usagePoint.usagePointDetail.endDate}"
-																							pattern="MMM dd, yyyy" /></span>
+																							pattern="MMM dd, yyyy"  timeZone="EST"/></span>
 																				</c:otherwise>
 																			</c:choose>
 																		</dd>
@@ -303,23 +303,23 @@ table.bor td {
 																								test="${subscription.authorization.authorizedPeriod!=null && subscription.authorization.authorizedPeriod.start!=null}">
 																								<jsp:setProperty property="time"
 																									name="dateValue"
-																									value="${subscription.authorization.authorizedPeriod.start}" />
+																									value="${subscription.authorization.authorizedPeriod.start*1000}" />
 																								<fmt:formatDate value="${dateValue}"
-																									pattern="MMM dd, yyyy" />
+																									pattern="MMM dd, yyyy"  timeZone="EST"/>
 																							</c:if></td>
 																						<td><jsp:setProperty property="time"
 																								name="dateValue"
-																								value="${subscription.authorization.authorizedPeriod.start+subscription.authorization.authorizedPeriod.duration}" /><c:choose>
+																								value="${subscription.authorization.authorizedPeriod.start*1000+subscription.authorization.authorizedPeriod.duration*1000}" /><c:choose>
 																								<c:when
 																									test="${subscription.authorization.status==1}">
 																									<span class="status-active"> <fmt:formatDate
-																											value="${dateValue}" pattern="MMM dd, yyyy" />
+																											value="${dateValue}" pattern="MMM dd, yyyy"  timeZone="EST"/>
 																									</span>
 																								</c:when>
 																								<c:otherwise>
 																									<span class="status-inactive"> Revoked <br />
 																										<fmt:formatDate value="${dateValue}"
-																											pattern="MMM dd, yyyy" />
+																											pattern="MMM dd, yyyy"  timeZone="EST"/>
 																									</span>
 																								</c:otherwise>
 																							</c:choose></td>
@@ -455,23 +455,23 @@ table.bor td {
 																									test="${subscription.authorization.authorizedPeriod!=null && subscription.authorization.authorizedPeriod.start!=null}">
 																									<jsp:setProperty property="time"
 																										name="dateValue"
-																										value="${subscription.authorization.authorizedPeriod.start}" />
+																										value="${subscription.authorization.authorizedPeriod.start*1000}" />
 																									<fmt:formatDate value="${dateValue}"
-																										pattern="MMM dd, yyyy" />
+																										pattern="MMM dd, yyyy"  timeZone="EST"/>
 																								</c:if></td>
 																							<td><jsp:setProperty property="time"
 																									name="dateValue"
-																									value="${subscription.authorization.authorizedPeriod.start+subscription.authorization.authorizedPeriod.duration}" /><c:choose>
+																									value="${subscription.authorization.authorizedPeriod.start*1000+subscription.authorization.authorizedPeriod.duration*1000}" /><c:choose>
 																									<c:when
 																										test="${subscription.authorization.status==1}">
 																										<span class="status-active"> <fmt:formatDate
-																												value="${dateValue}" pattern="MMM dd, yyyy" />
+																												value="${dateValue}" pattern="MMM dd, yyyy"  timeZone="EST"/>
 																										</span>
 																									</c:when>
 																									<c:otherwise>
 																										<span class="status-inactive"> Revoked
 																											<br /> <fmt:formatDate value="${dateValue}"
-																												pattern="MMM dd, yyyy" />
+																												pattern="MMM dd, yyyy"  timeZone="EST"/>
 																										</span>
 																									</c:otherwise>
 																								</c:choose></td>
@@ -589,7 +589,7 @@ table.bor td {
 																	property="time" name="dateValue"
 																	value="${applicationInformation.published.time.time}" />
 																<span class="lable-note"> Since</span> <fmt:formatDate
-																	value="${dateValue}" pattern="MMM dd, yyyy" /></span> <br />
+																	value="${dateValue}" pattern="MMM dd, yyyy"  timeZone="EST"/></span> <br />
 															<span class="nowrap"> <span class="rating-input" app_id="${applicationInformation.id}" app_type="average">
 																						<input type="number" class="rating" id="ratingValue" name="test" data-min="1" data-max="5" data-value="0" data-disabled="true">
 																						</span>

@@ -91,7 +91,7 @@ public class MeterReadingRESTController {
 	@RequestMapping(value = Routes.ROOT_METER_READING_COLLECTION, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
 	public void index(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, String> params)
-			throws IOException, FeedException {
+			throws IOException, FeedException, Exception {
 
 		Long subscriptionId = getSubscriptionId(request);
 
@@ -185,7 +185,7 @@ public class MeterReadingRESTController {
 	@RequestMapping(value = Routes.METER_READING_COLLECTION, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
 	public void index(HttpServletResponse response, @PathVariable Long subscriptionId, @PathVariable Long usagePointId,
-			@RequestParam Map<String, String> params) throws IOException, FeedException {
+			@RequestParam Map<String, String> params) throws IOException, FeedException, Exception {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		Subscription subscription = subscriptionService.findById(subscriptionId);

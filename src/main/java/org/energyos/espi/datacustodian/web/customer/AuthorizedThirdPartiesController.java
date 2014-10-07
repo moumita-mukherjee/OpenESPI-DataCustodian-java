@@ -3,10 +3,12 @@ package org.energyos.espi.datacustodian.web.customer;
 import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.energyos.espi.common.domain.ApplicationInformation;
 import org.energyos.espi.common.domain.Authorization;
 import org.energyos.espi.common.domain.DateTimeInterval;
 import org.energyos.espi.common.domain.Routes;
@@ -20,6 +22,7 @@ import org.energyos.espi.datacustodian.web.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -71,7 +74,7 @@ public class AuthorizedThirdPartiesController extends BaseController {
 		model.put("authorization", authorization);
 
 		List<UsagePoint> usagePoints = usagePointService.findAllByRetailCustomer(currentCustomer(principal).getId());
-		removeFromList(usagePoints, authorization.getSubscription().getUsagePoints());
+		removeFromList(authorization.getApplicationInformation(),usagePoints, authorization.getSubscription().getUsagePoints());
 		populateExternalDetail(currentUser(principal).getCustomerId(), usagePoints);
 		model.put("usagePoints", usagePoints);
 
@@ -109,7 +112,7 @@ public class AuthorizedThirdPartiesController extends BaseController {
 		model.put("authorization", authorization);
 
 		List<UsagePoint> usagePoints = usagePointService.findAllByRetailCustomer(currentCustomer(principal).getId());
-		removeFromList(usagePoints, authorization.getSubscription().getUsagePoints());
+		removeFromList(authorization.getApplicationInformation(),usagePoints, authorization.getSubscription().getUsagePoints());
 		populateExternalDetail(currentUser(principal).getCustomerId(), usagePoints);
 		model.put("usagePoints", usagePoints);
 		return "/customer/authorizedThirdParties/show";
@@ -125,7 +128,8 @@ public class AuthorizedThirdPartiesController extends BaseController {
 		UsagePoint usagePoint = usagePointService.findById(retailCustomerId, usagePointId);
 
 		if (authorization.getSubscription() != null) {
-			authorization.getSubscription().getUsagePoints().add(usagePoint);
+			authorization.getSubscription().setUpdated(new GregorianCalendar());
+			authorization.getSubscription().getUsagePoints().add(usagePoint);			
 
 			subscriptionService.merge(authorization.getSubscription());
 
@@ -135,7 +139,7 @@ public class AuthorizedThirdPartiesController extends BaseController {
 		model.put("authorization", authorization);
 
 		List<UsagePoint> usagePoints = usagePointService.findAllByRetailCustomer(currentCustomer(principal).getId());
-		removeFromList(usagePoints, authorization.getSubscription().getUsagePoints());
+		removeFromList(authorization.getApplicationInformation(),usagePoints, authorization.getSubscription().getUsagePoints());
 		populateExternalDetail(currentUser(principal).getCustomerId(), usagePoints);
 		model.put("usagePoints", usagePoints);
 
@@ -153,18 +157,27 @@ public class AuthorizedThirdPartiesController extends BaseController {
 		Authorization authorization = authorizationService.findById(retailCustomerId, authorizationId);
 
 		if (revoke != null && !"".equals(revoke)) {
-			boolean bStatus = defaultTokenServices.revokeToken(authorization.getAccessToken());
+			boolean bStatus=false;		
+			OAuth2AccessToken token= defaultTokenServices.readAccessToken(authorization.getAccessToken());
+			System.err.println(" token "+token);
+			if(token!=null) {
+				bStatus = defaultTokenServices.revokeToken(authorization.getAccessToken());
+			}else  {
+				bStatus=true;
+			}			
 			if (bStatus) {
 				authorization.setStatus("0");
+				authorization.setUpdated(new GregorianCalendar());
 				authorizationService.merge(authorization);
 			}
 		} else {
 			try {
-				Date newdate = sdf.parse(authorizationEndDate);
-				newdate.setHours(23);
-				newdate.setMinutes(59);
-				newdate.setSeconds(59);
-				long duration = newdate.getTime() - authorization.getAuthorizedPeriod().getStart();
+				long daysec=24 * 3600l;
+				long estoffsetsec=5*3600l;
+				long minutesec=60l;
+				Date newdate = sdf.parse(authorizationEndDate);		
+				long newenddate=(newdate.getTime()/(1000*daysec))*daysec +estoffsetsec;
+				long duration=newenddate-authorization.getAuthorizedPeriod().getStart()+daysec-minutesec;
 				if (duration > 0) {
 					DateTimeInterval dt = new DateTimeInterval();
 					dt.setStart(authorization.getAuthorizedPeriod().getStart());
@@ -184,16 +197,23 @@ public class AuthorizedThirdPartiesController extends BaseController {
 		model.put("authorization", authorization);
 
 		List<UsagePoint> usagePoints = usagePointService.findAllByRetailCustomer(currentCustomer(principal).getId());
-		removeFromList(usagePoints, authorization.getSubscription().getUsagePoints());
+		removeFromList(authorization.getApplicationInformation(), usagePoints, authorization.getSubscription().getUsagePoints());
 		populateExternalDetail(currentUser(principal).getCustomerId(), usagePoints);
 		model.put("usagePoints", usagePoints);
 		return "/customer/authorizedThirdParties/show";
 	}
 
-	private void removeFromList(List<UsagePoint> usagePoints, List<UsagePoint> usagePoints2) {
+	private void removeFromList(ApplicationInformation thirdParty,List<UsagePoint> usagePoints, List<UsagePoint> authorzedUsagePoints) {						
+		//filter based on the scope
 		for (int i = usagePoints.size() - 1; i >= 0; i--) {
-			for (int j = usagePoints2.size() - 1; j >= 0; j--) {
-				if (usagePoints.get(i).getId().equals(usagePoints2.get(j).getId())) {
+			if(!usagePoints.get(i).isCompatibleWithScope(thirdParty.getScopeArray())) {
+				usagePoints.remove(i);
+			}
+		}
+		//exclude all authorized one
+		for (int i = usagePoints.size() - 1; i >= 0; i--) {
+			for (int j = authorzedUsagePoints.size() - 1; j >= 0; j--) {
+				if (usagePoints.get(i).getId().equals(authorzedUsagePoints.get(j).getId())) {
 					usagePoints.remove(i);
 					break;
 				}

@@ -190,7 +190,7 @@
 																	<span class="status-inactive"> Ended On <br />
 																		<fmt:formatDate
 																			value="${oneselectedUsagePoint.usagePointDetail.endDate}"
-																			pattern="MMM dd, yyyy" /></span>
+																			pattern="MMM dd, yyyy" timeZone="EST"/></span>
 																</c:otherwise>
 															</c:choose>
 														</dd>
@@ -265,7 +265,7 @@
 															<c:otherwise>
 																<span class="status-inactive"> Ended On <br /> <fmt:formatDate
 																		value="${selectedUsagePoint.usagePointDetail.endDate}"
-																		pattern="MMM dd, yyyy" /></span>
+																		pattern="MMM dd, yyyy" timeZone="EST"/></span>
 															</c:otherwise>
 														</c:choose>
 													</dd>
@@ -390,7 +390,7 @@
 											<div class="input-append date input-group"
 												style="width: 210px" id="dp3">
 												<input class="datepicker form-control" size="16"
-													type="text" name="iauthorizationEndDate" /> <span
+													type="text" name="authorizationEndDate" /> <span
 													class="input-group-addon add-on"> <i
 													data-time-icon="icon-time" data-date-icon="icon-calendar"><span
 														class="glyphicon glyphicon-calendar"></span></i>

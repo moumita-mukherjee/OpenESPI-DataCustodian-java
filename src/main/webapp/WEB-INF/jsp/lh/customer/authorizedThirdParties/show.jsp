@@ -87,17 +87,17 @@
 								<dt>Valid From:</dt>
 								<dd>
 									<jsp:setProperty property="time" name="dateValue"
-										value="${authorization.authorizedPeriod.start}" />
-									<fmt:formatDate value="${dateValue}" pattern="MMM dd, yyyy" />
+										value="${authorization.authorizedPeriod.start*1000}" />
+									<fmt:formatDate value="${dateValue}" pattern="MMM dd, yyyy" timeZone="EST"/>
 								</dd>
 								<dt>Valid Until:</dt>
 								<dd>
 									<jsp:setProperty property="time" name="dateValue"
-										value="${authorization.authorizedPeriod.start+authorization.authorizedPeriod.duration}" />
+										value="${authorization.authorizedPeriod.start*1000+authorization.authorizedPeriod.duration*1000}" />
 									<c:choose>
 										<c:when test="${authorization.status==0}">
 											<span class="status-inactive"> Revoked <br /> <fmt:formatDate
-													value="${dateValue}" pattern="MMM dd, yyyy" /></span>
+													value="${dateValue}" pattern="MMM dd, yyyy" timeZone="EST"/></span>
 
 										</c:when>
 										<c:when test="${authorization.status==1}">
@@ -105,7 +105,7 @@
 												style="width: 210px">
 												<input class="datepicker form-control" size="16" type="text"
 													name="authorization_end_date"
-													value='<fmt:formatDate value="${dateValue}" pattern="MMM dd, yyyy" />' />
+													value='<fmt:formatDate value="${dateValue}" pattern="MMM dd, yyyy" timeZone="EST"/>' />
 												<span class="input-group-addon add-on"> <i
 													data-time-icon="icon-time" data-date-icon="icon-calendar"><span
 														class="glyphicon glyphicon-calendar"></span></i>
@@ -164,20 +164,20 @@
 													<c:otherwise>
 														<span class="status-inactive"> Ended On <br /> <fmt:formatDate
 																value="${usagePoint.usagePointDetail.endDate}"
-																pattern="MMM dd, yyyy" /></span>
+																pattern="MMM dd, yyyy" timeZone="EST"/></span>
 													</c:otherwise>
 												</c:choose></td>
 											<td><c:if
 													test="${authorization.status==1 and fn:length(authorization.subscription.usagePoints) gt 1}">
 													<a
-														href="<c:url value='/RetailCustomer/${currentCustomer.id}/AuthorizedThirdParties/${authorization.id}/UsagePoint/${usagePoint.id}/delete'/>">REVOME</a>
+														href="<c:url value='/RetailCustomer/${currentCustomer.id}/AuthorizedThirdParties/${authorization.id}/UsagePoint/${usagePoint.id}/delete'/>">REMOVE</a>
 												</c:if></td>
 										</tr>
 									</c:forEach>
 								</tbody>
 							</table>
 							<c:if test="${fn:length(usagePoints) gt 0}">
-									<p>Below are the list of services which is not included in the authorization. If you would like to include in the authorize, please click on "ADD" button.</p>									
+									<p> Below is the list of services that are not included in the authorization. If you would like to authorize these services, please click on the "Add" button located under the Action heading.</p>									
 									<table class="table table-striped" id="authorizations">
 
 										<thead>
@@ -222,7 +222,7 @@
 															<c:otherwise>
 																<span class="status-inactive"> Ended On <br /> <fmt:formatDate
 																		value="${usagePoint.usagePointDetail.endDate}"
-																		pattern="MMM dd, yyyy" /></span>
+																		pattern="MMM dd, yyyy" timeZone="EST"/></span>
 															</c:otherwise>
 														</c:choose></td>
 													<td><a

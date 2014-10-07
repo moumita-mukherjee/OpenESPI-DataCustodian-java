@@ -90,7 +90,7 @@ public class IntervalBlockRESTController {
 	@RequestMapping(value = Routes.ROOT_INTERVAL_BLOCK_COLLECTION, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
 	public void index(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, String> params)
-			throws IOException, FeedException {
+			throws IOException, FeedException,Exception {
 
 		Long subscriptionId = getSubscriptionId(request);
 
@@ -178,7 +178,7 @@ public class IntervalBlockRESTController {
 	@ResponseBody
 	public void index(HttpServletResponse response, @PathVariable Long subscriptionId, @PathVariable Long usagePointId,
 			@PathVariable Long meterReadingId, @RequestParam Map<String, String> params) throws IOException,
-			FeedException {
+			FeedException,Exception {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 

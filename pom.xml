@@ -203,6 +203,101 @@
 			</dependencies>
 		</profile>
 		<profile>
+			<id>googlecloudtestlab</id>
+			<properties>
+				<datacustodian.base.url>https://greenbutton-testlab-prod.appspot.com</datacustodian.base.url>
+				<appengine.application.name>greenbutton-testlab-prod</appengine.application.name>
+				<appengine.application.module>default</appengine.application.module>
+				<appengine.application.version>1</appengine.application.version>
+				<profile>googlecloudtestlab</profile>
+				<spring.profile>authserver</spring.profile>
+				<database>googlecloudtestlab</database>
+				<hbm2ddl_auto>none</hbm2ddl_auto>
+				<ga_code>UA-52133006-1</ga_code>
+				<appengine.target.version>1.9.7</appengine.target.version>
+				<api.base.url>https://lh-myaccount-qa.appspot.com</api.base.url>
+				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<excludedfiles>**/*.none</excludedfiles>
+			</properties>
+			<dependencies>
+				<!-- Compile/runtime dependencies -->
+
+
+				<dependency>
+					<groupId>org.datanucleus</groupId>
+					<artifactId>datanucleus-api-jpa</artifactId>
+					<version>3.1.1</version>
+				</dependency>
+				<dependency>
+					<groupId>org.datanucleus</groupId>
+					<artifactId>datanucleus-core</artifactId>
+					<version>3.1.1</version>
+				</dependency>
+				<dependency>
+					<groupId>com.google.appengine.orm</groupId>
+					<artifactId>datanucleus-appengine</artifactId>
+					<version>2.1.2</version>
+					<!-- Need to exclude the enhancer since it interfere with the enhancer 
+						plugin. -->
+					<exclusions>
+						<exclusion>
+							<groupId>org.datanucleus</groupId>
+							<artifactId>datanucleus-enhancer</artifactId>
+						</exclusion>
+					</exclusions>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>googlecloudtestlab-resource</id>
+			<properties>
+				<datacustodian.base.url>https://greenbutton-testlab-prod.appspot.com</datacustodian.base.url>
+				<appengine.application.name>greenbutton-testlab-prod</appengine.application.name>
+				<appengine.application.module>api</appengine.application.module>
+				<appengine.application.version>1</appengine.application.version>
+				<profile>googlecloudtestlab</profile>
+				<spring.profile>resourceserver</spring.profile>
+				<database>googleclouddev</database>
+				<hbm2ddl_auto>none</hbm2ddl_auto>
+				<ga_code>UA-52133006-1</ga_code>
+				<appengine.target.version>1.9.7</appengine.target.version>
+				<api.base.url>https://lh-myaccount-dev.appspot.com</api.base.url>
+				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
+			</properties>
+			<dependencies>
+				<!-- Compile/runtime dependencies -->
+				<dependency>
+					<groupId>com.google.appengine</groupId>
+					<artifactId>appengine-api-1.0-sdk</artifactId>
+					<version>${appengine.target.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.datanucleus</groupId>
+					<artifactId>datanucleus-api-jpa</artifactId>
+					<version>3.1.1</version>
+				</dependency>
+				<dependency>
+					<groupId>org.datanucleus</groupId>
+					<artifactId>datanucleus-core</artifactId>
+					<version>3.1.1</version>
+				</dependency>
+				<dependency>
+					<groupId>com.google.appengine.orm</groupId>
+					<artifactId>datanucleus-appengine</artifactId>
+					<version>2.1.2</version>
+					<!-- Need to exclude the enhancer since it interfere with the enhancer 
+						plugin. -->
+					<exclusions>
+						<exclusion>
+							<groupId>org.datanucleus</groupId>
+							<artifactId>datanucleus-enhancer</artifactId>
+						</exclusion>
+					</exclusions>
+				</dependency>
+			</dependencies>
+		</profile>		
+		<profile>
 			<id>googlecloudqa</id>
 			<properties>
 				<datacustodian.base.url>https://londonhydro-espi-qa.appspot.com</datacustodian.base.url>

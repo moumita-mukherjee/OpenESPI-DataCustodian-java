@@ -74,7 +74,7 @@ public class AuthorizationRESTController {
 	@RequestMapping(value = Routes.ROOT_AUTHORIZATION_COLLECTION, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
 	public void index(HttpServletResponse response, @RequestParam Map<String, String> params) throws IOException,
-			FeedException {
+			FeedException,Exception {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		exportService.exportAuthorizations(response.getOutputStream(), new ExportFilter(params));
@@ -148,7 +148,7 @@ public class AuthorizationRESTController {
 	@RequestMapping(value = Routes.AUTHORIZATION_COLLECTION, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
 	public void index(HttpServletResponse response, @PathVariable Long retailCustomerId,
-			@RequestParam Map<String, String> params) throws IOException, FeedException {
+			@RequestParam Map<String, String> params) throws IOException, FeedException,Exception {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		exportService.exportAuthorizations(retailCustomerId, response.getOutputStream(), new ExportFilter(params));

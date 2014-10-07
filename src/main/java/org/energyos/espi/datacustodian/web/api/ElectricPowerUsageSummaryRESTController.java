@@ -82,7 +82,7 @@ public class ElectricPowerUsageSummaryRESTController {
 	@ResponseBody
 	public void index(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam Map<String, String> params) throws IOException,
-			FeedException {
+			FeedException,Exception {
 
 		Long subscriptionId = getSubscriptionId(request);
 		
@@ -177,7 +177,7 @@ public class ElectricPowerUsageSummaryRESTController {
 			@PathVariable Long subscriptionId,
 			@PathVariable Long usagePointId,
 			@RequestParam Map<String, String> params) throws IOException,
-			FeedException {
+			FeedException,Exception {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		

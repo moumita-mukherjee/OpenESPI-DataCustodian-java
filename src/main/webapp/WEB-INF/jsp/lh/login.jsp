@@ -82,6 +82,10 @@
 										</div>
 									</fieldset>
 								</form>
+								<br><br>
+								<p>
+								Please use your current MyLondonHydro login identification and password to login to the Green Button microsite.
+								</p>
 							</div>
 						</section>
 

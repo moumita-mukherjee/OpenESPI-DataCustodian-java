@@ -1,5 +1,6 @@
 package org.energyos.espi.datacustodian.oauth;
 
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
@@ -68,11 +69,30 @@ public class EspiTokenEnhancer implements TokenEnhancer {
 		grantType = grantType.toLowerCase();
 
 		OAuth2Request oAuth2Request = authentication.getOAuth2Request();
-		Long usagePointId = 0l;
+		Long usagePointId = 0l;		
 		if (oAuth2Request.getExtensions() != null && oAuth2Request.getExtensions().containsKey("usagepoint")) {
 			usagePointId = (Long) oAuth2Request.getExtensions().get("usagepoint");
-
 		}
+		
+		long currentTimeSec=System.currentTimeMillis()/1000;
+		long daysec=24 * 3600l;
+		long estoffsetsec=5*3600l;
+		long minutesec=60 ;
+		currentTimeSec=(currentTimeSec/daysec)*daysec+estoffsetsec;
+		long authPeriod=daysec * 365l;
+		Date authorizationEndDate=null;
+		if (oAuth2Request.getExtensions() != null && oAuth2Request.getExtensions().containsKey("authorizationEndDate")) {
+			authorizationEndDate = (Date) oAuth2Request.getExtensions().get("authorizationEndDate");
+			if(authorizationEndDate!=null) { 
+				authPeriod=((authorizationEndDate.getTime()/(1000*daysec))*daysec)-currentTimeSec+daysec-minutesec;
+			}						
+		}
+		if(authPeriod<daysec) {
+			authPeriod=daysec;
+		}
+		System.err.println(" authorizationEndDate " + authorizationEndDate);
+		System.err.println(" authPeriod " + authPeriod);
+		
 		// base resource URI of datacustodian resource end-point
 		baseURL = applicationInformationService.getDataCustodianResourceEndpoint().substring(0,
 				applicationInformationService.getDataCustodianResourceEndpoint().lastIndexOf("/espi/"));
@@ -150,8 +170,8 @@ public class EspiTokenEnhancer implements TokenEnhancer {
 			// (long) 0));
 
 			authorization
-					.setAuthorizedPeriod(new DateTimeInterval(24 * 3600 * 1000 * 365l, System.currentTimeMillis()));
-			authorization.setPublishedPeriod(new DateTimeInterval(24 * 3600 * 1000 * 365l, System.currentTimeMillis()));
+					.setAuthorizedPeriod(new DateTimeInterval(authPeriod, currentTimeSec));
+			authorization.setPublishedPeriod(new DateTimeInterval(authPeriod, currentTimeSec));
 
 			if (accessToken.getRefreshToken() != null) {
 				authorization.setRefreshToken(accessToken.getRefreshToken().toString());
@@ -277,10 +297,8 @@ public class EspiTokenEnhancer implements TokenEnhancer {
 				// 0, (long) 0));
 				// authorization.setPublishedPeriod(new DateTimeInterval((long)
 				// 0, (long) 0));
-				authorization.setAuthorizedPeriod(new DateTimeInterval(24 * 3600 * 1000 * 365l, System
-						.currentTimeMillis()));
-				authorization.setPublishedPeriod(new DateTimeInterval(24 * 3600 * 1000 * 365l, System
-						.currentTimeMillis()));
+				authorization.setAuthorizedPeriod(new DateTimeInterval(authPeriod, currentTimeSec));
+				authorization.setPublishedPeriod(new DateTimeInterval(authPeriod, currentTimeSec));
 
 				authorizationService.merge(authorization);
 			}

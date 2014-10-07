@@ -65,7 +65,7 @@ public class ApplicationInformationRESTController {
 	@ResponseBody
 	public void index(HttpServletResponse response,
 			@RequestParam Map<String, String> params) throws IOException,
-			FeedException {
+			FeedException,Exception {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		exportService.exportApplicationInformations(response.getOutputStream(),

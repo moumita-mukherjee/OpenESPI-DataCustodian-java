@@ -65,7 +65,7 @@ public class ReadingTypeRESTController {
 	@ResponseBody
 	public void index(HttpServletResponse response,
 			@RequestParam Map<String, String> params) throws IOException,
-			FeedException {
+			FeedException,Exception {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		exportService.exportReadingTypes(response.getOutputStream(),
@@ -77,7 +77,7 @@ public class ReadingTypeRESTController {
 	public void show(HttpServletResponse response,
 			@PathVariable Long readingTypeId,
 			@RequestParam Map<String, String> params) throws IOException,
-			FeedException {
+			FeedException,Exception {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		exportService.exportReadingType(readingTypeId,

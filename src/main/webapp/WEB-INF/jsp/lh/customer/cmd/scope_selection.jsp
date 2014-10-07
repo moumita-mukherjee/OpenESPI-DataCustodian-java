@@ -194,14 +194,14 @@
 								</form>
 							</c:when>
 							<c:otherwise>
-							You are not able to authorize this third-party because
+							You are not able to authorize this application due to one or more of the following reasons:
 							<ul>
-									<li>You have already authorize this third-party
-										application for other service. If you would like add more
-										services into that authorization please edit the
-										authorization.</li>
-									<li>Third-party supported does not support services that
-										currently you have. Please check for other application.</li>
+									<li>You have already authorized the application for
+										another service. If you would like to add more services to
+										that authorization, please click on the "Edit" button (located
+										next to the application listing in the Authorized Applications
+										screen).</li>
+									<li>The application does not support the service(s) that you require.</li>
 								</ul>
 							</c:otherwise>
 						</c:choose>

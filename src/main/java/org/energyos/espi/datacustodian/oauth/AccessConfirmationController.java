@@ -13,6 +13,7 @@
 package org.energyos.espi.datacustodian.oauth;
 
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -27,6 +28,7 @@ import org.energyos.espi.common.domain.UsagePoint;
 import org.energyos.espi.common.repositories.UsagePointDetailRepository;
 import org.energyos.espi.common.service.ApplicationInformationService;
 import org.energyos.espi.common.service.UsagePointService;
+import org.energyos.espi.datacustodian.utils.DateUtil;
 import org.energyos.espi.datacustodian.utils.UsagePointHelper;
 import org.energyos.espi.datacustodian.web.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +58,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @SessionAttributes("authorizationRequest")
 public class AccessConfirmationController extends BaseController {
-
+	private final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
 	@Autowired
 	private ApplicationInformationService applicationInformationService;
 
@@ -112,8 +114,13 @@ public class AccessConfirmationController extends BaseController {
 	public ModelAndView getAccessConfirmation1(@ModelAttribute("authorizationEndDate") String authorizationEndDate,
 			ModelMap model, Principal principal, HttpSession sessionObj) throws Exception {
 
-		System.out.println("POST  authorizationEndDate authorizationEndDate authorizationEndDate "
+		System.err.println("POST  authorizationEndDate authorizationEndDate authorizationEndDate "
 				+ authorizationEndDate);
+		AuthorizationRequest clientAuth = (AuthorizationRequest) model.get("authorizationRequest");
+		
+		Date authEndDate=sdf.parse(authorizationEndDate);
+		clientAuth.getExtensions().put("authorizationEndDate", authEndDate);
+		model.put("authorizationEndDate", authEndDate);
 		return getAccessConfirmation(model, principal, sessionObj);
 	}
 
@@ -164,16 +171,17 @@ public class AccessConfirmationController extends BaseController {
 
 				populateExternalDetail(currentUser(principal).getCustomerId(), usagePoints);
 
-				Date authEndDate = new Date((24 * 3600 * 1000 * 365l + System.currentTimeMillis()));
+				
 
 				UsagePoint selectedUsagePoint = usagePoints.get(0);
 				model.put("selectedUsagePoint", selectedUsagePoint);
 				clientAuth.getExtensions().put("usagepoint", selectedUsagePoint.getId());
-
-				clientAuth.getExtensions().put("authorizationEndDate", authEndDate);
-
-				model.put("authorizationEndDate", authEndDate);
-				model.remove("authorizationRequest");
+				if(model.get("authorizationEndDate")==null) {
+					Date authEndDate = new Date((24 * 3600 * 1000 * 365l + System.currentTimeMillis()));
+					clientAuth.getExtensions().put("authorizationEndDate", authEndDate);
+					model.put("authorizationEndDate", authEndDate);
+				}
+				//model.remove("authorizationRequest");
 				return new ModelAndView("/access_confirmation", model);
 			}
 
