@@ -251,7 +251,7 @@ public class EspiTokenEnhancer implements TokenEnhancer {
 				RetailCustomer retailCustomer = ((User) authentication.getPrincipal()).getRetailCustomer();
 
 				// link in the usage points associated with this subscription
-				System.out.println("Linking with usagepoint----@ESPITokenEnhancer" + usagePointId);
+				System.err.println("Linking with usagepoint----@ESPITokenEnhancer" + usagePointId);
 				if (usagePointId > 0) {
 
 					UsagePoint up = resourceService.findById(usagePointId, UsagePoint.class);

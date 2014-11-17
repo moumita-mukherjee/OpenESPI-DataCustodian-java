@@ -73,6 +73,7 @@ public class ScopeSelectionController extends BaseController {
 			HttpSession sessionObj) {
 		ApplicationInformation thirdParty = applicationInformationService.findByClientId(thirdPartyClientId);
 
+
 		List<UsagePoint> usagePoints = usagePoints(principal);
 		
 		List<UsagePoint> applicableUsagePoints = new ArrayList<UsagePoint>(4);
@@ -84,7 +85,6 @@ public class ScopeSelectionController extends BaseController {
 
 		List<Authorization> authorizations = authorizationService.findAllActiveByRetailCustomerId(currentCustomer(
 				principal).getId());
-		
 		
 		
 		boolean isAuthorized = false;

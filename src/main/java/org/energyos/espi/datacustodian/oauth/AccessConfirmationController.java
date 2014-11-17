@@ -131,6 +131,22 @@ public class AccessConfirmationController extends BaseController {
 		try {
 			System.err.println(" authorizationEndDate authorizationEndDate authorizationEndDate "
 					+ model.get("authorizationEndDate"));
+			
+			Long usagePointId = (Long) sessionObj.getAttribute("usagePointId");
+			System.err.println(" session usagePointId " + usagePointId);
+			
+			/* this is required when multiple authorization is required per user
+			if(usagePointId!=null && usagePointId >0) {
+				if(principal instanceof org.energyos.espi.common.domain.User) {
+					System.err.println("principal 2222  "+principal);
+					User usr=(User)principal;
+					usr.setUsername(usr.getRawusername()+"_up_"+usagePointId.longValue());
+				}else if(principal instanceof UsernamePasswordAuthenticationToken) {
+					System.err.println("principal 3333  "+principal);
+					User usr=(User)((UsernamePasswordAuthenticationToken)principal).getPrincipal();
+					usr.setUsername(usr.getRawusername()+"_up_"+usagePointId.longValue());
+				}
+			}*/			
 
 			AuthorizationRequest clientAuth = (AuthorizationRequest) model.get("authorizationRequest");
 
@@ -142,8 +158,7 @@ public class AccessConfirmationController extends BaseController {
 			model.put("client", client);
 			model.put("thirdParty", thirdParty);
 
-			Long usagePointId = (Long) sessionObj.getAttribute("usagePointId");
-			System.err.println(" session usagePointId " + usagePointId);
+			
 
 			Map<String, String> scopes = new LinkedHashMap<String, String>();
 			System.err.println("clientAuth.getScope() " + clientAuth.getScope());
