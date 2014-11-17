@@ -151,6 +151,7 @@ public class BatchRESTController {
 		response.addHeader("Content-Disposition",
 				"attachment; filename=GreenButtonDownload.xml");
 		try {
+			params.put("subscription", "TRUE");
 			exportService.exportBatchSubscription(subscriptionId,
 					response.getOutputStream(), new ExportFilter(params));
 
