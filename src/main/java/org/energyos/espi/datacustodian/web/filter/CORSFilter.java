@@ -112,15 +112,17 @@ public class CORSFilter implements Filter {
                 
             } else if (checkOrigin(req, resp)) {
                 if (exposeHeaders != null) {
-                    resp.setHeader("Access-Control-Expose-Headers", exposeHeaders);
+                    resp.setHeader("Access-Control-Expose-Headers", exposeHeaders);                    
                 }
             }
+            resp.setHeader("X-Frame-Options","SAMEORIGIN");
         }
         filterChain.doFilter(request, response);
     }
 
     private boolean checkOrigin(HttpServletRequest req, HttpServletResponse resp) {
         String origin = req.getHeader("Origin");
+        System.err.println("begin allowOrigin "+allowOrigin +  " origin "+origin);
         if (origin == null) {
             //no origin; per W3C specification, terminate further processing for both pre-flight and actual requests
             return false;
@@ -140,7 +142,7 @@ public class CORSFilter implements Filter {
         	} else if (allowOrigin != null) {
         		matches = allowOrigin.equals("*") || allowOrigin.equals(origin);
         	}
-
+System.err.println(" allowOrigin "+allowOrigin +  " origin "+origin);
         if (matches) {
         	
         	if (allowCredentials != null) {
