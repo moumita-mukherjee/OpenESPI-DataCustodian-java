@@ -413,6 +413,7 @@
 			<property name="attributes">
 				<map>
 					<entry key="apiBaseUrl" value="${api.base.url}" />
+					<entry key="cmsSection" value="${cms.section}" />
 					<entry key="corporateBaseUrl" value="${corporateUrl}" />
 					<entry key="corporateUrl" value="${corporateUrl}/site" />
 				</map>
@@ -425,6 +426,17 @@
 				<property name="useExpiresHeader" value="true" />
 				<property name="useCacheControlHeader" value="true" />
 				<property name="useCacheControlNoStore" value="true" />
+				<property name="cacheMappings">
+					<props>
+						<!-- cache for one day -->
+						<prop key="/**/*.html">86400</prop>
+						<prop key="/**/*.htm">86400</prop>
+						<prop key="/**/*.jpg">86400</prop>
+						<prop key="/**/*.gif">86400</prop>
+						<prop key="/**/*.css">86400</prop>
+						<prop key="/**/*.js">86400</prop>
+					</props>
+				</property>
 			</bean>
 		</mvc:interceptors>
 	</beans>

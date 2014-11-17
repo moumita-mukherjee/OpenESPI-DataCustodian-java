@@ -69,7 +69,7 @@
 											<label for="password">Password</label>
 											<div class="clearfix">
 												<input type="password" name="j_password"
-													placeholder="Password" class="form-control">
+													placeholder="Password" class="form-control" autocomplete="off" >
 											</div>
 
 										</div>

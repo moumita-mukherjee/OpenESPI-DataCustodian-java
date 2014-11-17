@@ -116,18 +116,25 @@
 				<appengine.application.version>1</appengine.application.version>
 				<profile>googleclouddev</profile>
 				<spring.profile>authserver</spring.profile>
+				<web.allowOrigin>https://londonhydro-espi-dev.appspot.com/</web.allowOrigin>
 				<database>googleclouddev</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<ga_code>UA-52133006-1</ga_code>
 				<appengine.target.version>1.9.7</appengine.target.version>
 				<api.base.url>https://lh-myaccount-dev.appspot.com</api.base.url>
+				<cms.section>greenbutton</cms.section>
 				<corporateUrl>https://www.londonhydro.com</corporateUrl>
 				<excludedfiles>**/*.none</excludedfiles>
+				<appengine.threadsafe>false</appengine.threadsafe>
+				<appengine.instance-class>F2</appengine.instance-class>
+				<appengine.min-idle-instances>automatic</appengine.min-idle-instances>
+				<appengine.max-idle-instances>1</appengine.max-idle-instances>
+				<appengine.min-pending-latency>automatic</appengine.min-pending-latency>
+				<appengine.max-pending-latency>automatic</appengine.max-pending-latency>
+				<appengine.max-concurrent-requests>1</appengine.max-concurrent-requests>
 			</properties>
 			<dependencies>
 				<!-- Compile/runtime dependencies -->
-
-
 				<dependency>
 					<groupId>org.datanucleus</groupId>
 					<artifactId>datanucleus-api-jpa</artifactId>
@@ -162,13 +169,22 @@
 				<appengine.application.version>1</appengine.application.version>
 				<profile>googleclouddev</profile>
 				<spring.profile>resourceserver</spring.profile>
+				<web.allowOrigin>https://londonhydro-espi-dev.appspot.com/</web.allowOrigin>
 				<database>googleclouddev</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<ga_code>UA-52133006-1</ga_code>
 				<appengine.target.version>1.9.7</appengine.target.version>
 				<api.base.url>https://lh-myaccount-dev.appspot.com</api.base.url>
+				<cms.section>greenbutton</cms.section>
 				<corporateUrl>https://www.londonhydro.com</corporateUrl>
 				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
+				<appengine.threadsafe>false</appengine.threadsafe>
+				<appengine.instance-class>F2</appengine.instance-class>
+				<appengine.min-idle-instances>automatic</appengine.min-idle-instances>
+				<appengine.max-idle-instances>automatic</appengine.max-idle-instances>
+				<appengine.min-pending-latency>2s</appengine.min-pending-latency>
+				<appengine.max-pending-latency>automatic</appengine.max-pending-latency>
+				<appengine.max-concurrent-requests>1</appengine.max-concurrent-requests>
 			</properties>
 			<dependencies>
 				<!-- Compile/runtime dependencies -->
@@ -203,6 +219,64 @@
 			</dependencies>
 		</profile>
 		<profile>
+			<id>googleclouddev-adminapi</id>
+			<properties>
+				<datacustodian.base.url>https://londonhydro-espi-dev.appspot.com</datacustodian.base.url>
+				<appengine.application.name>londonhydro-espi-dev</appengine.application.name>
+				<appengine.application.module>adminapi</appengine.application.module>
+				<appengine.application.version>1</appengine.application.version>
+				<profile>googleclouddev</profile>
+				<spring.profile>resourceserver</spring.profile>
+				<web.allowOrigin>https://londonhydro-espi-dev.appspot.com/</web.allowOrigin>
+				<database>googleclouddev</database>
+				<hbm2ddl_auto>none</hbm2ddl_auto>
+				<ga_code>UA-52133006-1</ga_code>
+				<appengine.target.version>1.9.7</appengine.target.version>
+				<api.base.url>https://lh-myaccount-dev.appspot.com</api.base.url>
+				<cms.section>greenbutton</cms.section>
+				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
+				<appengine.threadsafe>false</appengine.threadsafe>
+				<appengine.instance-class>F2</appengine.instance-class>
+				<appengine.min-idle-instances>automatic</appengine.min-idle-instances>
+				<appengine.max-idle-instances>automatic</appengine.max-idle-instances>
+				<appengine.min-pending-latency>50ms</appengine.min-pending-latency>
+				<appengine.max-pending-latency>50ms</appengine.max-pending-latency>
+				<appengine.max-concurrent-requests>1</appengine.max-concurrent-requests>
+			</properties>
+			<dependencies>
+				<!-- Compile/runtime dependencies -->
+				<dependency>
+					<groupId>com.google.appengine</groupId>
+					<artifactId>appengine-api-1.0-sdk</artifactId>
+					<version>${appengine.target.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.datanucleus</groupId>
+					<artifactId>datanucleus-api-jpa</artifactId>
+					<version>3.1.1</version>
+				</dependency>
+				<dependency>
+					<groupId>org.datanucleus</groupId>
+					<artifactId>datanucleus-core</artifactId>
+					<version>3.1.1</version>
+				</dependency>
+				<dependency>
+					<groupId>com.google.appengine.orm</groupId>
+					<artifactId>datanucleus-appengine</artifactId>
+					<version>2.1.2</version>
+					<!-- Need to exclude the enhancer since it interfere with the enhancer 
+						plugin. -->
+					<exclusions>
+						<exclusion>
+							<groupId>org.datanucleus</groupId>
+							<artifactId>datanucleus-enhancer</artifactId>
+						</exclusion>
+					</exclusions>
+				</dependency>
+			</dependencies>
+		</profile>		
+		<profile>
 			<id>googlecloudtestlab</id>
 			<properties>
 				<datacustodian.base.url>https://greenbutton-testlab-prod.appspot.com</datacustodian.base.url>
@@ -211,13 +285,22 @@
 				<appengine.application.version>1</appengine.application.version>
 				<profile>googlecloudtestlab</profile>
 				<spring.profile>authserver</spring.profile>
+				<web.allowOrigin>https://londonhydro-testlab-prod.appspot.com/</web.allowOrigin>
 				<database>googlecloudtestlab</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<ga_code>UA-52133006-1</ga_code>
 				<appengine.target.version>1.9.7</appengine.target.version>
 				<api.base.url>https://lh-myaccount-qa.appspot.com</api.base.url>
+				<cms.section>greenbutton</cms.section>
 				<corporateUrl>https://www.londonhydro.com</corporateUrl>
 				<excludedfiles>**/*.none</excludedfiles>
+				<appengine.threadsafe>false</appengine.threadsafe>
+				<appengine.instance-class>F2</appengine.instance-class>
+				<appengine.min-idle-instances>automatic</appengine.min-idle-instances>
+				<appengine.max-idle-instances>1</appengine.max-idle-instances>
+				<appengine.min-pending-latency>automatic</appengine.min-pending-latency>
+				<appengine.max-pending-latency>automatic</appengine.max-pending-latency>
+				<appengine.max-concurrent-requests>1</appengine.max-concurrent-requests>
 			</properties>
 			<dependencies>
 				<!-- Compile/runtime dependencies -->
@@ -257,13 +340,22 @@
 				<appengine.application.version>1</appengine.application.version>
 				<profile>googlecloudtestlab</profile>
 				<spring.profile>resourceserver</spring.profile>
+				<web.allowOrigin>https://londonhydro-testlab-prod.appspot.com/</web.allowOrigin>
 				<database>googleclouddev</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<ga_code>UA-52133006-1</ga_code>
 				<appengine.target.version>1.9.7</appengine.target.version>
 				<api.base.url>https://lh-myaccount-dev.appspot.com</api.base.url>
+				<cms.section>greenbutton</cms.section>
 				<corporateUrl>https://www.londonhydro.com</corporateUrl>
 				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
+				<appengine.threadsafe>false</appengine.threadsafe>
+				<appengine.instance-class>F2</appengine.instance-class>
+				<appengine.min-idle-instances>automatic</appengine.min-idle-instances>
+				<appengine.max-idle-instances>1</appengine.max-idle-instances>
+				<appengine.min-pending-latency>automatic</appengine.min-pending-latency>
+				<appengine.max-pending-latency>automatic</appengine.max-pending-latency>
+				<appengine.max-concurrent-requests>1</appengine.max-concurrent-requests>
 			</properties>
 			<dependencies>
 				<!-- Compile/runtime dependencies -->
@@ -306,13 +398,22 @@
 				<appengine.application.version>1</appengine.application.version>
 				<profile>googlecloudqa</profile>
 				<spring.profile>authserver</spring.profile>
+				<web.allowOrigin>https://londonhydro-espi-qa.appspot.com/</web.allowOrigin>
 				<database>googlecloudqa</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<ga_code>UA-52133006-1</ga_code>
 				<appengine.target.version>1.9.7</appengine.target.version>
 				<api.base.url>https://lh-myaccount-qa.appspot.com</api.base.url>
+				<cms.section>greenbutton</cms.section>				
 				<corporateUrl>https://www.londonhydro.com</corporateUrl>
 				<excludedfiles>**/*.none</excludedfiles>
+				<appengine.threadsafe>false</appengine.threadsafe>
+				<appengine.instance-class>F2</appengine.instance-class>
+				<appengine.min-idle-instances>automatic</appengine.min-idle-instances>
+				<appengine.max-idle-instances>1</appengine.max-idle-instances>
+				<appengine.min-pending-latency>automatic</appengine.min-pending-latency>
+				<appengine.max-pending-latency>automatic</appengine.max-pending-latency>
+				<appengine.max-concurrent-requests>1</appengine.max-concurrent-requests>
 			</properties>
 			<dependencies>
 				<!-- Compile/runtime dependencies -->
@@ -355,13 +456,80 @@
 				<appengine.application.version>1</appengine.application.version>
 				<profile>googlecloudqa</profile>
 				<spring.profile>resourceserver</spring.profile>
+				<web.allowOrigin>https://londonhydro-espi-qa.appspot.com/</web.allowOrigin>
 				<database>googlecloudqa</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<ga_code>UA-52133006-1</ga_code>
 				<appengine.target.version>1.9.7</appengine.target.version>
 				<api.base.url>https://lh-myaccount-qa.appspot.com</api.base.url>
+				<cms.section>greenbutton</cms.section>
 				<corporateUrl>https://www.londonhydro.com</corporateUrl>
 				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
+				<appengine.threadsafe>false</appengine.threadsafe>
+				<appengine.instance-class>F4</appengine.instance-class>
+				<appengine.min-idle-instances>automatic</appengine.min-idle-instances>
+				<appengine.max-idle-instances>1</appengine.max-idle-instances>
+				<appengine.min-pending-latency>2s</appengine.min-pending-latency>
+				<appengine.max-pending-latency>automatic</appengine.max-pending-latency>
+				<appengine.max-concurrent-requests>1</appengine.max-concurrent-requests>
+			</properties>
+			<dependencies>
+				<!-- Compile/runtime dependencies -->
+				<dependency>
+					<groupId>com.google.appengine</groupId>
+					<artifactId>appengine-api-1.0-sdk</artifactId>
+					<version>${appengine.target.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.datanucleus</groupId>
+					<artifactId>datanucleus-api-jpa</artifactId>
+					<version>3.1.1</version>
+				</dependency>
+				<dependency>
+					<groupId>org.datanucleus</groupId>
+					<artifactId>datanucleus-core</artifactId>
+					<version>3.1.1</version>
+				</dependency>
+				<dependency>
+					<groupId>com.google.appengine.orm</groupId>
+					<artifactId>datanucleus-appengine</artifactId>
+					<version>2.1.2</version>
+					<!-- Need to exclude the enhancer since it interfere with the enhancer 
+						plugin. -->
+					<exclusions>
+						<exclusion>
+							<groupId>org.datanucleus</groupId>
+							<artifactId>datanucleus-enhancer</artifactId>
+						</exclusion>
+					</exclusions>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>googlecloudqa-adminapi</id>
+			<properties>
+				<datacustodian.base.url>https://londonhydro-espi-qa.appspot.com</datacustodian.base.url>
+				<appengine.application.name>londonhydro-espi-qa</appengine.application.name>
+				<appengine.application.module>adminapi</appengine.application.module>
+				<appengine.application.version>1</appengine.application.version>
+				<profile>googlecloudqa</profile>
+				<spring.profile>resourceserver</spring.profile>
+				<web.allowOrigin>https://londonhydro-espi-qa.appspot.com/</web.allowOrigin>
+				<database>googlecloudqa</database>
+				<hbm2ddl_auto>none</hbm2ddl_auto>
+				<ga_code>UA-52133006-1</ga_code>
+				<appengine.target.version>1.9.7</appengine.target.version>
+				<api.base.url>https://lh-myaccount-qa.appspot.com</api.base.url>
+				<cms.section>greenbutton</cms.section>
+				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
+				<appengine.threadsafe>false</appengine.threadsafe>
+				<appengine.instance-class>F2</appengine.instance-class>
+				<appengine.min-idle-instances>automatic</appengine.min-idle-instances>
+				<appengine.max-idle-instances>1</appengine.max-idle-instances>
+				<appengine.min-pending-latency>50ms</appengine.min-pending-latency>
+				<appengine.max-pending-latency>50ms</appengine.max-pending-latency>
+				<appengine.max-concurrent-requests>1</appengine.max-concurrent-requests>
 			</properties>
 			<dependencies>
 				<!-- Compile/runtime dependencies -->
@@ -405,13 +573,22 @@
 				<appengine.application.version>1</appengine.application.version>
 				<profile>googlecloudpilot</profile>
 				<spring.profile>authserver</spring.profile>
+				<web.allowOrigin>https://londonhydro-espi-pilot.appspot.com/</web.allowOrigin>
 				<database>googlecloudpilot</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<ga_code>UA-52133007-1</ga_code>
 				<appengine.target.version>1.9.7</appengine.target.version>
 				<api.base.url>https://lh-myaccount-qa.appspot.com</api.base.url>
+				<cms.section>greenbutton</cms.section>
 				<corporateUrl>https://www.londonhydro.com</corporateUrl>
 				<excludedfiles>**/*.none</excludedfiles>
+				<appengine.threadsafe>false</appengine.threadsafe>
+				<appengine.instance-class>F2</appengine.instance-class>
+				<appengine.min-idle-instances>automatic</appengine.min-idle-instances>
+				<appengine.max-idle-instances>1</appengine.max-idle-instances>
+				<appengine.min-pending-latency>automatic</appengine.min-pending-latency>
+				<appengine.max-pending-latency>automatic</appengine.max-pending-latency>
+				<appengine.max-concurrent-requests>1</appengine.max-concurrent-requests>
 			</properties>
 			<dependencies>
 				<!-- Compile/runtime dependencies -->
@@ -454,13 +631,22 @@
 				<appengine.application.version>1</appengine.application.version>
 				<profile>googlecloudpilot</profile>
 				<spring.profile>resourceserver</spring.profile>
+				<web.allowOrigin>https://londonhydro-espi-pilot.appspot.com/</web.allowOrigin>
 				<database>googlecloudpilot</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<ga_code>UA-52133007-1</ga_code>
 				<appengine.target.version>1.9.7</appengine.target.version>
 				<api.base.url>https://lh-myaccount-prod.appspot.com</api.base.url>
+				<cms.section>greenbutton</cms.section>
 				<corporateUrl>https://www.londonhydro.com</corporateUrl>
 				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
+				<appengine.threadsafe>false</appengine.threadsafe>
+				<appengine.instance-class>F2</appengine.instance-class>
+				<appengine.min-idle-instances>automatic</appengine.min-idle-instances>
+				<appengine.max-idle-instances>1</appengine.max-idle-instances>
+				<appengine.min-pending-latency>automatic</appengine.min-pending-latency>
+				<appengine.max-pending-latency>automatic</appengine.max-pending-latency>
+				<appengine.max-concurrent-requests>1</appengine.max-concurrent-requests>
 			</properties>
 			<dependencies>
 				<!-- Compile/runtime dependencies -->
@@ -503,13 +689,22 @@
 				<appengine.application.version>1</appengine.application.version>
 				<profile>googlecloudprod</profile>
 				<spring.profile>authserver</spring.profile>
+				<web.allowOrigin>https://greenbutton.londonhydro.com/</web.allowOrigin>
 				<database>googlecloudprod</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<ga_code>UA-52133007-1</ga_code>
 				<appengine.target.version>1.9.7</appengine.target.version>
 				<api.base.url>https://lh-myaccount-prod.appspot.com</api.base.url>
+				<cms.section>greenbutton</cms.section>
 				<corporateUrl>https://www.londonhydro.com</corporateUrl>
 				<excludedfiles>**/*.none</excludedfiles>
+				<appengine.threadsafe>false</appengine.threadsafe>
+				<appengine.instance-class>F2</appengine.instance-class>
+				<appengine.min-idle-instances>automatic</appengine.min-idle-instances>
+				<appengine.max-idle-instances>1</appengine.max-idle-instances>
+				<appengine.min-pending-latency>automatic</appengine.min-pending-latency>
+				<appengine.max-pending-latency>automatic</appengine.max-pending-latency>
+				<appengine.max-concurrent-requests>1</appengine.max-concurrent-requests>
 			</properties>
 			<dependencies>
 				<!-- Compile/runtime dependencies -->
@@ -552,13 +747,80 @@
 				<appengine.application.version>1</appengine.application.version>
 				<profile>googlecloudprod</profile>
 				<spring.profile>resourceserver</spring.profile>
+				<web.allowOrigin>https://api.londonhydro.com/</web.allowOrigin>
 				<database>googlecloudprod</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<ga_code>UA-52133007-1</ga_code>
 				<appengine.target.version>1.9.7</appengine.target.version>
 				<api.base.url>https://lh-myaccount-prod.appspot.com</api.base.url>
+				<cms.section>greenbutton</cms.section>
 				<corporateUrl>https://www.londonhydro.com</corporateUrl>
 				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
+				<appengine.threadsafe>false</appengine.threadsafe>
+				<appengine.instance-class>F2</appengine.instance-class>
+				<appengine.min-idle-instances>automatic</appengine.min-idle-instances>
+				<appengine.max-idle-instances>1</appengine.max-idle-instances>
+				<appengine.min-pending-latency>automatic</appengine.min-pending-latency>
+				<appengine.max-pending-latency>automatic</appengine.max-pending-latency>
+				<appengine.max-concurrent-requests>1</appengine.max-concurrent-requests>
+			</properties>
+			<dependencies>
+				<!-- Compile/runtime dependencies -->
+				<dependency>
+					<groupId>com.google.appengine</groupId>
+					<artifactId>appengine-api-1.0-sdk</artifactId>
+					<version>${appengine.target.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.datanucleus</groupId>
+					<artifactId>datanucleus-api-jpa</artifactId>
+					<version>3.1.1</version>
+				</dependency>
+				<dependency>
+					<groupId>org.datanucleus</groupId>
+					<artifactId>datanucleus-core</artifactId>
+					<version>3.1.1</version>
+				</dependency>
+				<dependency>
+					<groupId>com.google.appengine.orm</groupId>
+					<artifactId>datanucleus-appengine</artifactId>
+					<version>2.1.2</version>
+					<!-- Need to exclude the enhancer since it interfere with the enhancer 
+						plugin. -->
+					<exclusions>
+						<exclusion>
+							<groupId>org.datanucleus</groupId>
+							<artifactId>datanucleus-enhancer</artifactId>
+						</exclusion>
+					</exclusions>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>googlecloudprod-adminapi</id>
+			<properties>
+				<datacustodian.base.url>https://londonhydro-espi-prod.appspot.com</datacustodian.base.url>
+				<appengine.application.name>londonhydro-espi-prod</appengine.application.name>
+				<appengine.application.module>adminapi</appengine.application.module>
+				<appengine.application.version>1</appengine.application.version>
+				<profile>googlecloudprod</profile>
+				<spring.profile>resourceserver</spring.profile>
+				<web.allowOrigin>https://api.londonhydro.com/</web.allowOrigin>
+				<database>googlecloudprod</database>
+				<hbm2ddl_auto>none</hbm2ddl_auto>
+				<ga_code>UA-52133007-1</ga_code>
+				<appengine.target.version>1.9.7</appengine.target.version>
+				<api.base.url>https://lh-myaccount-prod.appspot.com</api.base.url>
+				<cms.section>greenbutton</cms.section>
+				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
+				<appengine.threadsafe>false</appengine.threadsafe>
+				<appengine.instance-class>F2</appengine.instance-class>
+				<appengine.min-idle-instances>automatic</appengine.min-idle-instances>
+				<appengine.max-idle-instances>1</appengine.max-idle-instances>
+				<appengine.min-pending-latency>50ms</appengine.min-pending-latency>
+				<appengine.max-pending-latency>50ms</appengine.max-pending-latency>
+				<appengine.max-concurrent-requests>1</appengine.max-concurrent-requests>
 			</properties>
 			<dependencies>
 				<!-- Compile/runtime dependencies -->
@@ -603,11 +865,13 @@
 				<appengine.application.version>1</appengine.application.version>
 				<profile>appenginedev</profile>
 				<spring.profile>authserver,resourceserver</spring.profile>
+				<web.allowOrigin>*</web.allowOrigin>
 				<database>mysql</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<ga_code>UA-52133006-1</ga_code>
 				<appengine.target.version>1.9.7</appengine.target.version>
 				<api.base.url>http://localhost:8080/lh</api.base.url>
+				<cms.section>greenbutton</cms.section>
 				<corporateUrl>https://www.londonhydro.com</corporateUrl>
 				<excludedfiles>**/*.none</excludedfiles>
 			</properties>
