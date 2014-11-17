@@ -41,7 +41,7 @@ $(function() {
     		else
     		{
 		    	$.ajax({
-				    url: apiBaseUrl + "/api/v1/content/staticpage?field=name&query=" + srckey + "&section=residential",
+				    url: apiBaseUrl + "/api/v1/content/staticpage?field=name&query=" + srckey + "&section="+cmsSection,
 				    type: 'GET',
 				    crossDomain: true,
 				    dataType: 'json',

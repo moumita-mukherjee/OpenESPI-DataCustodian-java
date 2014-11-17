@@ -145,7 +145,7 @@ table.bor td {
 																	title="${authorization.applicationInformation.thirdPartyApplicationName}"
 																	data-toggle="tooltip" />
 															</span></td>															
-																<td><span class="rating-input" app_id="${authorization.applicationInformation.id}" current_login_id="${currentUser.id}">
+																<td><span class="rating-input" app_id="${authorization.applicationInformation.id}" current_login_id="${currentUser.id}" app_type="single">
  																<input type="number" class="rating" id="ratingValue" name="test" data-min="1" data-max="5" data-value="0">
  																</span>
  																<div class="comments-input"><a  href="javascript:void(0)" id="commentsLink">Comment</a>

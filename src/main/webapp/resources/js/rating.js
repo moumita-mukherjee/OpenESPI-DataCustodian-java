@@ -1,27 +1,9 @@
 $(function() {
-
-	$(document).ready(function(){    	
-		$('#authorizations > tbody  > tr').each(function() { 
-    		var content = $(this), appId = content.attr("app_id");
-    		var loginId =  content.attr("current_login_id");
-	    	$.ajax({
-	    		url: apiBaseUrl + "/api/v1/public/"+loginId+"/rating?appId="+appId,
-			    type: 'GET',
-			    crossDomain: true,
-			    dataType: 'json',
-			    headers: {"authorization" : "bearer -dt01"},
-			    success: function(data) {
-			    	$('#ratingValue').val(data);
-			    }
-			});
-    	});
-    	
-    });
-
+	
     $(".rating-input").on("click", function() {
     	var content = $(this), appId = content.attr("app_id");
     	var type = content.attr("app_type");
-    	if(type)
+    	if(type == 'average')
     		return;
     	var rating =content.find("#ratingValue").val();
     	var loginId =  content.attr("current_login_id");
@@ -74,7 +56,7 @@ $(function() {
       	 content.find("#viewComments").on("click", function(e) {
    
 	    	var  appId = content.attr("app_id");
-
+	    	
 	    	$.ajax({
 			    url: apiBaseUrl + "/api/v1/public/comments?appId="+appId,
 			    type: 'GET',
