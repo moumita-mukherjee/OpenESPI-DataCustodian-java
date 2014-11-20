@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	version="2.0">
+	<persistence-unit name="pu-energy">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<class>org.energyos.espi.common.domain.RetailCustomer</class>
+		<class>org.energyos.espi.common.domain.ApplicationInformation</class>
+		<class>org.energyos.espi.common.domain.Authorization</class>
+		<class>org.energyos.espi.common.domain.BatchList</class>
+		<class>org.energyos.espi.common.domain.ElectricPowerQualitySummary
+		</class>
+		<class>org.energyos.espi.common.domain.ElectricPowerUsageSummary
+		</class>
+
+
+
+		<class>org.energyos.espi.common.domain.LineItem</class>
+		<class>org.energyos.espi.common.domain.MeterReading</class>
+
+		<class>org.energyos.espi.common.domain.IntervalBlock</class>
+		<class>org.energyos.espi.common.domain.IntervalReading</class>
+		<class>org.energyos.espi.common.domain.ReadingQuality</class>
+
+		<class>org.energyos.espi.common.domain.ReadingType</class>
+		<class>org.energyos.espi.common.domain.ServiceDeliveryPoint</class>
+		<class>org.energyos.espi.common.domain.Subscription</class>
+		<class>org.energyos.espi.common.domain.TimeConfiguration</class>
+		<class>org.energyos.espi.common.domain.UsagePoint</class>
+		<class>org.energyos.espi.common.domain.UsagePointDetail</class>
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		<properties>
+			<property name="javax.persistence.jdbc.url" value="${jdbc.url}" />
+			<property name="javax.persistence.jdbc.driver" value="${jdbc.driverClassName}" />
+			<property name="hibernate.default_schema" value="${jdbc.schema}" />
+			<property name="javax.persistence.jdbc.user" value="${jdbc.username}" />
+			<property name="javax.persistence.jdbc.password" value="${jdbc.password}" />
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.hbm2ddl.auto" value="none" />
+			<property name="hibernate.connection.autocommit" value="true" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+			<property name="hibernate.connection.driver_class" value="${jdbc.hibernate.driver}" />
+			<property name="hibernate.validator.apply_to_ddl" value="false" />
+			<property name="hibernate.validator.autoregister_listeners"
+				value="false" />
+			<property name="javax.persistence.validation.mode" value="none" />
+			<property name="hibernate.connection.release_mode" value="after_transaction" />
+
+		</properties>
+	</persistence-unit>
+	<persistence-unit name="pu-usage">
+		<provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider>
+		<class>org.energyos.espi.common.domain.ext.IntervalBlock</class>
+		<class>org.energyos.espi.common.domain.ext.IntervalReading</class>
+		<class>org.energyos.espi.common.domain.ext.ReadingQuality</class>
+		<class>org.energyos.espi.common.domain.ext.DateTimeInterval</class>
+
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		<properties>
+			<property name="datanucleus.NontransactionalRead" value="true" />
+			<property name="datanucleus.NontransactionalWrite" value="true" />
+			<property name="datanucleus.ConnectionURL" value="appengine" />
+			<property name="datanucleus.singletonEMFForName" value="true" />
+			<property name="datanucleus.appengine.datastoreEnableXGTransactions"
+				value="true" />
+			<property name="javax.persistence.query.timeout" value="60000" />
+			<property name="datanucleus.datastoreWriteTimeout" value="60000" />
+		</properties>
+	</persistence-unit>
+	<persistence-unit name="pu-mylh">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<class>org.energyos.espi.common.domain.User</class>
+		<class>org.energyos.espi.common.domain.UsagePointDetail</class>
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		<properties>
+			<property name="javax.persistence.jdbc.url" value="${jdbc.lh.url}" />
+			<property name="javax.persistence.jdbc.driver" value="${jdbc.lh.driverClassName}" />
+			<property name="hibernate.default_schema" value="${jdbc.lh.schema}" />
+			<property name="javax.persistence.jdbc.user" value="${jdbc.lh.username}" />
+			<property name="javax.persistence.jdbc.password" value="${jdbc.lh.password}" />
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.hbm2ddl.auto" value="none" />
+			<property name="hibernate.connection.autocommit" value="true" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+			<property name="hibernate.connection.driver_class" value="${jdbc.hibernate.driver}" />
+			<property name="hibernate.validator.apply_to_ddl" value="false" />
+			<property name="hibernate.validator.autoregister_listeners"
+				value="false" />
+			<property name="javax.persistence.validation.mode" value="none" />
+			<property name="hibernate.connection.release_mode" value="after_transaction" />
+		</properties>
+	</persistence-unit>
+</persistence>
