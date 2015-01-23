@@ -69,8 +69,6 @@ public class EspiUserApprovalHandler extends ApprovalStoreUserApprovalHandler {
 		if (useApprovalStore) {
 			authorizationRequest = super.checkForPreApproval(authorizationRequest, userAuthentication);
 			approved = authorizationRequest.isApproved();
-			System.err.println("11 approved ..."+approved);
-			approved=false;
 		}
 		else {
 			if (clientDetailsService != null) {
@@ -79,7 +77,6 @@ public class EspiUserApprovalHandler extends ApprovalStoreUserApprovalHandler {
 					ClientDetails client = clientDetailsService
 							.loadClientByClientId(authorizationRequest.getClientId());
 					for (String scope : requestedScopes) {
-						System.err.println("Scope ..."+scope);
 						if (client.isAutoApprove(scope) || client.isAutoApprove("all")) {
 							approved = true;
 							break;
@@ -89,9 +86,7 @@ public class EspiUserApprovalHandler extends ApprovalStoreUserApprovalHandler {
 				catch (ClientRegistrationException e) {
 				}
 			}
-			
 		}
-		System.err.println("approved ..."+approved);
 		authorizationRequest.setApproved(approved);
 
 		return authorizationRequest;

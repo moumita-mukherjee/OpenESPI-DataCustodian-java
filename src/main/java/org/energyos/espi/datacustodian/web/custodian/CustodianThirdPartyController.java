@@ -32,7 +32,7 @@ public class CustodianThirdPartyController extends BaseController {
 	public String authorizeThridParty(@PathVariable Long thirdPartyId,
 			ModelMap model) {
 
-		applicationInformationService.updateAuthroizeStatus(thirdPartyId, true);
+		//applicationInformationService.updateAuthroizeStatus(thirdPartyId, true);
 
 		model.put("applicationInformationList",
 				applicationInformationService.findAll());
@@ -41,12 +41,10 @@ public class CustodianThirdPartyController extends BaseController {
 
 	@RequestMapping(value = Routes.THIRD_PARTY_SHOW, method = RequestMethod.GET)
 	public String showThridParty(@PathVariable Long thirdPartyId, ModelMap model) {
+		
 
-		applicationInformationService
-				.updateAuthroizeStatus(thirdPartyId, false);
-
-		model.put("appInformation",
-				applicationInformationService.findById(thirdPartyId));
+		//model.put("appInformation",
+		//		applicationInformationService.findById(thirdPartyId));
 		return "/custodian/thirdparties/show";
 	}
 
@@ -54,24 +52,11 @@ public class CustodianThirdPartyController extends BaseController {
 	public String unAuthorizeThridParty(@PathVariable Long thirdPartyId,
 			ModelMap model) {
 
-		applicationInformationService
-				.updateAuthroizeStatus(thirdPartyId, false);
+		//applicationInformationService.updateAuthroizeStatus(thirdPartyId, false);
 
 		model.put("applicationInformationList",
 				applicationInformationService.findAll());
 		return "/custodian/thirdparties/index";
-	}
-
-	@RequestMapping(value = Routes.THIRD_PARTY_LIST_CUSTODIAN, method = RequestMethod.POST)
-	public String selectThirdParty(
-			@RequestParam("Third_party") Long thirdPartyId,
-			@RequestParam("Third_party_URL") String thirdPartyURL) {
-		ApplicationInformation applicationInformation = applicationInformationService
-				.findById(thirdPartyId);
-		return "redirect:" + thirdPartyURL + "?"
-				+ URLHelper.newScopeParams(applicationInformation.getScope())
-				+ "&DataCustodianID="
-				+ applicationInformation.getDataCustodianId();
 	}
 
 	public void setApplicationInformationService(

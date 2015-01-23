@@ -67,7 +67,6 @@
 
 	<bean id="tokenEnhancer" class="org.energyos.espi.datacustodian.oauth.EspiTokenEnhancer"
 		lazy-init="true">
-		<property name="baseURL" value="${datacustodian.base.url}" />
 	</bean>
 
 	<!-- <bean id="authorizationCode" -->
@@ -162,4 +161,3 @@
 		************************************** -->
 
 </beans>
-

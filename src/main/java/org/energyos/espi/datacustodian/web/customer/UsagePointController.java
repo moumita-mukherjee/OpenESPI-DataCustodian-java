@@ -60,12 +60,7 @@ public class UsagePointController extends BaseController {
 	@Autowired
 	private ApplicationInformationService applicationInformationService;
 
-	@Autowired
-	private UsagePointDetailRepository usagePointDetailRepository;
 
-	public void setUsagePointDetailRepository(UsagePointDetailRepository usagePointDetailRepository) {
-		this.usagePointDetailRepository = usagePointDetailRepository;
-	}
 
 	@ModelAttribute
 	public List<UsagePoint> usagePoints(Principal principal) {
@@ -74,21 +69,11 @@ public class UsagePointController extends BaseController {
 		return usagePoints;
 	}
 
-	private List<UsagePoint> populateExternalDetail(String customerId, List<UsagePoint> usagePoints) {
-		try {
-			UsagePointHelper.populateExternalDetail(usagePoints,
-					usagePointDetailRepository.findAllByRetailCustomerId(customerId));
-		} catch (EmptyResultDataAccessException ignore) {
-
-		}
-		return usagePoints;
-	}
-
-	@RequestMapping(value = Routes.USAGE_POINT_INDEX, method = RequestMethod.GET)
-	public String index() {
-		return "/customer/usagepoints/index";
-	}
-
+    @RequestMapping(value = Routes.USAGE_POINT_INDEX, method = RequestMethod.GET)
+    public String index() {
+        return "/customer/usagepoints/index";
+    }
+     
 	// DJ
 	// @Transactional(readOnly = true, isolation = Isolation.DEFAULT,
 	// propagation = Propagation.NEVER)
@@ -151,11 +136,9 @@ public class UsagePointController extends BaseController {
 			MeterReading mr = it.next();
 			mrBag.put("Description", mr.getDescription());
 			// TODO build the real IntervalBlocks URI
-			String uriTail = "/RetailCustomer/" + retailCustomerId + "/UsagePoint/" + usagePointId + "/MeterReading/"
-					+ mr.getId() + "/show";
-			mrBag.put("Uri",
-					applicationInformationService.getDataCustodianResourceEndpoint().replace("/espi/1_1/resource", "")
-							+ uriTail);
+		String dataCustodianResourceEndpoint = resourceService.findById(1L, ApplicationInformation.class).getDataCustodianResourceEndpoint();
+			String uriTail = "/RetailCustomer/" + retailCustomerId + "/UsagePoint/" + usagePointId + "/MeterReading/" + mr.getId() + "/show";
+			mrBag.put("Uri",dataCustodianResourceEndpoint.replace("/espi/1_1/resource", "") + uriTail);			
 			mrBag.put("uriTail", uriTail);
 			mrBag.put("ReadingType", mr.getReadingType());
 			mrBag.put("intervalReadingFrom", mr.getIntervalReadingFrom());
@@ -178,31 +161,46 @@ public class UsagePointController extends BaseController {
 		this.usagePointService = usagePointService;
 	}
 
-	public UsagePointService getUsagePointService() {
-		return this.usagePointService;
-	}
+   public UsagePointService getUsagePointService () {
+        return this.usagePointService;
+   }
+   public void setResourceService(ResourceService resourceService) {
+        this.resourceService = resourceService;
+   }
 
-	public void setResourceService(ResourceService resourceService) {
-		this.resourceService = resourceService;
-	}
+   public ResourceService getResourceService () {
+        return this.resourceService;
+   }
+   public void setExportService(ExportService exportService) {
+        this.exportService = exportService;
+   }
 
-	public ResourceService getResourceService() {
-		return this.resourceService;
-	}
+   public ExportService getExportService () {
+        return this.exportService;
+   }
+   public void setApplicationInformationService(ApplicationInformationService applicationInformationService) {
+        this.applicationInformationService = applicationInformationService;
+   }
 
-	public void setExportService(ExportService exportService) {
-		this.exportService = exportService;
-	}
+   public ApplicationInformationService getApplicationInformationService () {
+        return this.applicationInformationService;
+   }
+   /* LH customization starts here */
+	@Autowired
+	private UsagePointDetailRepository usagePointDetailRepository;
 
-	public ExportService getExportService() {
-		return this.exportService;
+	public void setUsagePointDetailRepository(UsagePointDetailRepository usagePointDetailRepository) {
+		this.usagePointDetailRepository = usagePointDetailRepository;
 	}
+	   
+	private List<UsagePoint> populateExternalDetail(String customerId, List<UsagePoint> usagePoints) {
+		try {
+			UsagePointHelper.populateExternalDetail(usagePoints,
+					usagePointDetailRepository.findAllByRetailCustomerId(customerId));
+		} catch (EmptyResultDataAccessException ignore) {
 
-	public void setApplicationInformationService(ApplicationInformationService applicationInformationService) {
-		this.applicationInformationService = applicationInformationService;
+		}
+		return usagePoints;
 	}
-
-	public ApplicationInformationService getApplicationInformationService() {
-		return this.applicationInformationService;
-	}
+    
 }

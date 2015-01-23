@@ -45,11 +45,8 @@ public class MeterReadingController extends BaseController {
 	@Autowired
 	protected MeterReadingService meterReadingService;
 
-	@Autowired
-	protected IntervalBlockService intervalBlockService;
 
-	@Autowired
-	private ApplicationInformationService applicationInformationService;
+
 
 	// DJ
 	// @Transactional(readOnly = true)
@@ -103,10 +100,7 @@ public class MeterReadingController extends BaseController {
 		model.put("meterReading", newMeterReading);
 		model.put("dpb", dpb);
 
-		model.put("meterReading", newMeterReading);
-		
-		
-		System.err.println((newMeterReading!=null && newMeterReading.getIntervalBlocks()!=null?newMeterReading.getIntervalBlocks().size():0)+ " ************************** Elapsed time *************+"+(System.currentTimeMillis()-startTick));
+		model.put("meterReading", newMeterReading);				
 		return "/customer/meterreadings/show";
 	}
 
@@ -117,6 +111,13 @@ public class MeterReadingController extends BaseController {
 	public MeterReadingService getMeterReadingService(MeterReadingService meterReadingService) {
 		return this.meterReadingService;
 	}
+
+	/* LH customization starts here */
+	@Autowired
+	protected IntervalBlockService intervalBlockService;
+	
+	@Autowired
+	private ApplicationInformationService applicationInformationService;
 
 	public void setIntervalBlockService(IntervalBlockService intervalBlockService) {
 		this.intervalBlockService = intervalBlockService;

@@ -160,4 +160,5 @@ public class AssociateUsagePointController {
    public UsagePointService getUsagePointService () {
         return this.service;
    }
+
 }

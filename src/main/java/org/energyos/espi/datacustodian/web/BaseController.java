@@ -28,17 +28,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Controller
 public class BaseController {
-
-	@Autowired
-	private RetailCustomerService retailCustomerService;
-
-	public void setRetailCustomerService(RetailCustomerService retailCustomerService) {
-		this.retailCustomerService = retailCustomerService;
-	}
-
-	@ModelAttribute("currentCustomer")
-	public RetailCustomer currentCustomer(Principal principal) {
-		try {
+    @ModelAttribute("currentCustomer")
+    public RetailCustomer currentCustomer(Principal principal) {
+    	try {
 			User user = (User) ((Authentication) principal).getPrincipal();
 			if (user.getRetailCustomer() == null) {
 				user.setRetailCustomer(retailCustomerService.findByLink(user.getSelfLink()));
@@ -50,14 +42,20 @@ public class BaseController {
 		}
 	}
 
+
+	/* LH customization starts here */
+	@Autowired
+	private RetailCustomerService retailCustomerService;
+
+	public void setRetailCustomerService(RetailCustomerService retailCustomerService) {
+		this.retailCustomerService = retailCustomerService;
+	}
 	@ModelAttribute("currentUser")
 	public User currentUser(Principal principal) {
 		try {
 			return (User) ((Authentication) principal).getPrincipal();
-
-		} catch (Exception e) {
+        	} catch (Exception e) {
 			return null;
 		}
 	}
-
 }

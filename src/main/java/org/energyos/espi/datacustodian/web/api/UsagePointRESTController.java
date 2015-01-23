@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,10 +47,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sun.syndication.io.FeedException;
 
-@Controller
+@RestController
 public class UsagePointRESTController {
 	private Logger log = LoggerFactory.getLogger(UsagePointRESTController.class);
 	@Autowired
@@ -80,17 +80,20 @@ public class UsagePointRESTController {
 	// first the RESTful Interface to the ROOT Objects
 	@RequestMapping(value = Routes.ROOT_USAGE_POINT_COLLECTION, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
-	public void index(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, String> params)
-			throws IOException, FeedException {
+	public void index(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, String> params) throws IOException,
+			FeedException {
 
 		Long subscriptionId = getSubscriptionId(request);
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		try {
 
-			exportService.exportUsagePoints_Root(subscriptionId, response.getOutputStream(), new ExportFilter(params));
+			exportService.exportUsagePoints_Root(subscriptionId,
+					response.getOutputStream(), new ExportFilter(params));
 		} catch (Exception e) {
 			log.warn("Exception", e);
+			e.printStackTrace(System.err);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
 
@@ -98,15 +101,17 @@ public class UsagePointRESTController {
 
 	@RequestMapping(value = Routes.ROOT_USAGE_POINT_MEMBER, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
-	public void show(HttpServletRequest request, HttpServletResponse response, @PathVariable Long usagePointId,
-			@RequestParam Map<String, String> params) throws IOException, FeedException {
+	public void show(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable Long usagePointId,
+			@RequestParam Map<String, String> params) throws IOException,
+			FeedException {
 
 		Long subscriptionId = getSubscriptionId(request);
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		try {
-			exportService.exportUsagePoint_Root(subscriptionId, usagePointId, response.getOutputStream(),
-					new ExportFilter(params));
+			exportService.exportUsagePoint_Root(subscriptionId, usagePointId,
+					response.getOutputStream(), new ExportFilter(params));
 		} catch (Exception e) {
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -115,15 +120,19 @@ public class UsagePointRESTController {
 
 	@RequestMapping(value = Routes.ROOT_USAGE_POINT_COLLECTION, method = RequestMethod.POST, consumes = "application/atom+xml", produces = "application/atom+xml")
 	@ResponseBody
-	public void create(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam Map<String, String> params, InputStream stream) throws IOException {
+	public void create(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam Map<String, String> params, InputStream stream)
+			throws IOException {
 
 		Long subscriptionId = getSubscriptionId(request);
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		try {
-			UsagePoint usagePoint = this.usagePointService.importResource(stream);
-			exportService.exportUsagePoint_Root(subscriptionId, usagePoint.getId(), response.getOutputStream(),
+			UsagePoint usagePoint = this.usagePointService
+					.importResource(stream);
+			exportService.exportUsagePoint_Root(subscriptionId,
+					usagePoint.getId(), response.getOutputStream(),
 					new ExportFilter(params));
 		} catch (Exception e) {
 			log.warn("Exception", e);
@@ -134,14 +143,16 @@ public class UsagePointRESTController {
 
 	@RequestMapping(value = Routes.ROOT_USAGE_POINT_MEMBER, method = RequestMethod.PUT, consumes = "application/atom+xml")
 	@ResponseBody
-	public void update(HttpServletResponse response, @PathVariable Long usagePointId,
+	public void update(HttpServletResponse response,
+			@PathVariable Long usagePointId,
 			@RequestParam Map<String, String> params, InputStream stream) {
 		UsagePoint usagePoint = usagePointService.findById(usagePointId);
 
 		if (usagePoint != null) {
 			try {
 
-				UsagePoint newUsagePoint = usagePointService.importResource(stream);
+				UsagePoint newUsagePoint = usagePointService
+						.importResource(stream);
 				usagePoint.merge(newUsagePoint);
 			} catch (Exception e) {
 				log.warn("Exception", e);
@@ -152,7 +163,8 @@ public class UsagePointRESTController {
 
 	@RequestMapping(value = Routes.ROOT_USAGE_POINT_MEMBER, method = RequestMethod.DELETE)
 	@ResponseBody
-	public void delete(HttpServletResponse response, @PathVariable Long usagePointId,
+	public void delete(HttpServletResponse response,
+			@PathVariable Long usagePointId,
 			@RequestParam Map<String, String> params) {
 
 		try {
@@ -167,18 +179,21 @@ public class UsagePointRESTController {
 	//
 	@RequestMapping(value = Routes.USAGE_POINT_COLLECTION, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
-	public void index(HttpServletResponse response, @PathVariable Long subscriptionId,
-			@RequestParam Map<String, String> params) throws IOException, FeedException {
+	public void index(HttpServletResponse response,
+			@PathVariable Long subscriptionId,
+			@RequestParam Map<String, String> params) throws IOException,
+			FeedException {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		try {
-			Subscription subscription = subscriptionService.findById(subscriptionId);
+			Subscription subscription = subscriptionService
+					.findById(subscriptionId);
 			Authorization authorization = subscription.getAuthorization();
 			RetailCustomer retailCustomer = authorization.getRetailCustomer();
 			Long retailCustomerId = retailCustomer.getId();
 
-			exportService.exportUsagePoints(subscriptionId, retailCustomerId, response.getOutputStream(),
-					new ExportFilter(params));
+			exportService.exportUsagePoints(subscriptionId, retailCustomerId,
+					response.getOutputStream(), new ExportFilter(params));
 
 		} catch (Exception e) {
 			log.warn("Exception", e);
@@ -188,17 +203,18 @@ public class UsagePointRESTController {
 
 	@RequestMapping(value = Routes.USAGE_POINT_MEMBER, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
-	public void show(HttpServletResponse response, @PathVariable Long subscriptionId, @PathVariable Long usagePointId,
-			@RequestParam Map<String, String> params) throws IOException, FeedException {
+	public void show(HttpServletResponse response,
+			@PathVariable Long subscriptionId, @PathVariable Long usagePointId,
+			@RequestParam Map<String, String> params) throws IOException,
+			FeedException {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		try {
-			Subscription subscription = subscriptionService.findById(subscriptionId);
-			Authorization authorization = subscription.getAuthorization();
-			RetailCustomer retailCustomer = authorization.getRetailCustomer();
-			Long retailCustomerId = retailCustomer.getId();
-			exportService.exportUsagePoint(subscriptionId, retailCustomerId, usagePointId, response.getOutputStream(),
-					new ExportFilter(params));
+			Long retailCustomerId = subscriptionService.findRetailCustomerId(
+					subscriptionId, usagePointId);
+			exportService.exportUsagePoint(subscriptionId, retailCustomerId,
+					usagePointId, response.getOutputStream(), new ExportFilter(
+							params));
 		} catch (Exception e) {
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -207,22 +223,28 @@ public class UsagePointRESTController {
 
 	@RequestMapping(value = Routes.USAGE_POINT_COLLECTION, method = RequestMethod.POST, consumes = "application/atom+xml", produces = "application/atom+xml")
 	@ResponseBody
-	public void create(HttpServletResponse response, @PathVariable Long subscriptionId,
-			@RequestParam Map<String, String> params, InputStream stream) throws IOException {
+	public void create(HttpServletResponse response,
+			@PathVariable Long subscriptionId,
+			@RequestParam Map<String, String> params, InputStream stream)
+			throws IOException {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		try {
-			Subscription subscription = subscriptionService.findById(subscriptionId);
+			Subscription subscription = subscriptionService
+					.findById(subscriptionId);
 			Authorization authorization = subscription.getAuthorization();
 			RetailCustomer retailCustomer = authorization.getRetailCustomer();
 			Long retailCustomerId = retailCustomer.getId();
 
-			UsagePoint usagePoint = this.usagePointService.importResource(stream);
+			UsagePoint usagePoint = this.usagePointService
+					.importResource(stream);
 
-			usagePointService.associateByUUID(retailCustomer, usagePoint.getUUID());
+			usagePointService.associateByUUID(retailCustomer,
+					usagePoint.getUUID());
 
-			exportService.exportUsagePoint(subscriptionId, retailCustomerId, usagePoint.getId(),
-					response.getOutputStream(), new ExportFilter(params));
+			exportService.exportUsagePoint(subscriptionId, retailCustomerId,
+					usagePoint.getId(), response.getOutputStream(),
+					new ExportFilter(params));
 
 		} catch (Exception e) {
 			log.warn("Exception", e);
@@ -232,17 +254,17 @@ public class UsagePointRESTController {
 
 	@RequestMapping(value = Routes.USAGE_POINT_MEMBER, method = RequestMethod.PUT, consumes = "application/atom+xml")
 	@ResponseBody
-	public void update(HttpServletResponse response, @PathVariable Long subscriptionId,
-			@PathVariable Long usagePointId, @RequestParam Map<String, String> params, InputStream stream) {
+	public void update(HttpServletResponse response,
+			@PathVariable Long subscriptionId, @PathVariable Long usagePointId,
+			@RequestParam Map<String, String> params, InputStream stream) {
 
 		try {
-			Subscription subscription = subscriptionService.findById(subscriptionId);
-			Authorization authorization = subscription.getAuthorization();
-			RetailCustomer retailCustomer = authorization.getRetailCustomer();
-			Long retailCustomerId = retailCustomer.getId();
-
-			Long id = resourceService.findIdByXPath(retailCustomerId, usagePointId, UsagePoint.class);
-			UsagePoint usagePoint = resourceService.findById(id, UsagePoint.class);
+			Long retailCustomerId = subscriptionService.findRetailCustomerId(
+					subscriptionId, usagePointId);
+			Long id = resourceService.findIdByXPath(retailCustomerId,
+					usagePointId, UsagePoint.class);
+			UsagePoint usagePoint = resourceService.findById(id,
+					UsagePoint.class);
 			UsagePoint newUsagePoint = usagePointService.importResource(stream);
 			usagePoint.merge(newUsagePoint);
 		} catch (Exception e) {
@@ -254,16 +276,15 @@ public class UsagePointRESTController {
 
 	@RequestMapping(value = Routes.USAGE_POINT_MEMBER, method = RequestMethod.DELETE)
 	@ResponseBody
-	public void delete(HttpServletResponse response, @PathVariable Long subscriptionId,
-			@PathVariable Long usagePointId, @RequestParam Map<String, String> params) {
+	public void delete(HttpServletResponse response,
+			@PathVariable Long subscriptionId, @PathVariable Long usagePointId,
+			@RequestParam Map<String, String> params) {
 
 		try {
-			Subscription subscription = subscriptionService.findById(subscriptionId);
-			Authorization authorization = subscription.getAuthorization();
-			RetailCustomer retailCustomer = authorization.getRetailCustomer();
-			Long retailCustomerId = retailCustomer.getId();
-
-			resourceService.deleteByXPathId(retailCustomerId, usagePointId, UsagePoint.class);
+			Long retailCustomerId = subscriptionService.findRetailCustomerId(
+					subscriptionId, usagePointId);
+			resourceService.deleteByXPathId(retailCustomerId, usagePointId,
+					UsagePoint.class);
 
 		} catch (Exception e) {
 			log.warn("****Delete Error: %s - %s\n", UsagePoint.class, e.toString());
@@ -279,7 +300,8 @@ public class UsagePointRESTController {
 		try {
 			if (token != null) {
 				token = token.replace("Bearer ", "");
-				Authorization authorization = authorizationService.findByAccessToken(token);
+			Authorization authorization = authorizationService
+					.findByAccessToken(token);
 				if (authorization != null) {
 					Subscription subscription = authorization.getSubscription();
 					if (subscription != null) {
@@ -307,11 +329,13 @@ public class UsagePointRESTController {
 		this.subscriptionService = subscriptionService;
 	}
 
-	public SubscriptionService getSubscriptionService(SubscriptionService subscriptionService) {
+	public SubscriptionService getSubscriptionService(
+			SubscriptionService subscriptionService) {
 		return this.subscriptionService;
 	}
 
-	public void setRetailCustomerService(RetailCustomerService retailCustomerService) {
+	public void setRetailCustomerService(
+			RetailCustomerService retailCustomerService) {
 		this.retailCustomerService = retailCustomerService;
 	}
 
@@ -335,7 +359,8 @@ public class UsagePointRESTController {
 		return this.resourceService;
 	}
 
-	public void setAuthorizationService(AuthorizationService authorizationService) {
+	public void setAuthorizationService(
+			AuthorizationService authorizationService) {
 		this.authorizationService = authorizationService;
 	}
 

@@ -127,6 +127,7 @@
 										<th>Address</th>
 										<th>Billing Number</th>
 										<th>Service</th>
+										<th>Usage Point</th>
 										<th>Meter</th>
 										<th>Service Status</th>
 										<th>Action</th>
@@ -150,6 +151,7 @@
 											<td><spring:message
 													code="service.name.${usagePoint.serviceCategory.kind}" /><br />
 												<c:out value="${usagePoint.usagePointDetail.serviceId}" /></td>
+											<td><c:out value="${usagePoint.id}" /></td>	
 											<td><c:out
 													value="${usagePoint.usagePointDetail.meterNumber}" /></td>
 
@@ -185,6 +187,7 @@
 												<th>Address</th>
 												<th>Billing Number</th>
 												<th>Service</th>
+												<th>Usage Point</th>
 												<th>Meter</th>
 												<th>Service Status</th>
 												<th>Action</th>
@@ -208,6 +211,7 @@
 													<td><spring:message
 															code="service.name.${usagePoint.serviceCategory.kind}" /><br />
 														<c:out value="${usagePoint.usagePointDetail.serviceId}" /></td>
+													<td><c:out value="${usagePoint.id}" /></td>															
 													<td><c:out
 															value="${usagePoint.usagePointDetail.meterNumber}" /></td>
 

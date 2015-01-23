@@ -34,7 +34,7 @@ public class HomeController extends BaseController{
         return "/home";
     }
     
-
+	/* LH customization starts here */
     @RequestMapping(value = "/session", method = RequestMethod.GET)
     public String session() {    	
         return "/session";

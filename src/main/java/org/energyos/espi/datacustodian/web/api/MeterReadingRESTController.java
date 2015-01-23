@@ -20,14 +20,11 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.energyos.espi.common.domain.Authorization;
 import org.energyos.espi.common.domain.MeterReading;
-import org.energyos.espi.common.domain.RetailCustomer;
 import org.energyos.espi.common.domain.Routes;
 import org.energyos.espi.common.domain.Subscription;
 import org.energyos.espi.common.domain.UsagePoint;
@@ -39,14 +36,9 @@ import org.energyos.espi.common.service.RetailCustomerService;
 import org.energyos.espi.common.service.SubscriptionService;
 import org.energyos.espi.common.service.UsagePointService;
 import org.energyos.espi.common.utils.ExportFilter;
-import org.hibernate.PersistentObjectException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.orm.jpa.JpaSystemException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,10 +46,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sun.syndication.io.FeedException;
 
-@Controller
+@RestController
 public class MeterReadingRESTController {
 
 	@Autowired
@@ -90,47 +83,30 @@ public class MeterReadingRESTController {
 	//
 	@RequestMapping(value = Routes.ROOT_METER_READING_COLLECTION, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
-	public void index(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, String> params)
-			throws IOException, FeedException, Exception {
+	public void index(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, String> params) throws Exception,
+			FeedException {
 
 		Long subscriptionId = getSubscriptionId(request);
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
-		exportService.exportMeterReadings_Root(subscriptionId, response.getOutputStream(), new ExportFilter(params));
-	}
-
-	@RequestMapping(value = Routes.EXT_METER_READING_MEMBER, method = RequestMethod.GET, produces = "application/atom+xml")
-	@ResponseBody
-	public void show(HttpServletRequest request, HttpServletResponse response, @PathVariable String uuid,
-			@RequestParam Map<String, String> params) throws IOException, FeedException {
-
-		try {
-			Long subscriptionId = 0l;// getSubscriptionId(request);
-
-			response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
-
-			MeterReading mr = meterReadingService.findByUUID(UUID.fromString(uuid));
-
-			System.err.print(" mr ...." + mr);
-			exportService.exportMeterReadingFull(subscriptionId, mr.getId(), mr.getUsagePoint().getId(), mr
-					.getUsagePoint().getRetailCustomer().getId(), response.getOutputStream(), new ExportFilter(params));
-
-		} catch (Exception e) {
-			e.printStackTrace(System.err);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		}
+		exportService.exportMeterReadings_Root(subscriptionId,
+				response.getOutputStream(), new ExportFilter(params));
 	}
 
 	@RequestMapping(value = Routes.ROOT_METER_READING_MEMBER, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
-	public void show(HttpServletRequest request, HttpServletResponse response, @PathVariable Long meterReadingId,
-			@RequestParam Map<String, String> params) throws IOException, FeedException {
+	public void show(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable Long meterReadingId,
+			@RequestParam Map<String, String> params) throws Exception,
+			FeedException {
 
 		Long subscriptionId = getSubscriptionId(request);
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		try {
-			exportService.exportMeterReading_Root(subscriptionId, meterReadingId, response.getOutputStream(),
+			exportService.exportMeterReading_Root(subscriptionId,
+					meterReadingId, response.getOutputStream(),
 					new ExportFilter(params));
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -139,15 +115,19 @@ public class MeterReadingRESTController {
 
 	@RequestMapping(value = Routes.ROOT_METER_READING_COLLECTION, method = RequestMethod.POST, consumes = "application/atom+xml", produces = "application/atom+xml")
 	@ResponseBody
-	public void create(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam Map<String, String> params, InputStream stream) throws IOException {
+	public void create(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam Map<String, String> params, InputStream stream)
+			throws IOException {
 
 		Long subscriptionId = getSubscriptionId(request);
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		try {
-			MeterReading meterReading = this.meterReadingService.importResource(stream);
-			exportService.exportMeterReading_Root(subscriptionId, meterReading.getId(), response.getOutputStream(),
+			MeterReading meterReading = this.meterReadingService
+					.importResource(stream);
+			exportService.exportMeterReading_Root(subscriptionId,
+					meterReading.getId(), response.getOutputStream(),
 					new ExportFilter(params));
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -156,10 +136,12 @@ public class MeterReadingRESTController {
 
 	@RequestMapping(value = Routes.ROOT_METER_READING_MEMBER, method = RequestMethod.PUT, consumes = "application/atom+xml", produces = "application/atom+xml")
 	@ResponseBody
-	public void update(HttpServletResponse response, @PathVariable Long meterReadingId,
+	public void update(HttpServletResponse response,
+			@PathVariable Long meterReadingId,
 			@RequestParam Map<String, String> params, InputStream stream) {
 
-		if (null != resourceService.findById(meterReadingId, MeterReading.class)) {
+		if (null != resourceService
+				.findById(meterReadingId, MeterReading.class)) {
 			try {
 				// note that the import service is doing the merge
 				// if this should change, we have to do it here.
@@ -172,7 +154,8 @@ public class MeterReadingRESTController {
 	}
 
 	@RequestMapping(value = Routes.ROOT_METER_READING_MEMBER, method = RequestMethod.DELETE)
-	public void delete(HttpServletResponse response, @PathVariable Long meterReadingId) {
+	public void delete(HttpServletResponse response,
+			@PathVariable Long meterReadingId) {
 		try {
 			resourceService.deleteById(meterReadingId, MeterReading.class);
 		} catch (Exception e) {
@@ -184,34 +167,35 @@ public class MeterReadingRESTController {
 	//
 	@RequestMapping(value = Routes.METER_READING_COLLECTION, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
-	public void index(HttpServletResponse response, @PathVariable Long subscriptionId, @PathVariable Long usagePointId,
-			@RequestParam Map<String, String> params) throws IOException, FeedException, Exception {
+	public void index(HttpServletResponse response,
+			@PathVariable Long subscriptionId, @PathVariable Long usagePointId,
+			@RequestParam Map<String, String> params) throws Exception,
+			FeedException {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
-		Subscription subscription = subscriptionService.findById(subscriptionId);
-		Authorization authorization = subscription.getAuthorization();
-		RetailCustomer retailCustomer = authorization.getRetailCustomer();
-		Long retailCustomerId = retailCustomer.getId();
+		Long retailCustomerId = subscriptionService.findRetailCustomerId(
+				subscriptionId, usagePointId);
 
-		exportService.exportMeterReadings(subscriptionId, retailCustomerId, usagePointId, response.getOutputStream(),
-				new ExportFilter(params));
+		exportService.exportMeterReadings(subscriptionId, retailCustomerId,
+				usagePointId, response.getOutputStream(), new ExportFilter(
+						params));
 	}
 
 	@RequestMapping(value = Routes.METER_READING_MEMBER, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
-	public void show(HttpServletResponse response, @PathVariable Long subscriptionId, @PathVariable Long usagePointId,
-			@PathVariable Long meterReadingId, @RequestParam Map<String, String> params) throws IOException,
+	public void show(HttpServletResponse response,
+			@PathVariable Long subscriptionId, @PathVariable Long usagePointId,
+			@PathVariable Long meterReadingId,
+			@RequestParam Map<String, String> params) throws IOException,
 			FeedException {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		try {
-			Subscription subscription = subscriptionService.findById(subscriptionId);
-			Authorization authorization = subscription.getAuthorization();
-			RetailCustomer retailCustomer = authorization.getRetailCustomer();
-			Long retailCustomerId = retailCustomer.getId();
-
-			exportService.exportMeterReading(subscriptionId, retailCustomerId, usagePointId, meterReadingId,
-					response.getOutputStream(), new ExportFilter(params));
+			Long retailCustomerId = subscriptionService.findRetailCustomerId(
+					subscriptionId, usagePointId);
+			exportService.exportMeterReading(subscriptionId, retailCustomerId,
+					usagePointId, meterReadingId, response.getOutputStream(),
+					new ExportFilter(params));
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -221,22 +205,24 @@ public class MeterReadingRESTController {
 	//
 	@RequestMapping(value = Routes.METER_READING_COLLECTION, method = RequestMethod.POST, consumes = "application/atom+xml", produces = "application/atom+xml")
 	@ResponseBody
-	public void create(HttpServletResponse response, @PathVariable Long subscriptionId,
-			@PathVariable Long usagePointId, @RequestParam Map<String, String> params, InputStream stream)
+	public void create(HttpServletResponse response,
+			@PathVariable Long subscriptionId, @PathVariable Long usagePointId,
+			@RequestParam Map<String, String> params, InputStream stream)
 			throws IOException {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
-		Subscription subscription = subscriptionService.findById(subscriptionId);
-		Authorization authorization = subscription.getAuthorization();
-		RetailCustomer retailCustomer = authorization.getRetailCustomer();
-		Long retailCustomerId = retailCustomer.getId();
+		Long retailCustomerId = subscriptionService.findRetailCustomerId(
+				subscriptionId, usagePointId);
 
-		if (null != resourceService.findIdByXPath(retailCustomerId, usagePointId, UsagePoint.class)) {
+		if (null != resourceService.findIdByXPath(retailCustomerId,
+				usagePointId, UsagePoint.class)) {
 			try {
 
-				MeterReading meterReading = meterReadingService.importResource(stream);
+				MeterReading meterReading = meterReadingService
+						.importResource(stream);
 
-				exportService.exportMeterReading(subscriptionId, retailCustomerId, usagePointId, meterReading.getId(),
+				exportService.exportMeterReading(subscriptionId,
+						retailCustomerId, usagePointId, meterReading.getId(),
 						response.getOutputStream(), new ExportFilter(params));
 
 			} catch (Exception e) {
@@ -250,16 +236,17 @@ public class MeterReadingRESTController {
 	//
 	@RequestMapping(value = Routes.METER_READING_MEMBER, method = RequestMethod.PUT, consumes = "application/atom+xml", produces = "application/atom+xml")
 	@ResponseBody
-	public void update(HttpServletResponse response, @PathVariable Long subscriptionId,
-			@PathVariable Long usagePointId, @PathVariable Long meterReadingId,
+	public void update(HttpServletResponse response,
+			@PathVariable Long subscriptionId, @PathVariable Long usagePointId,
+			@PathVariable Long meterReadingId,
 			@RequestParam Map<String, String> params, InputStream stream) {
 
-		Subscription subscription = subscriptionService.findById(subscriptionId);
-		Authorization authorization = subscription.getAuthorization();
-		RetailCustomer retailCustomer = authorization.getRetailCustomer();
-		Long retailCustomerId = retailCustomer.getId();
+		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
+		Long retailCustomerId = subscriptionService.findRetailCustomerId(
+				subscriptionId, usagePointId);
 
-		if (null != resourceService.findIdByXPath(retailCustomerId, usagePointId, meterReadingId, MeterReading.class)) {
+		if (null != resourceService.findIdByXPath(retailCustomerId,
+				usagePointId, meterReadingId, MeterReading.class)) {
 
 			try {
 				meterReadingService.importResource(stream);
@@ -271,16 +258,16 @@ public class MeterReadingRESTController {
 	}
 
 	@RequestMapping(value = Routes.METER_READING_MEMBER, method = RequestMethod.DELETE)
-	public void delete(HttpServletResponse response, @PathVariable Long subscriptionId,
-			@PathVariable Long usagePointId, @PathVariable Long meterReadingId) {
+	public void delete(HttpServletResponse response,
+			@PathVariable Long subscriptionId, @PathVariable Long usagePointId,
+			@PathVariable Long meterReadingId) {
 
 		try {
-			Subscription subscription = subscriptionService.findById(subscriptionId);
-			Authorization authorization = subscription.getAuthorization();
-			RetailCustomer retailCustomer = authorization.getRetailCustomer();
-			Long retailCustomerId = retailCustomer.getId();
+			Long retailCustomerId = subscriptionService.findRetailCustomerId(
+					subscriptionId, usagePointId);
 
-			resourceService.deleteByXPathId(retailCustomerId, usagePointId, meterReadingId, MeterReading.class);
+			resourceService.deleteByXPathId(retailCustomerId, usagePointId,
+					meterReadingId, MeterReading.class);
 
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -294,7 +281,8 @@ public class MeterReadingRESTController {
 
 		if (token != null) {
 			token = token.replace("Bearer ", "");
-			Authorization authorization = authorizationService.findByAccessToken(token);
+			Authorization authorization = authorizationService
+					.findByAccessToken(token);
 			if (authorization != null) {
 				Subscription subscription = authorization.getSubscription();
 				if (subscription != null) {
@@ -323,7 +311,8 @@ public class MeterReadingRESTController {
 		return this.usagePointService;
 	}
 
-	public void setRetailCustomerService(RetailCustomerService retailCustomerService) {
+	public void setRetailCustomerService(
+			RetailCustomerService retailCustomerService) {
 		this.retailCustomerService = retailCustomerService;
 	}
 
@@ -355,12 +344,36 @@ public class MeterReadingRESTController {
 		return this.resourceService;
 	}
 
-	public void setAuthorizationService(AuthorizationService authorizationService) {
+	public void setAuthorizationService(
+			AuthorizationService authorizationService) {
 		this.authorizationService = authorizationService;
 	}
 
 	public AuthorizationService getAuthorizationService() {
 		return this.authorizationService;
 	}
+	/* LH customization starts here */	
+	@RequestMapping(value = Routes.EXT_METER_READING_MEMBER, method = RequestMethod.GET, produces = "application/atom+xml")
+	@ResponseBody
+	public void show(HttpServletRequest request, HttpServletResponse response, @PathVariable String uuid,
+			@RequestParam Map<String, String> params) throws IOException, FeedException {
+
+		try {
+			Long subscriptionId = 0l;// getSubscriptionId(request);
+
+			response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
+
+			MeterReading mr = meterReadingService.findByUUID(UUID.fromString(uuid));
+
+			System.err.print(" mr ...." + mr);
+			exportService.exportMeterReadingFull(subscriptionId, mr.getId(), mr.getUsagePoint().getId(), mr
+					.getUsagePoint().getRetailCustomer().getId(), response.getOutputStream(), new ExportFilter(params));
+
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		}
+	}
+
 
 }
