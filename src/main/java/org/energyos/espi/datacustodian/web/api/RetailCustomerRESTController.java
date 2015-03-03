@@ -132,9 +132,11 @@ public class RetailCustomerRESTController {
 		try {
 			RetailCustomer retailCustomer = this.retailCustomerService
 					.importResource(stream);
+			if(retailCustomer!=null) {
 			exportService.exportRetailCustomer(subscriptionId, retailCustomer.getId(),
 					response.getOutputStream(), new ExportFilter(
 							new HashMap<String, String>()));
+			}
 		} catch (Exception e) {
 			System.err
 					.printf("***** Error Caused by RetailCustomer.x.IndentifiedObject need: %s",

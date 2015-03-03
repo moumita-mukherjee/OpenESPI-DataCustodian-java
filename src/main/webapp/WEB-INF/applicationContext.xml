@@ -57,6 +57,10 @@
 	<bean id="timeConfiguration" class="org.energyos.espi.common.domain.TimeConfiguration" />
 	<bean id="usagePoint" class="org.energyos.espi.common.domain.UsagePoint" />
 	<bean id="usagePointDetail" class="org.energyos.espi.common.domain.UsagePointDetail" />
+	<bean id="touSchedule" class="org.energyos.espi.common.domain.ext.TOUSchedule" />
+	<bean id="holiday" class="org.energyos.espi.common.domain.ext.Holiday" />	
+	<bean id="contractRate" class="org.energyos.espi.common.domain.ext.ContractRate" />
+	<bean id="supplyContract" class="org.energyos.espi.common.domain.ext.SupplyContract" />
 	<bean id="user" class="org.energyos.espi.common.domain.User" />
 
 
@@ -143,6 +147,12 @@
 	<bean id="usagePointDetailRepository"
 		class="org.energyos.espi.common.repositories.jpa.UsagePointDetailRepositoryImpl"
 		lazy-init="true" />
+	<bean id="touScheduleRepository"
+		class="org.energyos.espi.common.repositories.datastore.TOUScheduleRepositoryImpl"
+		lazy-init="true" />
+	<bean id="holidayRepository"
+		class="org.energyos.espi.common.repositories.datastore.HolidayRepositoryImpl"
+		lazy-init="true" />				
 	<bean id="usagePointRepository"
 		class="org.energyos.espi.common.repositories.jpa.UsagePointRepositoryImpl"
 		lazy-init="true" />

@@ -91,12 +91,17 @@ public class IntervalBlockRESTController {
 	public void index(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam Map<String, String> params) throws Exception,
 			FeedException {
-
+			try{
 		Long subscriptionId = getSubscriptionId(request);
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		exportService.exportIntervalBlocks_Root(subscriptionId,
 				response.getOutputStream(), new ExportFilter(params));
+			} catch (Exception e) {
+				e.printStackTrace(System.err);
+				log.warn("Exception", e);
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			}
 	}
 
 	//
@@ -198,7 +203,7 @@ public class IntervalBlockRESTController {
 
 		Long retailCustomerId = subscriptionService.findRetailCustomerId(
 				subscriptionId, usagePointId);
-
+System.err.println("retailCustomerId "+retailCustomerId);
 		exportService.exportIntervalBlocks(subscriptionId, retailCustomerId,
 				usagePointId, meterReadingId, response.getOutputStream(),
 				new ExportFilter(params));

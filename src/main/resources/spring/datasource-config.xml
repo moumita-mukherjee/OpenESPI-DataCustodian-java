@@ -43,7 +43,7 @@
 		<property name="validationQuery" value="select 1" />
 	</bean>
 
-	<beans profile="authserver">
+	<beans >
 		<bean id="lhdbDataSource" class="org.apache.commons.dbcp.BasicDataSource"
 			destroy-method="close">
 			<property name="driverClassName" value="${jdbc.lh.driverClassName}" />
