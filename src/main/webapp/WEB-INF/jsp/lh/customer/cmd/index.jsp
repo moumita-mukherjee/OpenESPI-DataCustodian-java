@@ -218,7 +218,7 @@ table.bor td {
 														</div>
 														<div class="panel-body">
 															<div class="row">
-																<div class="col-xs-6 col-md-3">
+																<div class="col-xs-4 col-md-3">
 																	<dl class="dl-horizontal">
 																		<dt>Billing Number:</dt>
 																		<dd>
@@ -232,13 +232,21 @@ table.bor td {
 																		</dd>
 																	</dl>
 																</div>
-																<div class="col-xs-6 col-md-6">
+																<div class="col-xs-4 col-md-3">
 																	<dl class="dl-horizontal">
 																		<dt>Meter Number:</dt>
 																		<dd>
 																			<c:out
 																				value="${usagePoint.usagePointDetail.meterNumber}" />
 																		</dd>
+																		<dt>Usage Point:</dt>
+																		<dd>
+																			<c:out value="${usagePoint.id}" />
+																		</dd>
+																	</dl>
+																</div>
+																<div class="col-xs-4 col-md-3">
+																	<dl class="dl-horizontal">
 																		<dt>Status:</dt>
 																		<dd>
 																			<c:choose>
@@ -414,6 +422,7 @@ table.bor td {
 																					<th>Address</th>
 																					<th>Billing Number</th>
 																					<th>Service</th>
+																					<th>Usage Point</th>
 																					<th>Meter</th>
 																					<th>Authorized On</th>
 																					<th>Valid Until</th>
@@ -449,6 +458,7 @@ table.bor td {
 																									code="service.name.${usagePoint.serviceCategory.kind}" /><br />
 																								<c:out
 																									value="${usagePoint.usagePointDetail.serviceId}" /></td>
+																							<td><c:out value="${usagePoint.id}" /></td>
 																							<td><c:out
 																									value="${usagePoint.usagePointDetail.meterNumber}" /></td>
 																							<td><c:if
@@ -600,9 +610,10 @@ table.bor td {
 																 <div id="allComments"  style="display: none" >
 																 </div>
 															</div>
+															<!-- 
 															</span> <span class="lable-note">Used by </span><span
 																class="badge">1000+</span> </span>
-
+ -->
 															<dl>
 																<dt>About the application</dt>
 																<dd>
@@ -616,7 +627,7 @@ table.bor td {
 																		<ul>
 																			<c:forEach items="${applicationInformation.scope}"
 																				var="vscope">
-																				<li><c:out value="${vscope.description}"></c:out></li>
+																				<li><c:out value="${vscope}"></c:out></li>
 																			</c:forEach>
 																		</ul>
 																		<span>Read our <c:choose>

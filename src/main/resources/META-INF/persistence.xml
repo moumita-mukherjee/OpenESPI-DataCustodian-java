@@ -53,7 +53,6 @@
 		<class>org.energyos.espi.common.domain.ext.IntervalReading</class>
 		<class>org.energyos.espi.common.domain.ext.ReadingQuality</class>
 		<class>org.energyos.espi.common.domain.ext.DateTimeInterval</class>
-
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="datanucleus.NontransactionalRead" value="true" />
@@ -70,6 +69,10 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>org.energyos.espi.common.domain.User</class>
 		<class>org.energyos.espi.common.domain.UsagePointDetail</class>
+		<class>org.energyos.espi.common.domain.ext.TOUSchedule</class>
+		<class>org.energyos.espi.common.domain.ext.Holiday</class>
+		<class>org.energyos.espi.common.domain.ext.ContractRate</class>
+		<class>org.energyos.espi.common.domain.ext.SupplyContract</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="${jdbc.lh.url}" />

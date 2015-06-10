@@ -72,11 +72,9 @@ public class RegistrationController extends BaseController {
 		}
 		if (appInfo.getScope() == null || appInfo.getScope().size() == 0) {
 
-			Set<ApplicationInformationScope> scopes = new HashSet<ApplicationInformationScope>();
-			scopes.add(new ApplicationInformationScope(
-					"FB=4_5_15;IntervalDuration=3600;BlockDuration=monthly;HistoryLength=13"));
-			scopes.add(new ApplicationInformationScope(
-					"FB=4_5_15;IntervalDuration=900;BlockDuration=monthly;HistoryLength=13"));
+			Set<String> scopes = new HashSet<String>();
+			scopes.add("FB=4_5_15;IntervalDuration=3600;BlockDuration=monthly;HistoryLength=13");
+			scopes.add("FB=4_5_15;IntervalDuration=900;BlockDuration=monthly;HistoryLength=13");
 			appInfo.setScope(scopes);
 		}
 		try {
@@ -114,8 +112,7 @@ public class RegistrationController extends BaseController {
 					bclientDetails.setClientSecret(appInfo.getClientSecret());
 					bclientDetails.setAccessTokenValiditySeconds(3600);
 					bclientDetails.setRefreshTokenValiditySeconds(3600);
-					bclientDetails.setScope(URLHelper.toScopeList(appInfo
-							.getScope()));
+					bclientDetails.setScope(appInfo.getScope());
 					bclientDetails
 							.setAuthorizedGrantTypes(authorizedGrantTypes);
 					bclientDetails.setAuthorities(authorities);
@@ -187,9 +184,7 @@ public class RegistrationController extends BaseController {
 				appInfo.setClientId(clientidRandomString.nextString());
 				appInfo.setClientSecret(secretRandomString.nextString());
 
-				List<String> mails = new ArrayList<>();
-				mails.add("test@abc.com");
-				appInfo.setContacts(mails);
+				appInfo.setContacts("test@abc.com");
 				appInfo.setThirdPartyPhone("519-661-5800");
 
 				appInfo.setThirdPartyApplicationName("thirdparty");

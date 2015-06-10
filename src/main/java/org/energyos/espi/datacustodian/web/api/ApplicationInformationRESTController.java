@@ -31,7 +31,6 @@ import org.energyos.espi.common.utils.ExportFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,10 +38,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sun.syndication.io.FeedException;
 
-@Controller
+@RestController
 public class ApplicationInformationRESTController {
 
 	@Autowired
@@ -64,8 +64,8 @@ public class ApplicationInformationRESTController {
 	@RequestMapping(value = Routes.ROOT_APPLICATION_INFORMATION_COLLECTION, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
 	public void index(HttpServletResponse response,
-			@RequestParam Map<String, String> params) throws IOException,
-			FeedException,Exception {
+			@RequestParam Map<String, String> params) throws Exception,
+			FeedException {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		exportService.exportApplicationInformations(response.getOutputStream(),
@@ -120,8 +120,8 @@ public class ApplicationInformationRESTController {
 			@PathVariable Long applicationInformationId,
 			@RequestParam Map<String, String> params, InputStream stream)
 			throws IOException, FeedException {
-		ApplicationInformation applicationInformation = applicationInformationService
-				.findById(applicationInformationId);
+		ApplicationInformation applicationInformation = resourceService
+				.findById(applicationInformationId, ApplicationInformation.class);
 
 		if (applicationInformation != null) {
 			try {

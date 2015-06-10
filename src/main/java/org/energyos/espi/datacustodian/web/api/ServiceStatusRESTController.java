@@ -28,20 +28,20 @@ import org.energyos.espi.common.domain.ApplicationInformation;
 import org.energyos.espi.common.domain.Authorization;
 import org.energyos.espi.common.domain.Routes;
 import org.energyos.espi.common.models.atom.DateTimeType;
-import org.energyos.espi.common.service.AuthorizationService;
 import org.energyos.espi.common.service.ResourceService;
+import org.energyos.espi.common.service.AuthorizationService;
 import org.energyos.espi.common.utils.DateConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sun.syndication.io.FeedException;
 
-@Controller
+@RestController
 public class ServiceStatusRESTController {
 
 	@Autowired

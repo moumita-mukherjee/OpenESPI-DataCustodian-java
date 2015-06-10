@@ -50,79 +50,17 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * Controller for retrieving the model for and displaying the confirmation page
- * for access to a protected resource.
+ * Controller for retrieving the model for and displaying the confirmation page for access to a protected resource.
  * 
  * @author Ryan Heaton
  */
 @Controller
 @SessionAttributes("authorizationRequest")
 public class AccessConfirmationController extends BaseController {
-	private final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
-	@Autowired
-	private ApplicationInformationService applicationInformationService;
-
-	public void setApplicationInformationService(ApplicationInformationService applicationInformationService) {
-		this.applicationInformationService = applicationInformationService;
-	}
-
-	@Autowired
-	private UsagePointDetailRepository usagePointDetailRepository;
-
-	public void setUsagePointDetailRepository(UsagePointDetailRepository usagePointDetailRepository) {
-		this.usagePointDetailRepository = usagePointDetailRepository;
-	}
 
 	private ClientDetailsService clientDetailsService;
-
-	private ApprovalStore approvalStore; // Spring Security OAuth2 2.0.0.M2
-											// change
-
-	@Autowired
-	private UsagePointService usagePointService;
-
-	public void setUsagePointService(UsagePointService usagePointService) {
-		this.usagePointService = usagePointService;
-	}
-
-	@ModelAttribute
-	public List<UsagePoint> usagePoints(Principal principal) {
-		return usagePointService.findAllByRetailCustomer(currentCustomer(principal));
-	}
-
-	@RequestMapping(value = "oauth/confirm_access_continue", method = RequestMethod.POST)
-	public ModelAndView getAccessConfirmationContinue(@RequestParam("usage_point") Long usagePointId,
-			Map<String, Object> model, Principal principal) throws Exception {
-
-		if (usagePointId >= 0) {
-			model.put("usage_point", usagePointId);
-		}
-		return new ModelAndView("redirect:/oauth/confirm_access", model);
-	}
-
-	private List<UsagePoint> populateExternalDetail(String customerId, List<UsagePoint> usagePoints) {
-		try {
-			UsagePointHelper.populateExternalDetail(usagePoints,
-					usagePointDetailRepository.findAllByRetailCustomerId(customerId));
-		} catch (EmptyResultDataAccessException ignore) {
-
-		}
-		return usagePoints;
-	}
-
-	@RequestMapping(value = "/accessconfirm/setdate", method = RequestMethod.POST)
-	public ModelAndView getAccessConfirmation1(@ModelAttribute("authorizationEndDate") String authorizationEndDate,
-			ModelMap model, Principal principal, HttpSession sessionObj) throws Exception {
-
-		System.err.println("POST  authorizationEndDate authorizationEndDate authorizationEndDate "
-				+ authorizationEndDate);
-		AuthorizationRequest clientAuth = (AuthorizationRequest) model.get("authorizationRequest");
-		
-		Date authEndDate=sdf.parse(authorizationEndDate);
-		clientAuth.getExtensions().put("authorizationEndDate", authEndDate);
-		model.put("authorizationEndDate", authEndDate);
-		return getAccessConfirmation(model, principal, sessionObj);
-	}
+	
+	private ApprovalStore approvalStore;	//Spring Security OAuth2 2.0.0.M2 change
 
 	@RequestMapping("/oauth/confirm_access")
 	public ModelAndView getAccessConfirmation(ModelMap model, Principal principal, HttpSession sessionObj)
@@ -207,9 +145,8 @@ public class AccessConfirmationController extends BaseController {
 	}
 
 	@RequestMapping("oauth/error")
-	public String handleError(Map<String, Object> model) throws Exception {
-		// We can add more stuff to the model here for JSP rendering. If the
-		// client was a machine then
+	public String handleError(Map<String,Object> model) throws Exception {
+		// We can add more stuff to the model here for JSP rendering.  If the client was a machine then
 		// the JSON will already have been rendered.
 		model.put("message", "There was a problem with the OAuth2 protocol");
 		return "oauth_error";
@@ -222,5 +159,67 @@ public class AccessConfirmationController extends BaseController {
 	public void setApprovalStore(ApprovalStore approvalStore) {
 		this.approvalStore = approvalStore;
 	}
+	/* LH customization starts here */
+	private final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
+	@Autowired
+	private ApplicationInformationService applicationInformationService;
+
+	public void setApplicationInformationService(ApplicationInformationService applicationInformationService) {
+		this.applicationInformationService = applicationInformationService;
+	}
+
+	@Autowired
+	private UsagePointDetailRepository usagePointDetailRepository;
+
+	public void setUsagePointDetailRepository(UsagePointDetailRepository usagePointDetailRepository) {
+		this.usagePointDetailRepository = usagePointDetailRepository;
+	}
+		
+	@Autowired
+	private UsagePointService usagePointService;
+
+	public void setUsagePointService(UsagePointService usagePointService) {
+		this.usagePointService = usagePointService;
+	}
+
+	@ModelAttribute
+	public List<UsagePoint> usagePoints(Principal principal) {
+		return usagePointService.findAllByRetailCustomer(currentCustomer(principal));
+	}
+
+	@RequestMapping(value = "oauth/confirm_access_continue", method = RequestMethod.POST)
+	public ModelAndView getAccessConfirmationContinue(@RequestParam("usage_point") Long usagePointId,
+			Map<String, Object> model, Principal principal) throws Exception {
+
+		if (usagePointId >= 0) {
+			model.put("usage_point", usagePointId);
+		}
+		return new ModelAndView("redirect:/oauth/confirm_access", model);
+	}
+
+	private List<UsagePoint> populateExternalDetail(String customerId, List<UsagePoint> usagePoints) {
+		try {
+			UsagePointHelper.populateExternalDetail(usagePoints,
+					usagePointDetailRepository.findAllByRetailCustomerId(customerId));
+		} catch (EmptyResultDataAccessException ignore) {
+
+		}
+		return usagePoints;
+	}
+
+	@RequestMapping(value = "/accessconfirm/setdate", method = RequestMethod.POST)
+	public ModelAndView getAccessConfirmation1(@ModelAttribute("authorizationEndDate") String authorizationEndDate,
+			ModelMap model, Principal principal, HttpSession sessionObj) throws Exception {
+
+		System.err.println("POST  authorizationEndDate authorizationEndDate authorizationEndDate "
+				+ authorizationEndDate);
+		AuthorizationRequest clientAuth = (AuthorizationRequest) model.get("authorizationRequest");
+		
+		Date authEndDate=sdf.parse(authorizationEndDate);
+		clientAuth.getExtensions().put("authorizationEndDate", authEndDate);
+		model.put("authorizationEndDate", authEndDate);
+		return getAccessConfirmation(model, principal, sessionObj);
+	}
+
 
 }

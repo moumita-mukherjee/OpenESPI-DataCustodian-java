@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
 @Controller
 @RequestMapping(Routes.THIRD_PARTY_LIST)
 public class ThirdPartyController extends BaseController {
@@ -40,10 +41,12 @@ public class ThirdPartyController extends BaseController {
 		return "/customer/thirdparties/index";
 	}
 
-	public void setApplicationInformationService(ApplicationInformationService applicationInformationService) {
-		this.applicationInformationService = applicationInformationService;
-	}
+    public void setApplicationInformationService(ApplicationInformationService applicationInformationService) {
+        this.applicationInformationService = applicationInformationService;
+    }
+    
     public ApplicationInformationService gettApplicationInformationService(ApplicationInformationService applicationInformationService) {
         return this.applicationInformationService;
     }
+    
 }

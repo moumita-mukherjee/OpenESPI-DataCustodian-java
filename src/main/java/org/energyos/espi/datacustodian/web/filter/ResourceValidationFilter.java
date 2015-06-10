@@ -54,77 +54,88 @@ public class ResourceValidationFilter implements Filter {
 		
 
 		Boolean invalid = true;
-		HttpServletRequest request = (HttpServletRequest) req;
-		HttpServletResponse response = (HttpServletResponse) res;
-		
-		System.err.println(" ResourceValidationFilter: start of doFilter messageid= "+request.getHeader("x_lh_messageid"));
-
 		Boolean hasBearer = false;
 		Boolean hasValidOAuthAccessToken = false;
+		Boolean resourceRequest = false;
+		
 		Authorization authorizationFromToken = null;
 		Subscription subscription = null;
 		String resourceUri = null;
 		String authorizationUri = null;
+		Set<String> roles = null;		
 
 		// get the uri for later tests
+		HttpServletRequest request = (HttpServletRequest) req;
+		HttpServletResponse response = (HttpServletResponse) res;		
 		String uri = request.getRequestURI();
 		String service = request.getMethod();
-		Set<String> roles = null;
 
+		System.err.println(" ResourceValidationFilter: start of doFilter messageid= "+request.getHeader("x_lh_messageid"));
+		
 		// see if any authentication has happened
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication != null) {
 			roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
-		} else {
+			
+		}	else {
 			System.err.println("1 ResourceValidationFilter: doFilter - Access Not Authorized:"+request.getHeader("authorization"));
 			throw new AccessDeniedException(String.format("Access Not Authorized"));
 
 		}
 
 		
-		System.err.printf("ResourceValidationFilter: role=%s, uri:%s\n", roles, uri);
-
-		// /////////////////////////////////////////////////////////////////////
-		// find the access token if present and validate we have a good one
-		// /////////////////////////////////////////////////////////////////////
-		String token = request.getHeader("authorization");
-		if (token != null) {
-			if (token.contains("Bearer") ) {
-				// has Authorization header with Bearer type
-				hasBearer = true;
-				token = token.replace("Bearer ", "");
-				// ensure length is >12 characters (48 bits in hex at least)
-				if (token.length() >= 12) {
-					// lookup the authorization -- we must have one to
-					// correspond to an access token
-					try {
-						authorizationFromToken = authorizationService.findByAccessToken(token);
-					} catch (Exception e) {
-						
-						System.err.printf("ResourceValidationFilter: doFilter - No Authorization Found - %s\n",
+		if ((uri.indexOf("/espi/1_1/resource/") != -1))
+		{
+			resourceRequest = true;
+			
+			///////////////////////////////////////////////////////////////////////
+			// find the access token if present and validate we have a good one
+			///////////////////////////////////////////////////////////////////////
+			String token = request.getHeader("authorization");
+			
+			if(token!=null)
+			{
+				if (token.contains("Bearer"))
+				{
+					// has Authorization header with Bearer type
+					hasBearer = true;
+					token = token.replace("Bearer ", "");
+					
+					// ensure length is >12 characters (48 bits in hex at least)
+					if(token.length()>=12)
+					{
+						// lookup the authorization -- we must have one to correspond to an access token
+						try {
+							authorizationFromToken = authorizationService.findByAccessToken(token);
+							
+						}
+						catch (Exception e) {
+							System.err.printf("ResourceValidationFilter: doFilter - No Authorization Found - %s\n",
 								e.toString());
-						e.printStackTrace(System.err);
 						throw new AccessDeniedException(String.format("No Authorization Found"));
 					}
 
 					// see if we have valid authorization and can get parameters
-					if (authorizationFromToken != null) {
-						long tend = authorizationFromToken.getAuthorizedPeriod().getStart()
-								+ authorizationFromToken.getAuthorizedPeriod().getDuration();
-						Calendar c = Calendar.getInstance();
-						long now = c.getTimeInMillis() / 1000;
-						// check that it is still active and check that it has
-						// not expired
-						if ((authorizationFromToken.getStatus().equals("1")) && ((tend == 0) || (tend >= now))) {
-							hasValidOAuthAccessToken = true;
-							resourceUri = authorizationFromToken.getResourceURI();
-							authorizationUri = authorizationFromToken.getAuthorizationURI();
-							subscription = authorizationFromToken.getSubscription();
-						} else {
-							// authorization not valid now
+						if(authorizationFromToken != null)
+						{
+							long tend = authorizationFromToken.getAuthorizedPeriod().getStart() + authorizationFromToken.getAuthorizedPeriod().getDuration();
+							Calendar c = Calendar.getInstance(); 						
+							long now = c.getTimeInMillis()/1000;
+						
+							// check that it is still active and check that it has not expired
+						
+							if( (authorizationFromToken.getStatus().equals("1") ) && ((tend == 0) || (tend >= now))){
+								hasValidOAuthAccessToken = true;
+								resourceUri = authorizationFromToken.getResourceURI();
+								authorizationUri = authorizationFromToken.getAuthorizationURI();
+								subscription = authorizationFromToken.getSubscription();
+							
+							} else {
+							
+								// authorization not valid now
 							System.err.printf("2 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 							throw new AccessDeniedException(String.format("Access Not Authorized"));
-
+							}
 						}
 					}
 				}
@@ -134,9 +145,9 @@ public class ResourceValidationFilter implements Filter {
 		// /////////////////////////////////////////////////////////////////////
 		// if this is not RESTful request with Bearer token
 		// /////////////////////////////////////////////////////////////////////
-		if (hasBearer == false) {
-			// no bearer token and it passed the OAuth filter - so it must be
-			// good2go not RESTAPI request
+		if ((hasBearer == false) & !(resourceRequest == true))
+		{
+			// no bearer token and it passed the OAuth filter - so it must be good2go not RESTAPI request
 			// make sure the role is not an ANONYMOUS request for /manage ...
 			if (!((roles.contains("ROLE_ANONYMOUS")) & (uri.indexOf("/management") != -1))) {
 				invalid = false;
@@ -146,18 +157,20 @@ public class ResourceValidationFilter implements Filter {
 		// /////////////////////////////////////////////////////////////////////
 		// if this is rest, process based on ROLE
 		// /////////////////////////////////////////////////////////////////////
-		else if (hasValidOAuthAccessToken == true) {
+		else if(hasValidOAuthAccessToken == true)
+		{
 			// if it has a valid access token
 			// then we know it is REST request
 			// Dispatch on authentication type
-
-			// first, escape out of this if it is the special
-			// "manage?command=foo" form
+			
+			// first, escape out of this if it is the special "manage?command=foo" form
 			int i = uri.indexOf("/management");
 			if (i > 0) {
 				if (roles.contains("ROLE_DC_ADMIN")) {
 					invalid = false;
-				} else {
+				}
+				else
+				{
 					System.out.printf("ResourceValidationFilter: doFilter - not valid for this token %s\n", uri);
 					throw new AccessDeniedException(String.format("Access Not Authorized"));
 				}
@@ -180,32 +193,23 @@ public class ResourceValidationFilter implements Filter {
 
 			// /////////////////////////////////////////////////////////////////////
 			// ROLE_USER
+			//
 			// GET /resource/LocalTimeParameters
 			// GET /resource/LocalTimeParameters/{LocalTimeParametersID}
 			// GET /resource/ReadingType
-			// GET /resource/ReadingType/{ReadingTypeID}
-			// GET /resource/Batch/Subscription/{SubscriptionID}
-			// GET
-			// /resource/Batch/Subscription/{SubscriptionID}/UsagePoint/{UsagePointId}
-			// GET /resource/Subscription/{SubscriptionID}/UsagePoint
-			// GET
-			// /resource/Subscription/{SubscriptionID}/UsagePoint/{UsagePointID}
-			// GET
-			// /resource/Subscription/{SubscriptionID}/UsagePoint/{UsagePointID}/ElectricPowerQualitySummary
-			// GET
-			// /resource/Subscription/{SubscriptionID}/UsagePoint/{UsagePointID}/ElectricPowerQualitySummary/{ElectricPowerQualitySummaryID}
-			// GET
-			// /resource/Subscription/{SubscriptionID}/UsagePoint/{UsagePointID}/ElectricPowerUsageSumary
-			// GET
-			// /resource/Subscription/{SubscriptionID}/UsagePoint/{UsagePointID}/ElectricPowerUsageSumary/{ElectricPowerUsageSummaryID}
-			// GET
-			// /resource/Subscription/{SubscriptionID}/UsagePoint/{UsagePointID}/MeterReading
-			// GET
-			// /resource/Subscription/{SubscriptionID}/UsagePoint/{UsagePointID}/MeterReading/{MeterReadingID}
-			// GET
-			// /resource/Subscription/{SubscriptionID}/UsagePoint/{UsagePointID}/MeterReading/{MeterReadingID}/IntervalBlock
-			// GET
-			// /resource/Subscription/{SubscriptionID}/UsagePoint/{UsagePointID}/MeterReading/{MeterReadingID}/IntervalBlock/{IntervalBlockID}
+			// GET /resource/ReadingType/{readingTypeId}
+			// GET /resource/Batch/Subscription/{subscriptionId}
+			// GET /resource/Batch/Subscription/{subscriptionId}/UsagePoint/{usagePointId}
+			// GET /resource/Subscription/{subscriptionId}/UsagePoint
+			// GET /resource/Subscription/{subscriptionId}/UsagePoint/{usagePointId}
+			// GET /resource/Subscription/{subscriptionId}/UsagePoint/{usagePointId}/ElectricPowerQualitySummary
+			// GET /resource/Subscription/{subscriptionId}/UsagePoint/{usagePointId}/ElectricPowerQualitySummary/{electricPowerQualitySummaryId}
+			// GET /resource/Subscription/{subscriptionId}/UsagePoint/{usagePointId}/ElectricPowerUsageSumary
+			// GET /resource/Subscription/{subscriptionId}/UsagePoint/{usagePointId}/ElectricPowerUsageSumary/{electricPowerUsageSummaryId}
+			// GET /resource/Subscription/{subscriptionId}/UsagePoint/{usagePointId}/MeterReading
+			// GET /resource/Subscription/{subscriptionId}/UsagePoint/{usagePointId}/MeterReading/{meterReadingId}
+			// GET /resource/Subscription/{subscriptionId}/UsagePoint/{usagePointId}/MeterReading/{meterReadingId}/IntervalBlock
+			// GET /resource/Subscription/{subscriptionId}/UsagePoint/{usagePointId}/MeterReading/{meterReadingId}/IntervalBlock/{intervalBlockId}
 			//
 			// /////////////////////////////////////////////////////////////////////
 			if (invalid && roles.contains("ROLE_USER")) {
@@ -215,22 +219,19 @@ public class ResourceValidationFilter implements Filter {
 
 				// only GET for this ROLE permitted
 				if (!service.equals("GET")) {
-					System.err
-							.printf("ResourceValidationFilter: doFilter - ROLE_USER attempted a RESTful %s Request -- Only GET Request are allowed\n",
-									service);
+					System.err.printf("ResourceValidationFilter: doFilter - ROLE_USER attempted a RESTful %s Request -- Only GET Request are allowed\n", service);					
 					throw new AccessDeniedException(String.format("Access Not Authorized"));
 				}
 
-				// look for the root forms of LocalTimeParameters and
-				// ReadingType
-				if (invalid
-						&& ((uri.contains("resource/LocalTimeParameters")) || (uri.contains("resource/ReadingType")))) {
+				// look for the root forms of LocalTimeParameters and ReadingType
+				if (invalid && ((uri.contains("resource/LocalTimeParameters"))
+						     || (uri.contains("resource/ReadingType")))) {
 					invalid = false;
 				}
 
 				// must be either /resource/Batch/Subscription/{subscriptionId}
 				if (invalid && uri.contains("/resource/Batch/Subscription")) {
-					if (uri.equals(resourceUri)) {
+					if (uri.startsWith(resourceUri)) { 
 						invalid = false;
 					} else {
 						// not authorized for this resource
@@ -261,29 +262,28 @@ public class ResourceValidationFilter implements Filter {
 			} else if (invalid && roles.contains("ROLE_TP_ADMIN")) {
 				// /////////////////////////////////////////////////////////////////////
 				// ROLE_TP_ADMIN
-				// GET /resource/Authorization
-				// GET /resource/Authorization/{AuthorizationID}
-				// PUT /resource/Authorization/{AuthorizationID}
-				// DELETE /resource/Authorization/{AuthorizationID}
-				// GET /resource/Batch/Bulk/{BulkID}
-				// GET /resource/ReadServiceStatus
-				// GETALL
-				// sftp://services.greenbuttondata.org/DataCustodian/espi/1_1/resource/Batch/Bulk/{BulkID}
-				// /////////////////////////////////////////////////////////////////////
+				//
+				// GET 		/resource/Authorization
+				// GET 		/resource/Authorization/{authorizationId}
+				// PUT 		/resource/Authorization/{authorizationId}
+				// DELETE	/resource/Authorization/{authorizationId}
+				// GET      /resource/Batch/Bulk/{bulkId}
+				// GET      /resource/ReadServiceStatus
+				// GETALL   sftp://services.greenbuttondata.org/DataCustodian/espi/1_1/resource/Batch/Bulk/{bulkId}
+				///////////////////////////////////////////////////////////////////////
 
+				
 				// the Bulk Authorizations
 				if (invalid && uri.contains("/resource/Batch/Bulk")) {
 					invalid = false;
 				}
-
-				// Authorizations GET/PUT/DELETE on individual, GET on
-				// collection
-				if (invalid && (uri.contains("/resource/Authorization"))) {
+				
+				// Authorizations GET/PUT/DELETE on individual, GET on collection
+				if (invalid && (uri.contains("/resource/Authorization"))){
 					// this is retrieving the authorization related to the token
 					// the TP has access to AuthorizationIds he is tp for
 					// which is authorization looked by access token, or,
-					// any authorization that points to same
-					// applicationInformationId
+					// any authorization that points to same applicationInformationId
 
 					if (service.equals("GET") || service.equals("PUT") || service.equals("DELETE")) {
 						if (authorizationUri.equals(uri)) {
@@ -291,20 +291,17 @@ public class ResourceValidationFilter implements Filter {
 						} else {
 							// get authorizationID
 							String[] tokens = uri.split("/");
-							Long authorizationId = Long.parseLong(tokens[3], 10);
-
+							Long authorizationId = -1l; 
+							if(tokens.length>3)
+							{
+								authorizationId = Long.parseLong(tokens[3],10);
+							}
 							// check if its a collection
-							if (authorizationId != null) {
-								// it is specific ID, see if it authorization
-								// for this third party
-								
-								Authorization requestedAuthorization = authorizationService.findById(authorizationId);
-								
-								System.err.println("authorizationId "+authorizationId);
-								System.err.println("requestedAuthorization.getApplicationInformation().getId() "+requestedAuthorization.getApplicationInformation().getId());
-								System.err.println("authorizationFromToken.getApplicationInformation().getId() "+authorizationFromToken.getApplicationInformation().getId());
-								if (requestedAuthorization.getApplicationInformation().getId().equals(authorizationFromToken
-										.getApplicationInformation().getId())) {
+							if (authorizationId != -1l) {
+								// it is specific ID, see if it authorization for this third party 
+								Authorization requestedAuthorization = authorizationService
+										.findById(authorizationId);
+								if ((requestedAuthorization.getApplicationInformation().getId()).equals(authorizationFromToken.getApplicationInformation().getId())) {
 									invalid = false;
 								} else {
 									// not authorized for this resource
@@ -312,8 +309,7 @@ public class ResourceValidationFilter implements Filter {
 									throw new AccessDeniedException(String.format("Access Not Authorized"));
 								}
 							} else {
-								// this is collection request and controller
-								// will limit to valid authorizations
+								// this is collection request and controller will limit to valid authorizations
 								if (service.equals("GET")) {
 									invalid = false;
 								} else {
@@ -329,13 +325,16 @@ public class ResourceValidationFilter implements Filter {
 				if (invalid && uri.contains("/resource/ReadServiceStatus")) {
 					if (service.equals("GET")) {
 						invalid = false;
-					} else {
+					}
+					else
+					{
 						// not authorized for this resource
 						System.err.printf("8 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 						throw new AccessDeniedException(String.format("Access Not Authorized"));
 					}
 				}
-
+				
+				
 				// sftp
 				// TODO:
 
@@ -343,11 +342,9 @@ public class ResourceValidationFilter implements Filter {
 				// /////////////////////////////////////////////////////////////////////
 				// ROLE_UL_ADMIN
 				//
-				// GET
-				// /resource/Batch/RetailCustomer/{RetailCustomerID}/UsagePoint
-				// POST
-				// /resource/Batch/RetailCustomer/{RetailCustomerID}/UsagePoint
-				// GET /resource/Authorization/{AuthorizationID}
+				// GET  /resource/Batch/RetailCustomer/{retailCustomerId}/UsagePoint
+				// POST /resource/Batch/RetailCustomer/{retailCustomerId}/UsagePoint
+				// GET /resource/Authorization/{authorizationId}
 				//
 				// /////////////////////////////////////////////////////////////////////
 
@@ -356,7 +353,8 @@ public class ResourceValidationFilter implements Filter {
 				if (uri.contains("/resource/Authorization")) {
 					if (authorizationUri.equals(uri)) {
 						invalid = false;
-					} else {
+					}
+					else {
 						// not authorized for this resource
 						System.err.printf("9 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 						throw new AccessDeniedException(String.format("Access Not Authorized"));
@@ -370,40 +368,48 @@ public class ResourceValidationFilter implements Filter {
 				if (invalid && uri.contains("/resource/ReadServiceStatus")) {
 					if (service.equals("GET")) {
 						invalid = false;
-					} else {
+					}
+					else
+					{
 						// not authorized for this resource
 						System.err.printf("10 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 						throw new AccessDeniedException(String.format("Access Not Authorized"));
 					}
 				}
-			} else if (invalid && roles.contains("ROLE_TP_REGISTRATION")) {
-				// /////////////////////////////////////////////////////////////////////
-				// ROLE_REGISTRATION_ADMIN
-				// GET
-				// /resource/ApplicationInformation/{ApplicationInformationID}
-				// GET /resource/Authorization/{AuthorizationID}
-				// PUT
-				// /resource/ApplicationInformation/{ApplicationInformationID}
-				// DELETE
-				// /resource/ApplicationInformation/{ApplicationInformationID}
-				// /////////////////////////////////////////////////////////////////////
+		    }
+			else if (invalid && roles.contains("ROLE_TP_REGISTRATION"))	{
+				///////////////////////////////////////////////////////////////////////
+				// ROLE_TP_REGISTRATION
+				//
+				// GET 		/resource/ApplicationInformation/{applicationInformationId}
+				// PUT 		/resource/ApplicationInformation/{applicationInformationId}
+				// DELETE	/resource/ApplicationInformation/{applicationInformationId}
+				///////////////////////////////////////////////////////////////////////
 
 				if (service.equals("GET") || service.equals("PUT") || service.equals("DELETE")) {
 					if (uri.contains("/resource/ApplicationInformation")) {
 						String[] tokens = uri.split("/");
-						long applicationInformationIdFromUri = Long.parseLong(tokens[3], 10);
-						long applicationInformationId = authorizationFromToken.getApplicationInformation().getId();
+						
+						if (tokens.length > 3)
+						{
+							Long applicationInformationIdFromUri = Long.parseLong(tokens[3],10);
+							Long applicationInformationId = authorizationFromToken.getApplicationInformation().getId();
 
 						// only gets access to his
 						if (applicationInformationIdFromUri == applicationInformationId) {
 							invalid = false;
-						} else {
+							}
+						} 
+						else 
+						{
 							// not authorized for this resource
 							System.err.printf("11 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 							throw new AccessDeniedException(String.format("Access Not Authorized"));
 						}
 					}
-				} else {
+				}
+				else
+				{
 					// not authorized for this resource
 					System.err.printf("12 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 					throw new AccessDeniedException(String.format("Access Not Authorized"));
@@ -413,7 +419,8 @@ public class ResourceValidationFilter implements Filter {
 				if (uri.contains("/resource/Authorization")) {
 					if (authorizationUri.equals(uri) && service.equals("GET")) {
 						invalid = false;
-					} else {
+					}
+					else {
 						// not authorized for this resource
 						System.err.printf("13 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 						throw new AccessDeniedException(String.format("Access Not Authorized"));
@@ -448,25 +455,22 @@ public class ResourceValidationFilter implements Filter {
 		this.subscriptionService = subscriptionService;
 	}
 
-	public SubscriptionService getSubscriptionService() {
-		return this.subscriptionService;
-	}
+   public SubscriptionService getSubscriptionService () {
+        return this.subscriptionService;
+   }
+   public void setAuthorizationService(AuthorizationService authorizationService) {
+        this.authorizationService = authorizationService;
+   }
 
-	public void setAuthorizationService(AuthorizationService authorizationService) {
-		this.authorizationService = authorizationService;
-	}
+   public AuthorizationService getAuthorizationService () {
+        return this.authorizationService;
+   }
+   public void setUsagePointService(UsagePointService usagePointService) {
+        this.usagePointService = usagePointService;	
+   }
 
-	public AuthorizationService getAuthorizationService() {
-		return this.authorizationService;
-	}
-
-	public void setUsagePointService(UsagePointService usagePointService) {
-		this.usagePointService = usagePointService;
-	}
-
-	public UsagePointService getUsagePointService() {
-		return this.usagePointService;
-	}
-	
+   public UsagePointService getUsagePointService () {
+        return this.usagePointService;
+   }
 
 }

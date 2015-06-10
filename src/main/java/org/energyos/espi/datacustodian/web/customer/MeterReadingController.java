@@ -19,6 +19,7 @@ package org.energyos.espi.datacustodian.web.customer;
 import java.security.Principal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 import org.energyos.espi.common.domain.AtomPeriod;
@@ -27,6 +28,7 @@ import org.energyos.espi.common.domain.Routes;
 import org.energyos.espi.common.service.ApplicationInformationService;
 import org.energyos.espi.common.service.IntervalBlockService;
 import org.energyos.espi.common.service.MeterReadingService;
+import org.energyos.espi.common.utils.ExportFilter;
 import org.energyos.espi.datacustodian.bean.DatePeriodBean;
 import org.energyos.espi.datacustodian.utils.DateUtil;
 import org.energyos.espi.datacustodian.web.BaseController;
@@ -45,11 +47,8 @@ public class MeterReadingController extends BaseController {
 	@Autowired
 	protected MeterReadingService meterReadingService;
 
-	@Autowired
-	protected IntervalBlockService intervalBlockService;
 
-	@Autowired
-	private ApplicationInformationService applicationInformationService;
+
 
 	// DJ
 	// @Transactional(readOnly = true)
@@ -59,6 +58,7 @@ public class MeterReadingController extends BaseController {
 			@RequestParam("usagetime-min") Long fromTime, @RequestParam("usagetime-max") Long toTime, ModelMap model,Principal principal) {
 		// TODO need to walk the subtree to force the load (for now)
 
+		try {
 		long startTick=System.currentTimeMillis();
 		Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		if (toTime == 0) {
@@ -74,12 +74,14 @@ public class MeterReadingController extends BaseController {
 		MeterReading newMeterReading = new MeterReading();
 		if (mr != null) {
 			newMeterReading.merge(mr);
+			ExportFilter filter= new ExportFilter(new HashMap<String, String>());
 			AtomPeriod filterPeriod = new AtomPeriod();
 			filterPeriod.setUsageMin(fromTime);
 			filterPeriod.setUsageMax(toTime);
+			filter.setFilterPeriod(filterPeriod);
 			System.err.println(" newMeterReading " + newMeterReading.getId());
 			newMeterReading.setIntervalBlocks(intervalBlockService.findIntervalBlocksByPeriod(newMeterReading.getId(),
-					filterPeriod));
+					filter));
 
 			
 		}
@@ -103,10 +105,10 @@ public class MeterReadingController extends BaseController {
 		model.put("meterReading", newMeterReading);
 		model.put("dpb", dpb);
 
-		model.put("meterReading", newMeterReading);
-		
-		
-		System.err.println((newMeterReading!=null && newMeterReading.getIntervalBlocks()!=null?newMeterReading.getIntervalBlocks().size():0)+ " ************************** Elapsed time *************+"+(System.currentTimeMillis()-startTick));
+		model.put("meterReading", newMeterReading);		
+		}catch(Exception ignore) {
+			
+		}
 		return "/customer/meterreadings/show";
 	}
 
@@ -117,6 +119,13 @@ public class MeterReadingController extends BaseController {
 	public MeterReadingService getMeterReadingService(MeterReadingService meterReadingService) {
 		return this.meterReadingService;
 	}
+
+	/* LH customization starts here */
+	@Autowired
+	protected IntervalBlockService intervalBlockService;
+	
+	@Autowired
+	private ApplicationInformationService applicationInformationService;
 
 	public void setIntervalBlockService(IntervalBlockService intervalBlockService) {
 		this.intervalBlockService = intervalBlockService;

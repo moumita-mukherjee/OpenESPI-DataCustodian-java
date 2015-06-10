@@ -50,6 +50,7 @@ public class ManagementController extends BaseController {
 
         return "redirect:" + Routes.DATA_CUSTODIAN_HOME;
     }
+    
    public void setNotificationService(NotificationService notificationService) {
         this.notificationService = notificationService;
    }
@@ -57,5 +58,6 @@ public class ManagementController extends BaseController {
    public NotificationService getNotificationService () {
         return this.notificationService;
    }
+
   
 }
