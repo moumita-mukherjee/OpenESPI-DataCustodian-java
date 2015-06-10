@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.energyos.espi.common.domain.Authorization;
 import org.energyos.espi.common.domain.IntervalBlock;
 import org.energyos.espi.common.domain.MeterReading;
-import org.energyos.espi.common.domain.RetailCustomer;
 import org.energyos.espi.common.domain.Routes;
 import org.energyos.espi.common.domain.Subscription;
 import org.energyos.espi.common.service.AuthorizationService;
@@ -43,7 +42,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,10 +49,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sun.syndication.io.FeedException;
 
-@Controller
+@RestController
 public class IntervalBlockRESTController {
 	private Logger log = LoggerFactory.getLogger(IntervalBlockRESTController.class);
 	@Autowired
@@ -89,27 +88,37 @@ public class IntervalBlockRESTController {
 	//
 	@RequestMapping(value = Routes.ROOT_INTERVAL_BLOCK_COLLECTION, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
-	public void index(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, String> params)
-			throws IOException, FeedException,Exception {
-
+	public void index(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, String> params) throws Exception,
+			FeedException {
+			try{
 		Long subscriptionId = getSubscriptionId(request);
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
-		exportService.exportIntervalBlocks_Root(subscriptionId, response.getOutputStream(), new ExportFilter(params));
+		exportService.exportIntervalBlocks_Root(subscriptionId,
+				response.getOutputStream(), new ExportFilter(params));
+			} catch (Exception e) {
+				e.printStackTrace(System.err);
+				log.warn("Exception", e);
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			}
 	}
 
 	//
 	//
 	@RequestMapping(value = Routes.ROOT_INTERVAL_BLOCK_MEMBER, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
-	public void show(HttpServletRequest request, HttpServletResponse response, @PathVariable Long intervalBlockId,
-			@RequestParam Map<String, String> params) throws IOException, FeedException {
+	public void show(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable Long intervalBlockId,
+			@RequestParam Map<String, String> params) throws IOException,
+			FeedException {
 
 		Long subscriptionId = getSubscriptionId(request);
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		try {
-			exportService.exportIntervalBlock_Root(subscriptionId, intervalBlockId, response.getOutputStream(),
+			exportService.exportIntervalBlock_Root(subscriptionId,
+					intervalBlockId, response.getOutputStream(),
 					new ExportFilter(params));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -122,8 +131,10 @@ public class IntervalBlockRESTController {
 	//
 	@RequestMapping(value = Routes.ROOT_INTERVAL_BLOCK_COLLECTION, method = RequestMethod.POST, consumes = "application/atom+xml", produces = "application/atom+xml")
 	@ResponseBody
-	public void create(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam Map<String, String> params, InputStream stream) throws IOException {
+	public void create(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam Map<String, String> params, InputStream stream)
+			throws IOException {
 
 		Long subscriptionId = getSubscriptionId(request);
 
@@ -144,14 +155,18 @@ public class IntervalBlockRESTController {
 	//
 	@RequestMapping(value = Routes.ROOT_INTERVAL_BLOCK_MEMBER, method = RequestMethod.PUT, consumes = "application/atom+xml", produces = "application/atom+xml")
 	@ResponseBody
-	public void update(HttpServletResponse response, @PathVariable Long intervalBlockId,
-			@RequestParam Map<String, String> params, InputStream stream) throws IOException, FeedException {
+	public void update(HttpServletResponse response,
+			@PathVariable Long intervalBlockId,
+			@RequestParam Map<String, String> params, InputStream stream)
+			throws IOException, FeedException {
 
-		IntervalBlock intervalBlock = intervalBlockService.findById(intervalBlockId);
+		IntervalBlock intervalBlock = intervalBlockService
+				.findById(intervalBlockId);
 
 		if (intervalBlock != null) {
 			try {
-				intervalBlock.merge(intervalBlockService.importResource(stream));
+				intervalBlock
+						.merge(intervalBlockService.importResource(stream));
 				intervalBlockService.persist(intervalBlock);
 			} catch (Exception e) {
 				log.warn("Exception", e);
@@ -161,8 +176,10 @@ public class IntervalBlockRESTController {
 	}
 
 	@RequestMapping(value = Routes.ROOT_INTERVAL_BLOCK_MEMBER, method = RequestMethod.DELETE)
-	public void delete(HttpServletResponse response, @PathVariable Long intervalBlockId,
-			@RequestParam Map<String, String> params, InputStream stream) throws IOException, FeedException {
+	public void delete(HttpServletResponse response,
+			@PathVariable Long intervalBlockId,
+			@RequestParam Map<String, String> params, InputStream stream)
+			throws IOException, FeedException {
 
 		try {
 			resourceService.deleteById(intervalBlockId, IntervalBlock.class);
@@ -176,38 +193,41 @@ public class IntervalBlockRESTController {
 	//
 	@RequestMapping(value = Routes.INTERVAL_BLOCK_COLLECTION, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
-	public void index(HttpServletResponse response, @PathVariable Long subscriptionId, @PathVariable Long usagePointId,
-			@PathVariable Long meterReadingId, @RequestParam Map<String, String> params) throws IOException,
-			FeedException,Exception {
+	public void index(HttpServletResponse response,
+			@PathVariable Long subscriptionId, @PathVariable Long usagePointId,
+			@PathVariable Long meterReadingId,
+			@RequestParam Map<String, String> params) throws Exception,
+			FeedException {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 
-		Subscription subscription = subscriptionService.findById(subscriptionId);
-		Authorization authorization = subscription.getAuthorization();
-		RetailCustomer retailCustomer = authorization.getRetailCustomer();
-		Long retailCustomerId = retailCustomer.getId();
-
-		exportService.exportIntervalBlocks(subscriptionId, retailCustomerId, usagePointId, meterReadingId,
-				response.getOutputStream(), new ExportFilter(params));
+		Long retailCustomerId = subscriptionService.findRetailCustomerId(
+				subscriptionId, usagePointId);
+System.err.println("retailCustomerId "+retailCustomerId);
+		exportService.exportIntervalBlocks(subscriptionId, retailCustomerId,
+				usagePointId, meterReadingId, response.getOutputStream(),
+				new ExportFilter(params));
 	}
 
 	//
 	//
 	@RequestMapping(value = Routes.INTERVAL_BLOCK_MEMBER, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
-	public void show(HttpServletResponse response, @PathVariable Long subscriptionId, @PathVariable Long usagePointId,
-			@PathVariable Long meterReadingId, @PathVariable Long intervalBlockId,
-			@RequestParam Map<String, String> params) throws IOException, FeedException {
+	public void show(HttpServletResponse response,
+			@PathVariable Long subscriptionId, @PathVariable Long usagePointId,
+			@PathVariable Long meterReadingId,
+			@PathVariable Long intervalBlockId,
+			@RequestParam Map<String, String> params) throws IOException,
+			FeedException {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		try {
-			Subscription subscription = subscriptionService.findById(subscriptionId);
-			Authorization authorization = subscription.getAuthorization();
-			RetailCustomer retailCustomer = authorization.getRetailCustomer();
-			Long retailCustomerId = retailCustomer.getId();
+			Long retailCustomerId = subscriptionService.findRetailCustomerId(
+					subscriptionId, usagePointId);
 
-			exportService.exportIntervalBlock(subscriptionId, retailCustomerId, usagePointId, meterReadingId,
-					intervalBlockId, response.getOutputStream(), new ExportFilter(params));
+			exportService.exportIntervalBlock(subscriptionId, retailCustomerId,
+					usagePointId, meterReadingId, intervalBlockId,
+					response.getOutputStream(), new ExportFilter(params));
 
 		} catch (Exception e) {
 			log.warn("Exception", e);
@@ -219,24 +239,30 @@ public class IntervalBlockRESTController {
 	//
 	@RequestMapping(value = Routes.INTERVAL_BLOCK_COLLECTION, method = RequestMethod.POST, consumes = "application/atom+xml", produces = "application/atom+xml")
 	@ResponseBody
-	public void create(HttpServletResponse response, @PathVariable Long subscriptionId,
-			@PathVariable Long usagePointId, @PathVariable Long meterReadingId,
-			@RequestParam Map<String, String> params, InputStream stream) throws IOException {
+	public void create(HttpServletResponse response,
+			@PathVariable Long subscriptionId, @PathVariable Long usagePointId,
+			@PathVariable Long meterReadingId,
+			@RequestParam Map<String, String> params, InputStream stream)
+			throws IOException {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 
-		Subscription subscription = subscriptionService.findById(subscriptionId);
-		Authorization authorization = subscription.getAuthorization();
-		RetailCustomer retailCustomer = authorization.getRetailCustomer();
-		Long retailCustomerId = retailCustomer.getId();
+		Long retailCustomerId = subscriptionService.findRetailCustomerId(
+				subscriptionId, usagePointId);
 
-		if (null != resourceService.findIdByXPath(retailCustomerId, usagePointId, meterReadingId, MeterReading.class)) {
+		if (null != resourceService.findIdByXPath(retailCustomerId,
+				usagePointId, meterReadingId, MeterReading.class)) {
 			try {
-				MeterReading meterReading = resourceService.findById(meterReadingId, MeterReading.class);
-				IntervalBlock intervalBlock = this.intervalBlockService.importResource(stream);
-				intervalBlockService.associateByUUID(meterReading, intervalBlock.getUUID());
-				exportService.exportIntervalBlock(subscriptionId, retailCustomerId, usagePointId, meterReadingId,
-						intervalBlock.getId(), response.getOutputStream(), new ExportFilter(params));
+				MeterReading meterReading = resourceService.findById(
+						meterReadingId, MeterReading.class);
+				IntervalBlock intervalBlock = this.intervalBlockService
+						.importResource(stream);
+				intervalBlockService.associateByUUID(meterReading,
+						intervalBlock.getUUID());
+				exportService.exportIntervalBlock(subscriptionId,
+						retailCustomerId, usagePointId, meterReadingId,
+						intervalBlock.getId(), response.getOutputStream(),
+						new ExportFilter(params));
 
 			} catch (Exception e) {
 				log.warn("Exception", e);
@@ -251,22 +277,25 @@ public class IntervalBlockRESTController {
 	//
 	@RequestMapping(value = Routes.INTERVAL_BLOCK_MEMBER, method = RequestMethod.PUT, consumes = "application/atom+xml", produces = "application/atom+xml")
 	@ResponseBody
-	public void update(HttpServletResponse response, @PathVariable Long subscriptionId,
-			@PathVariable Long usagePointId, @PathVariable Long meterReadingId, @PathVariable Long intervalBlockId,
-			@RequestParam Map<String, String> params, InputStream stream) throws IOException, FeedException {
+	public void update(HttpServletResponse response,
+			@PathVariable Long subscriptionId, @PathVariable Long usagePointId,
+			@PathVariable Long meterReadingId,
+			@PathVariable Long intervalBlockId,
+			@RequestParam Map<String, String> params, InputStream stream)
+			throws IOException, FeedException {
 
-		Subscription subscription = subscriptionService.findById(subscriptionId);
-		Authorization authorization = subscription.getAuthorization();
-		RetailCustomer retailCustomer = authorization.getRetailCustomer();
-		Long retailCustomerId = retailCustomer.getId();
+		Long retailCustomerId = subscriptionService.findRetailCustomerId(
+				subscriptionId, usagePointId);
 
-		IntervalBlock intervalBlock = intervalBlockService.findById(retailCustomerId, usagePointId, meterReadingId,
+		IntervalBlock intervalBlock = intervalBlockService
+				.findById(retailCustomerId, usagePointId, meterReadingId,
 				intervalBlockId);
 
 		if (intervalBlock != null) {
 
 			try {
-				intervalBlock.merge(intervalBlockService.importResource(stream));
+				intervalBlock
+						.merge(intervalBlockService.importResource(stream));
 
 				resourceService.merge(intervalBlock);
 
@@ -281,17 +310,18 @@ public class IntervalBlockRESTController {
 	}
 
 	@RequestMapping(value = Routes.INTERVAL_BLOCK_MEMBER, method = RequestMethod.DELETE)
-	public void delete(HttpServletResponse response, @PathVariable Long subscriptionId,
-			@PathVariable Long usagePointId, @PathVariable Long meterReadingId, @PathVariable Long intervalBlockId,
-			@RequestParam Map<String, String> params, InputStream stream) throws IOException, FeedException {
+	public void delete(HttpServletResponse response,
+			@PathVariable Long subscriptionId, @PathVariable Long usagePointId,
+			@PathVariable Long meterReadingId,
+			@PathVariable Long intervalBlockId,
+			@RequestParam Map<String, String> params, InputStream stream)
+			throws IOException, FeedException {
 		try {
-			Subscription subscription = subscriptionService.findById(subscriptionId);
-			Authorization authorization = subscription.getAuthorization();
-			RetailCustomer retailCustomer = authorization.getRetailCustomer();
-			Long retailCustomerId = retailCustomer.getId();
+			Long retailCustomerId = subscriptionService.findRetailCustomerId(
+					subscriptionId, usagePointId);
 
-			resourceService.deleteByXPathId(retailCustomerId, usagePointId, meterReadingId, intervalBlockId,
-					IntervalBlock.class);
+			resourceService.deleteByXPathId(retailCustomerId, usagePointId,
+					meterReadingId, intervalBlockId, IntervalBlock.class);
 
 		} catch (Exception e) {
 			log.warn("Exception", e);
@@ -305,7 +335,8 @@ public class IntervalBlockRESTController {
 		try {
 		if (token != null) {
 			token = token.replace("Bearer ", "");
-			Authorization authorization = authorizationService.findByAccessToken(token);
+			Authorization authorization = authorizationService
+					.findByAccessToken(token);
 			if (authorization != null) {
 				Subscription subscription = authorization.getSubscription();
 				if (subscription != null) {
@@ -321,7 +352,8 @@ public class IntervalBlockRESTController {
 
 	}
 
-	public void setIntervalBlockService(IntervalBlockService intervalBlockService) {
+	public void setIntervalBlockService(
+			IntervalBlockService intervalBlockService) {
 		this.intervalBlockService = intervalBlockService;
 	}
 
@@ -329,7 +361,8 @@ public class IntervalBlockRESTController {
 		return this.intervalBlockService;
 	}
 
-	public void setRetailCustomerService(RetailCustomerService retailCustomerService) {
+	public void setRetailCustomerService(
+			RetailCustomerService retailCustomerService) {
 		this.retailCustomerService = retailCustomerService;
 	}
 
@@ -377,11 +410,13 @@ public class IntervalBlockRESTController {
 		return this.subscriptionService;
 	}
 
-	public void setAuthorizationService(AuthorizationService authorizationService) {
+	public void setAuthorizationService(
+			AuthorizationService authorizationService) {
 		this.authorizationService = authorizationService;
 	}
 
 	public AuthorizationService getAuthorizationService() {
 		return this.authorizationService;
 	}
+
 }

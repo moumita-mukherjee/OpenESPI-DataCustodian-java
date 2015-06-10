@@ -46,7 +46,7 @@
 			<property name="entityManagerFactory" ref="dsentityManagerFactory" />
 		</bean>
 	</beans>
-	<beans profile="authserver">
+	<beans >
 		<bean id="lhentityManagerFactory"
 			class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
 			p:dataSource-ref="lhdbDataSource">

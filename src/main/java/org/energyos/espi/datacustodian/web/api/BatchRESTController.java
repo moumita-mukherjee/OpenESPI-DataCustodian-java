@@ -16,14 +16,19 @@
 
 package org.energyos.espi.datacustodian.web.api;
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.energyos.espi.common.domain.ApplicationInformation;
+import org.energyos.espi.common.domain.Authorization;
 import org.energyos.espi.common.domain.RetailCustomer;
 import org.energyos.espi.common.domain.Routes;
+import org.energyos.espi.common.service.AuthorizationService;
 import org.energyos.espi.common.service.ExportService;
 import org.energyos.espi.common.service.ImportService;
 import org.energyos.espi.common.service.NotificationService;
@@ -33,7 +38,7 @@ import org.energyos.espi.common.utils.ExportFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,10 +46,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sun.syndication.io.FeedException;
 
-@Controller
+@RestController
 public class BatchRESTController {
 
 	@Autowired
@@ -52,6 +58,9 @@ public class BatchRESTController {
 
 	@Autowired
 	private ResourceService resourceService;
+	
+	@Autowired
+	private AuthorizationService authorizationService;
 
 	@Autowired
 	private NotificationService notificationService;
@@ -62,17 +71,28 @@ public class BatchRESTController {
 	@Autowired
 	private ExportService exportService;
 
-	@ExceptionHandler(Exception.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public void handleGenericException() {
-	}
-
+	/**
+	 * Supports the upload (or import) of Green Button DMD files.
+	 * Simply send the DMD file within the POST data.
+	 * 
+	 * Requires Authorization: Bearer [{data_custodian_access_token} | {upload_access_token}]
+	 * 
+	 * @param response HTTP Servlet Response
+	 * @param retailCustomerId The locally unique identifier of a Retail Customer - NOTE PII
+	 * @param params HTTP Query Parameters
+	 * @param stream An input stream
+	 * @throws IOException
+	 * @throws FeedException
+	 * 
+	 * @usage POST /espi/1_1/resource/Batch/RetailCustomer/{retailCustomerId}/UsagePoint
+	 */
 	@RequestMapping(value = Routes.BATCH_UPLOAD_MY_DATA, method = RequestMethod.POST, consumes = "application/xml", produces = "application/atom+xml")
 	@ResponseBody
 	public void upload(HttpServletResponse response,
 			@PathVariable Long retailCustomerId,
 			@RequestParam Map<String, String> params, InputStream stream)
 			throws IOException, FeedException {
+
 		try {
 			RetailCustomer retailCustomer = retailCustomerService
 					.findById(retailCustomerId);
@@ -92,6 +112,20 @@ public class BatchRESTController {
 
 	}
 
+	/**
+	 * Supports Green Button Download My Data - 
+	 * A DMD file will be produced that contains all Usage Points for the requested Retail Customer. 
+	 * 
+     * Requires Authorization: Bearer [{data_custodian_access_token} | {upload_access_token}]
+	 * 
+	 * @param response HTTP Servlet Response
+	 * @param retailCustomerId The locally unique identifier of a Retail Customer - NOTE PII
+	 * @param  HTTP Query Parameters
+	 * @throws IOException
+	 * @throws FeedException
+	 * 
+	 * @usage GET /espi/1_1/resource/Batch/RetailCustomer/{retailCustomerId}/UsagePoint
+	 */
 	@RequestMapping(value = Routes.BATCH_DOWNLOAD_MY_DATA_COLLECTION, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
 	public void download_collection(HttpServletResponse response,
@@ -113,6 +147,21 @@ public class BatchRESTController {
 
 	}
 
+	/**
+	 * Supports Green Button Download My Data
+	 * A DMD file for a particular Usage Point will be produced and returned to the Retail Customer
+	 * 
+	 * Requires Authorization: Bearer [{data_custodian_access_token} | {upload_access_token}]
+	 * 
+	 * @param response HTTP Servlet Response
+	 * @param retailCustomerId The locally unique identifier of a Retail Customer - NOTE PII
+	 * @param usagePointId The locally unique identifier of a UsagePoint.id
+	 * @param params params HTTP Query Parameters
+	 * @throws IOException
+	 * @throws FeedException
+	 * 
+	 *  @usage GET /espi/1_1/resource/Batch/RetailCustomer/{retailCustomerId}/UsagePoint/{usagePointId}
+	 */
 	@RequestMapping(value = Routes.BATCH_DOWNLOAD_MY_DATA_MEMBER, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
 	public void download_member(HttpServletResponse response,
@@ -126,7 +175,6 @@ public class BatchRESTController {
 				"attachment; filename=GreenButtonDownload.xml");
 		try {
 
-			// TODO -- need authorization hook
 			exportService.exportUsagePointFull(0L,retailCustomerId, usagePointId,
 					response.getOutputStream(), new ExportFilter(params));
 
@@ -136,10 +184,20 @@ public class BatchRESTController {
 
 	}
 
-
-
-	//DJ 
-	//@Transactional(readOnly = true)
+	/**
+	 * Produce a Subscription for the requester. The resultant response
+	 * will contain a <feed> of the Usage Point(s) associated with the subscription.
+	 * 
+	 * Requires Authorization: Bearer [{data_custodian_access_token} | {access_token}]
+	 * 
+	 * @param response HTTP Servlet Response
+	 * @param subscriptionId Long identifying the Subscription.id of the desired Authorization
+	 * @param params HTTP Query Parameters
+	 * @throws IOException
+	 * @throws FeedException
+	 * 
+	 * @usage GET /espi/1_1/resource/Batch/Subscription/{subscriptionId}
+	 */
 	@RequestMapping(value = Routes.BATCH_SUBSCRIPTION, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
 	public void subscription(HttpServletResponse response,
@@ -161,25 +219,152 @@ public class BatchRESTController {
 
 	}
 
-	@RequestMapping(value = Routes.BATCH_BULK_MEMBER, method = RequestMethod.GET, produces = "application/atom+xml")
+	/**
+	 * Produce a Subscription for the requester. The resultant response
+	 * will contain a <feed> of the Usage Point(s) associated with the subscription.
+	 * 
+	 * Requires Authorization: Bearer [{data_custodian_access_token} | {access_token}]
+	 * 
+	 * @param response HTTP Servlet Response
+	 * @param subscriptionId Long identifying the Subscription.id of the desired Authorization
+	 * @param params HTTP Query Parameters
+	 * @throws IOException
+	 * @throws FeedException
+	 * 
+	 * @usage GET /espi/1_1/resource/Batch/Subscription/{subscriptionId}/UsagePoint
+	 */
+	@RequestMapping(value = Routes.BATCH_SUBSCRIPTION_USAGEPOINT, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
-	public void bulk(HttpServletResponse response, @PathVariable long bulkId,
+	public void subscriptionUsagePoint(HttpServletResponse response,
+			@PathVariable Long subscriptionId,
 			@RequestParam Map<String, String> params) throws IOException,
 			FeedException {
-		
+
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		response.addHeader("Content-Disposition",
 				"attachment; filename=GreenButtonDownload.xml");
 		try {
-			exportService.exportBatchBulk(bulkId, response.getOutputStream(),
-					new ExportFilter(params));
+			exportService.exportBatchSubscriptionUsagePoint(subscriptionId,
+					response.getOutputStream(), new ExportFilter(params));
 
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
 
 	}
+	
+	/**
+	 * Produce a Subscription for the requester. The resultant response
+	 * will contain a <feed> of the Usage Point(s) associated with the subscription.
+	 * 
+	 * Requires Authorization: Bearer [{data_custodian_access_token} | {access_token}]
+	 * 
+	 * @param response HTTP Servlet Response
+	 * @param subscriptionId Long identifying the Subscription.id of the desired Authorization
+	 * @param usagePointId Long identifying the UsagePoint.id of the desired Authorization
+	 * @param params HTTP Query Parameters
+	 * @throws IOException
+	 * @throws FeedException
+	 * 
+	 * @usage GET /espi/1_1/resource/Batch/Subscription/{subscriptionId}
+	 */
+	@RequestMapping(value = Routes.BATCH_SUBSCRIPTION_USAGEPOINT_MEMBER, method = RequestMethod.GET, produces = "application/atom+xml")
+	@ResponseBody
+	public void subscriptionUsagePointMember(HttpServletResponse response,
+			@PathVariable Long subscriptionId,
+			@PathVariable Long usagePointId,
+			@RequestParam Map<String, String> params) throws IOException,
+			FeedException {
 
+		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
+		response.addHeader("Content-Disposition",
+				"attachment; filename=GreenButtonDownload.xml");
+		try {
+			exportService.exportBatchSubscriptionUsagePoint(subscriptionId, usagePointId,
+					response.getOutputStream(), new ExportFilter(params));
+
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		}
+
+	}
+	
+	/**
+	 * Provide a Bulk delivery of information. The Third Party is
+	 * provided with the XML representation of the Bulk. 
+	 * 
+	 * RESTful Pattern:  
+	 *    /espi/1_1/resource/Batch/Subscription/{subscriptionId}
+	 * 
+	 * Requires Authorization: Bearer [{data_custodian_access_token} | {client_access_token}]
+	 * 
+	 * @param request HTTP Servlet Request
+	 * @param response HTTP Servlet Response
+	 * @param bulkId Long identifying the BR={bulkId} within the Authorization.scope string
+	 * @param params HTTP Query Parameters
+	 * @throws IOException
+	 * @throws FeedException
+	 * 
+	 * @usage GET /espi/1_1/resource/Batch/Bulk/{bulkId}
+	 */
+	@RequestMapping(value = Routes.BATCH_BULK_MEMBER, method = RequestMethod.GET, produces = "application/atom+xml")
+	@ResponseBody
+	public void bulk(HttpServletRequest request, HttpServletResponse response, @PathVariable Long bulkId,
+			@RequestParam Map<String, String> params) throws IOException,
+			FeedException {
+	}
+
+	private String getAuthorizationThirdParty(HttpServletRequest request) {
+		String token = request.getHeader("authorization");
+		String thirdParty = "";
+
+		if (token != null) {
+			token = token.replace("Bearer ", "");
+			Authorization authorization = authorizationService
+					.findByAccessToken(token);
+			ApplicationInformation applicationInformation = authorization.getApplicationInformation();
+			// note that ApplicationInformation.clientId is a String
+			//
+			thirdParty = applicationInformation.getClientId();
+		}
+
+		return thirdParty;
+
+	}
+	
+	private boolean isInCache(HttpServletRequest request, Long bulkId) {
+		System.out.println(System.getProperty("/var/greenbutton/export-cache/")); 
+		System.out.println(System.getProperty("/var/greenbutton/export-cache/" + bulkId)); 
+		return false;
+		
+	}
+	
+	private boolean isSFTP(HttpServletRequest request) {
+		Boolean result = false;
+		String accessToken = request.getHeader("authorization");
+		if(accessToken!=null)
+		{
+			if (accessToken.contains("Bearer"))
+			{
+				// has Authorization header with Bearer type
+				accessToken = accessToken.replace("Bearer ", "");
+				// ensure length is >12 characters (48 bits in hex at least)
+				if(accessToken.length()>=12)
+				{
+					// we have a valid token
+					Authorization authorization = authorizationService.findByAccessToken(accessToken);
+			        ApplicationInformation applicationInformation = authorization.getApplicationInformation();
+			        String bulkRequestUri = applicationInformation.getDataCustodianBulkRequestURI();
+			        if (bulkRequestUri.contains("sftp:")) {
+			        	result = true;
+			        }
+				}
+			}
+		}
+		return result;
+		
+	}
+	
     public void setImportService(ImportService importService) {
         this.importService = importService;
    }
@@ -194,6 +379,15 @@ public class BatchRESTController {
    public ResourceService getResourceService () {
         return this.resourceService;
    }
+   
+   public void setAuthorizationService(AuthorizationService authorizationService) {
+       this.authorizationService = authorizationService;
+  }
+
+  public AuthorizationService getAuthorizationService () {
+       return this.authorizationService;
+  }
+  
    public void setNotificationService(NotificationService notificationService) {
         this.notificationService = notificationService;
    }
@@ -215,4 +409,5 @@ public class BatchRESTController {
    public ExportService getExportService () {
         return this.exportService;
    }
+
 }

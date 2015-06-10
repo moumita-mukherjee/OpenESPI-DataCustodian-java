@@ -7,8 +7,7 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-
-	<mvc:annotation-driven />
+    <mvc:annotation-driven />
 
 	<mvc:default-servlet-handler />
 
@@ -22,8 +21,6 @@
 
 	<import resource="classpath:spring/business-config.xml" />
 
-	<bean id="resourceValidationFilter"
-		class="org.energyos.espi.datacustodian.web.filter.ResourceValidationFilter" />
 
 	<bean id="accessToken" class="org.energyos.espi.common.domain.AccessToken" />
 	<bean id="applicationInformation" class="org.energyos.espi.common.domain.ApplicationInformation" />
@@ -60,6 +57,10 @@
 	<bean id="timeConfiguration" class="org.energyos.espi.common.domain.TimeConfiguration" />
 	<bean id="usagePoint" class="org.energyos.espi.common.domain.UsagePoint" />
 	<bean id="usagePointDetail" class="org.energyos.espi.common.domain.UsagePointDetail" />
+	<bean id="touSchedule" class="org.energyos.espi.common.domain.ext.TOUSchedule" />
+	<bean id="holiday" class="org.energyos.espi.common.domain.ext.Holiday" />	
+	<bean id="contractRate" class="org.energyos.espi.common.domain.ext.ContractRate" />
+	<bean id="supplyContract" class="org.energyos.espi.common.domain.ext.SupplyContract" />
 	<bean id="user" class="org.energyos.espi.common.domain.User" />
 
 
@@ -146,6 +147,12 @@
 	<bean id="usagePointDetailRepository"
 		class="org.energyos.espi.common.repositories.jpa.UsagePointDetailRepositoryImpl"
 		lazy-init="true" />
+	<bean id="touScheduleRepository"
+		class="org.energyos.espi.common.repositories.datastore.TOUScheduleRepositoryImpl"
+		lazy-init="true" />
+	<bean id="holidayRepository"
+		class="org.energyos.espi.common.repositories.datastore.HolidayRepositoryImpl"
+		lazy-init="true" />				
 	<bean id="usagePointRepository"
 		class="org.energyos.espi.common.repositories.jpa.UsagePointRepositoryImpl"
 		lazy-init="true" />
@@ -209,6 +216,9 @@
 		lazy-init="true" />
 	<bean id="defaultLoginService" class="org.energyos.espi.common.service.DefaultLoginService"
 		lazy-init="true" scope="prototype" />
+
+	<bean id="resourceValidationFilter"
+		class="org.energyos.espi.datacustodian.web.filter.ResourceValidationFilter" lazy-init="true"/>
 
 
 	<beans profile="authserver">
@@ -313,8 +323,22 @@
 	</beans>
 
 	<beans profile="resourceserver">
+	
+		<bean id="wADLController"
+			class="org.energyos.espi.datacustodian.web.api.WADLController"
+			lazy-init="true" />
+			
 		<bean id="versionRESTController"
 			class="org.energyos.espi.datacustodian.web.VersionRESTController"
+			lazy-init="true" />
+			
+		<bean id="timeConfigurationRESTController"
+			class="org.energyos.espi.datacustodian.web.api.TimeConfigurationRESTController"
+			lazy-init="true" />
+
+
+		<bean id="readingTypeRESTController"
+			class="org.energyos.espi.datacustodian.web.api.ReadingTypeRESTController"
 			lazy-init="true" />
 
 
@@ -348,11 +372,6 @@
 
 		<bean id="serviceStatusRESTController"
 			class="org.energyos.espi.datacustodian.web.api.ServiceStatusRESTController"
-			lazy-init="true" />
-
-
-		<bean id="authorizationStatusRESTController"
-			class="org.energyos.espi.datacustodian.web.api.AuthorizationStatusRESTController"
 			lazy-init="true" />
 
 		<bean id="authorizationRESTController"

@@ -36,6 +36,7 @@ import org.energyos.espi.common.service.UsagePointService;
 import org.energyos.espi.datacustodian.utils.UsagePointHelper;
 import org.energyos.espi.datacustodian.web.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -45,29 +46,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
+@PreAuthorize("hasRole('ROLE_USER')")
 public class ScopeSelectionController extends BaseController {
 
-	@Autowired
-	private AuthorizationService authorizationService;
+    @Autowired
+    private ApplicationInformationService applicationInformationService;
 
-	@Autowired
-	private ApplicationInformationService applicationInformationService;
-
-	@Autowired
-	private UsagePointService usagePointService;
-
-	@Autowired
-	private UsagePointDetailRepository usagePointDetailRepository;
-
-	@ModelAttribute
-	public List<UsagePoint> usagePoints(Principal principal) {
-		List<UsagePoint> usagePoints = usagePointService.findAllByRetailCustomer(currentCustomer(principal));
-		populateExternalDetail(currentUser(principal).getCustomerId(), usagePoints);
-		return usagePoints;
-	}
-
-	// @Secured("ROLE_USER_X'")
-	@RequestMapping(value = Routes.DATA_CUSTODIAN_SCOPE_SELECTION_SCREEN, method = RequestMethod.GET)
+    @RequestMapping(value = Routes.DATA_CUSTODIAN_SCOPE_SELECTION_SCREEN, method = RequestMethod.GET)
 	public String scopeSelection(HttpServletRequest request, String[] scopes,
 			@RequestParam("ThirdPartyID") String thirdPartyClientId, ModelMap model, Principal principal,
 			HttpSession sessionObj) {
@@ -126,6 +111,45 @@ public class ScopeSelectionController extends BaseController {
 
 	}
 
+
+
+
+	public void setApplicationInformationService(ApplicationInformationService applicationInformationService) {
+		this.applicationInformationService = applicationInformationService;
+	}
+
+	/* LH customization starts here */
+	@Autowired
+	private AuthorizationService authorizationService;
+	
+	@Autowired
+	private UsagePointService usagePointService;
+
+	@Autowired
+	private UsagePointDetailRepository usagePointDetailRepository;
+
+	@ModelAttribute
+	public List<UsagePoint> usagePoints(Principal principal) {
+		List<UsagePoint> usagePoints = usagePointService.findAllByRetailCustomer(currentCustomer(principal));
+		populateExternalDetail(currentUser(principal).getCustomerId(), usagePoints);
+		return usagePoints;
+	}
+	public void setUsagePointService(UsagePointService usagePointService) {
+		this.usagePointService = usagePointService;
+	}
+
+	public void setUsagePointDetailRepository(UsagePointDetailRepository usagePointDetailRepository) {
+		this.usagePointDetailRepository = usagePointDetailRepository;
+	}
+	private List<UsagePoint> populateExternalDetail(String customerId, List<UsagePoint> usagePoints) {
+		try {
+			UsagePointHelper.populateExternalDetail(usagePoints,
+					usagePointDetailRepository.findAllByRetailCustomerId(customerId));
+		} catch (EmptyResultDataAccessException ignore) {
+
+		}
+		return usagePoints;
+	}
 	@RequestMapping(value = Routes.DATA_CUSTODIAN_SCOPE_SELECTION_SCREEN, method = RequestMethod.POST)
 	public String scopeSelectionConfirm(HttpServletRequest request, String[] scopes,
 			@RequestParam("ThirdPartyID") String thirdPartyClientId, @RequestParam("usage_point") Long usagePointId,
@@ -137,27 +161,5 @@ public class ScopeSelectionController extends BaseController {
 		return "redirect:" + thirdParty.getThirdPartyScopeSelectionScreenURI() + "?"
 				+ newScopeParams(usagePoint.filterCompatibleWithScope(thirdParty.getScopeArray())) + "&DataCustodianID=" + thirdParty.getDataCustodianId();
 
-	}
-
-	private List<UsagePoint> populateExternalDetail(String customerId, List<UsagePoint> usagePoints) {
-		try {
-			UsagePointHelper.populateExternalDetail(usagePoints,
-					usagePointDetailRepository.findAllByRetailCustomerId(customerId));
-		} catch (EmptyResultDataAccessException ignore) {
-
-		}
-		return usagePoints;
-	}
-
-	public void setApplicationInformationService(ApplicationInformationService applicationInformationService) {
-		this.applicationInformationService = applicationInformationService;
-	}
-
-	public void setUsagePointService(UsagePointService usagePointService) {
-		this.usagePointService = usagePointService;
-	}
-
-	public void setUsagePointDetailRepository(UsagePointDetailRepository usagePointDetailRepository) {
-		this.usagePointDetailRepository = usagePointDetailRepository;
-	}
+	}	
 }

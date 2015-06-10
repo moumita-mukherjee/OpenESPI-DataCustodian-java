@@ -122,8 +122,9 @@
 													<tr>
 														<th></th>
 														<th>Address</th>
-														<th>Service Number</th>
 														<th>Billing Number</th>
+														<th>Service</th>
+														<th>Usage Point</th>
 														<th>Meter</th>
 														<th>Status</th>
 													</tr>
@@ -156,11 +157,12 @@
 																<c:out value="${usagePoint.usagePointDetail.postalCode}" />
 																<c:out
 																	value="${usagePoint.usagePointDetail.streetProvince}" /></td>
+															<td><c:out
+																	value="${usagePoint.usagePointDetail.accountId}" /></td>																	
 															<td><spring:message
 																	code="service.name.${usagePoint.serviceCategory.kind}" /><br />
 																<c:out value="${usagePoint.usagePointDetail.serviceId}" /></td>
-															<td><c:out
-																	value="${usagePoint.usagePointDetail.accountId}" /></td>
+															<td><c:out value="${usagePoint.id}" /></td>
 															<td><c:out
 																	value="${usagePoint.usagePointDetail.meterNumber}" /></td>
 															<td><c:choose>

@@ -37,7 +37,6 @@ import org.energyos.espi.common.utils.ExportFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,10 +44,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sun.syndication.io.FeedException;
 
-@Controller
+@RestController
 public class RetailCustomerRESTController {
 
 	@Autowired
@@ -62,16 +62,14 @@ public class RetailCustomerRESTController {
 
 	@Autowired
 	private ExportService exportService;
+	
+	
 	@Autowired
 	private AuthorizationService authorizationService;
 
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public void handleGenericException(Exception ex) {
-		System.err.println("handleGenericException "+ex);
-		if(ex !=null) {
-			ex.printStackTrace(System.err);
-		}
+	public void handleGenericException() {
 	}
 
 	// ROOT and XPath are the same for this one.
@@ -134,9 +132,11 @@ public class RetailCustomerRESTController {
 		try {
 			RetailCustomer retailCustomer = this.retailCustomerService
 					.importResource(stream);
+			if(retailCustomer!=null) {
 			exportService.exportRetailCustomer(subscriptionId, retailCustomer.getId(),
 					response.getOutputStream(), new ExportFilter(
 							new HashMap<String, String>()));
+			}
 		} catch (Exception e) {
 			System.err
 					.printf("***** Error Caused by RetailCustomer.x.IndentifiedObject need: %s",

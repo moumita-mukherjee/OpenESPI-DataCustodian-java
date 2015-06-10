@@ -29,7 +29,7 @@ public class CustomerHomeController extends BaseController {
 	public String index() {
 		return "/customer/home";		
 	}
-
+	/* LH customization starts here */
 	@RequestMapping(value = "/RetailCustomer/{retailCustomerId}/feedback", method = RequestMethod.GET)
 	public String feedback() {
 		return "/customer/feedback/index";

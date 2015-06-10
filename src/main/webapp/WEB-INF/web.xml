@@ -2,25 +2,8 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-	version="3.0">
-	<filter>
-		<filter-name>appstats</filter-name>
-		<filter-class>com.google.appengine.tools.appstats.AppstatsFilter</filter-class>
-		<init-param>
-			<param-name>logMessage</param-name>
-			<param-value>Appstats available: /appstats/details?time={ID}</param-value>
-		</init-param>
-		<init-param>
-			<param-name>calculateRpcCosts</param-name>
-			<param-value>true</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>appstats</filter-name>
-		<url-pattern>/RetailCustomer/*</url-pattern>
-		<url-pattern>/espiignore/*</url-pattern>
-		<url-pattern>/lh/*</url-pattern>
-	</filter-mapping>
+	version="3.0">	
+	
 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -29,18 +12,46 @@
 			<param-value>org.springframework.web.servlet.FrameworkServlet.CONTEXT.spring</param-value>
 		</init-param>
 	</filter>
-	<filter>
-		<filter-name>CORSFilter</filter-name>
-		<filter-class>org.energyos.espi.datacustodian.web.filter.CORSFilter</filter-class>
-		<init-param>
-			<param-name>allow.origin</param-name>
+	
+    <filter>
+        <filter-name>CORSFilter</filter-name>
+        <filter-class>org.energyos.espi.datacustodian.web.filter.CORSFilter</filter-class>
+      
+		<!-- Allow "origin" header -->
+    	<init-param>  
+    		<param-name>allow.origin</param-name>
 			<param-value>${web.allowOrigin}</param-value>
-		</init-param>
-	</filter>
-	<filter>
-		<filter-name>StringToLongFilter</filter-name>
-		<filter-class>org.energyos.espi.common.utils.StringToLongFilter</filter-class>
-	</filter>
+    	</init-param>
+        
+<!--    CORSFilter Initialization parameters (for documentation only - not required)
+     
+    	<init-param>  // Allow origin to use regex definition
+     		<param-name>allow.origin.regex</param-name>
+        	<param-value>cfg.allow.origin.regex.toString()</param-value>
+    	</init-param>
+    	
+    	<init-param>  // Define optional CORS response headers
+    		<param-name>header: Access-Control-Allow-Origin</param-name>
+    		<param-value>*</param-value>
+    	</init-param>
+    	
+    	<init-param>  // Allow CORS headers to be exposed
+    		<param-name>expose.headers</param-name>
+    		<param-value>cfg.expose.headers.toString()</param-value>
+    	</init-param>
+    	
+    	<init-param>  // Allow Credential support
+    		<param-name>allow.credentials</param-name>
+    		<param-value>true</param-value>
+    	</init-param>
+-->         
+             
+    </filter>
+    
+    <filter>
+    	<filter-name>StringToLongFilter</filter-name>
+    	<filter-class>org.energyos.espi.common.utils.StringToLongFilter</filter-class>	
+    </filter>
 	<filter>
 		<filter-name>httpMethodFilter</filter-name>
 		<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
@@ -50,57 +61,50 @@
 		<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>CORSFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>StringToLongFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+        <filter-name>CORSFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+    <filter-mapping>
+    	<filter-name>StringToLongFilter</filter-name>
+    	<url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	<filter>
-		<filter-name>resourceValidationFilter</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>resourceValidationFilter</filter-name>
-		<!-- 
-		<url-pattern>/*</url-pattern>
-		 -->
+
+	<!-- Resource Access Validation Filter -->
+    <filter>
+        <filter-name>resourceValidationFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+     </filter>
+    <filter-mapping>
+        <filter-name>resourceValidationFilter</filter-name>
 		<url-pattern>/RetailCustomer/*</url-pattern>
 		<url-pattern>/espi/*</url-pattern>
 		<url-pattern>/custodian/*</url-pattern>
 		<url-pattern>/management/*</url-pattern>
-	</filter-mapping>
+    </filter-mapping>
+
 	<servlet>
 		<servlet-name>spring</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+<!--         <init-param> -->
+<!--             <param-name>contextConfigLocation</param-name> -->
+<!--             <param-value>/WEB-INF/spring-servlet.xml</param-value> -->
+<!--         </init-param> -->
+
 		<load-on-startup>5</load-on-startup>
 	</servlet>
+
 	<servlet-mapping>
 		<servlet-name>spring</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-	<servlet>
-		<servlet-name>appstats</servlet-name>
-		<servlet-class>com.google.appengine.tools.appstats.AppstatsServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>appstats</servlet-name>
-		<url-pattern>/appstats/*</url-pattern>
-	</servlet-mapping>
-	<security-constraint>
-		<web-resource-collection>
-			<web-resource-name>appstats</web-resource-name>
-			<url-pattern>/appstats/*</url-pattern>
-		</web-resource-collection>
-		<auth-constraint>
-			<role-name>admin</role-name>
-		</auth-constraint>
-	</security-constraint>
+	
+	
 	<servlet>
 		<servlet-name>_ah_sessioncleanup</servlet-name>
 		<servlet-class>com.google.apphosting.utils.servlet.SessionCleanupServlet</servlet-class>

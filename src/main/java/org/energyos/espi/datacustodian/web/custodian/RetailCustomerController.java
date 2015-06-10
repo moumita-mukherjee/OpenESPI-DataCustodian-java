@@ -89,7 +89,6 @@ public class RetailCustomerController extends BaseController {
 	@RequestMapping(value = Routes.DATA_CUSTODIAN_RETAIL_CUSTOMER_SHOW, method = RequestMethod.GET)
 	public String show(@PathVariable Long retailCustomerId, ModelMap model) {
 		RetailCustomer retailCustomer = service.findById(retailCustomerId);
-		model.put("authorizationList", authorizationService.findAllByRetailCustomerId(retailCustomerId));
 		model.put("retailCustomer", retailCustomer);
 		return "/custodian/retailcustomers/show";
 	}

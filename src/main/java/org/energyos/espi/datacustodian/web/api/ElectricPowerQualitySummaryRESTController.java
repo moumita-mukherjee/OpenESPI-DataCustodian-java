@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.energyos.espi.common.domain.Authorization;
 import org.energyos.espi.common.domain.ElectricPowerQualitySummary;
-import org.energyos.espi.common.domain.RetailCustomer;
 import org.energyos.espi.common.domain.Routes;
 import org.energyos.espi.common.domain.Subscription;
 import org.energyos.espi.common.domain.UsagePoint;
@@ -40,7 +39,6 @@ import org.energyos.espi.common.utils.ExportFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,10 +46,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sun.syndication.io.FeedException;
 
-@Controller
+@RestController
 public class ElectricPowerQualitySummaryRESTController {
 
 	@Autowired
@@ -85,8 +84,8 @@ public class ElectricPowerQualitySummaryRESTController {
 	@RequestMapping(value = Routes.ROOT_ELECTRIC_POWER_QUALITY_SUMMARY_COLLECTION, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
 	public void index(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam Map<String, String> params) throws IOException,
-			FeedException,Exception {
+			@RequestParam Map<String, String> params) throws Exception,
+			FeedException {
 
 		Long subscriptionId = getSubscriptionId(request);
 		
@@ -107,10 +106,11 @@ public class ElectricPowerQualitySummaryRESTController {
 		Long subscriptionId = getSubscriptionId(request);
 		
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
+
 		try {
-			exportService.exportElectricPowerQualitySummary_Root(subscriptionId,
-					electricPowerQualitySummaryId, response.getOutputStream(),
-					new ExportFilter(params));
+			exportService.exportElectricPowerQualitySummary_Root(
+					subscriptionId, electricPowerQualitySummaryId,
+					response.getOutputStream(), new ExportFilter(params));
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -118,20 +118,21 @@ public class ElectricPowerQualitySummaryRESTController {
 
 	@RequestMapping(value = Routes.ROOT_ELECTRIC_POWER_QUALITY_SUMMARY_COLLECTION, method = RequestMethod.POST, consumes = "application/atom+xml", produces = "application/atom+xml")
 	@ResponseBody
-	public void create(HttpServletRequest request, HttpServletResponse response,
+	public void create(HttpServletRequest request,
+			HttpServletResponse response,
 			@RequestParam Map<String, String> params, InputStream stream)
 			throws IOException {
 
 		Long subscriptionId = getSubscriptionId(request);
 		
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
+
 		try {
 			ElectricPowerQualitySummary electricPowerQualitySummary = this.electricPowerQualitySummaryService
 					.importResource(stream);
-			exportService.exportElectricPowerQualitySummary_Root(subscriptionId,
-					electricPowerQualitySummary.getId(),
+			exportService.exportElectricPowerQualitySummary_Root(
+					subscriptionId, electricPowerQualitySummary.getId(),
 					response.getOutputStream(), new ExportFilter(params));
-
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -164,6 +165,7 @@ public class ElectricPowerQualitySummaryRESTController {
 			@PathVariable Long electricPowerQualitySummaryId,
 			@RequestParam Map<String, String> params, InputStream stream)
 			throws IOException, FeedException {
+
 		try {
 			resourceService.deleteById(electricPowerQualitySummaryId,
 					ElectricPowerQualitySummary.class);
@@ -177,43 +179,38 @@ public class ElectricPowerQualitySummaryRESTController {
 	@RequestMapping(value = Routes.ELECTRIC_POWER_QUALITY_SUMMARY_COLLECTION, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
 	public void index(HttpServletResponse response,
-			@PathVariable Long subscriptionId,
-			@PathVariable Long usagePointId,
-			@RequestParam Map<String, String> params) throws IOException,
-			FeedException,Exception {
+			@PathVariable Long subscriptionId, @PathVariable Long usagePointId,
+			@RequestParam Map<String, String> params) throws Exception,
+			FeedException {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		
-		Subscription subscription = subscriptionService.findById(subscriptionId);
-		Authorization authorization = subscription.getAuthorization();
-		RetailCustomer retailCustomer = authorization.getRetailCustomer();
-		Long retailCustomerId = retailCustomer.getId();
+		Long retailCustomerId = subscriptionService.findRetailCustomerId(
+				subscriptionId, usagePointId);
 		
-		exportService.exportElectricPowerQualitySummarys(subscriptionId, retailCustomerId,
-				usagePointId, response.getOutputStream(), new ExportFilter(
-						params));
+		exportService.exportElectricPowerQualitySummarys(subscriptionId,
+				retailCustomerId, usagePointId, response.getOutputStream(),
+				new ExportFilter(params));
 	}
-
 
 	@RequestMapping(value = Routes.ELECTRIC_POWER_QUALITY_SUMMARY_MEMBER, method = RequestMethod.GET, produces = "application/atom+xml")
 	@ResponseBody
 	public void show(HttpServletResponse response,
-			@PathVariable Long subscriptionId,
-			@PathVariable Long usagePointId,
+			@PathVariable Long subscriptionId, @PathVariable Long usagePointId,
 			@PathVariable Long electricPowerQualitySummaryId,
 			@RequestParam Map<String, String> params) throws IOException,
 			FeedException {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
+
 		try {
-			Subscription subscription = subscriptionService.findById(subscriptionId);
-			Authorization authorization = subscription.getAuthorization();
-			RetailCustomer retailCustomer = authorization.getRetailCustomer();
-			Long retailCustomerId = retailCustomer.getId();
+			Long retailCustomerId = subscriptionService.findRetailCustomerId(
+					subscriptionId, usagePointId);
 			
-			exportService.exportElectricPowerQualitySummary(subscriptionId, retailCustomerId,
-					usagePointId, electricPowerQualitySummaryId,
-					response.getOutputStream(), new ExportFilter(params));
+			exportService.exportElectricPowerQualitySummary(subscriptionId,
+					retailCustomerId, usagePointId,
+					electricPowerQualitySummaryId, response.getOutputStream(),
+					new ExportFilter(params));
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -222,16 +219,13 @@ public class ElectricPowerQualitySummaryRESTController {
 	@RequestMapping(value = Routes.ELECTRIC_POWER_QUALITY_SUMMARY_COLLECTION, method = RequestMethod.POST, consumes = "application/atom+xml", produces = "application/atom+xml")
 	@ResponseBody
 	public void create(HttpServletResponse response,
-			@PathVariable Long subscriptionId,
-			@PathVariable Long usagePointId,
+			@PathVariable Long subscriptionId, @PathVariable Long usagePointId,
 			@RequestParam Map<String, String> params, InputStream stream)
 			throws IOException {
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
-		Subscription subscription = subscriptionService.findById(subscriptionId);
-		Authorization authorization = subscription.getAuthorization();
-		RetailCustomer retailCustomer = authorization.getRetailCustomer();
-		Long retailCustomerId = retailCustomer.getId();
+		Long retailCustomerId = subscriptionService.findRetailCustomerId(
+				subscriptionId, usagePointId);
 		
 		if (null != resourceService.findIdByXPath(retailCustomerId,
 				usagePointId, UsagePoint.class)) {
@@ -243,8 +237,8 @@ public class ElectricPowerQualitySummaryRESTController {
 						.importResource(stream);
 				electricPowerQualitySummaryService.associateByUUID(usagePoint,
 						electricPowerQualitySummary.getUUID());
-				exportService.exportElectricPowerQualitySummary(
-						subscriptionId, retailCustomerId, usagePointId,
+				exportService.exportElectricPowerQualitySummary(subscriptionId,
+						retailCustomerId, usagePointId,
 						electricPowerQualitySummary.getId(),
 						response.getOutputStream(), new ExportFilter(params));
 			} catch (Exception e) {
@@ -260,8 +254,7 @@ public class ElectricPowerQualitySummaryRESTController {
 	@RequestMapping(value = Routes.ELECTRIC_POWER_QUALITY_SUMMARY_MEMBER, method = RequestMethod.PUT, consumes = "application/atom+xml", produces = "application/atom+xml")
 	@ResponseBody
 	public void update(HttpServletResponse response,
-			@PathVariable Long subscriptionId,
-			@PathVariable Long usagePointId,
+			@PathVariable Long subscriptionId, @PathVariable Long usagePointId,
 			@PathVariable Long electricPowerQualitySummaryId,
 			@RequestParam Map<String, String> params, InputStream stream)
 			throws IOException, FeedException {
@@ -271,10 +264,8 @@ public class ElectricPowerQualitySummaryRESTController {
 
 		if (electricPowerQualitySummary != null) {
 			try {
-				Subscription subscription = subscriptionService.findById(subscriptionId);
-				Authorization authorization = subscription.getAuthorization();
-				RetailCustomer retailCustomer = authorization.getRetailCustomer();
-				Long retailCustomerId = retailCustomer.getId();
+				Long retailCustomerId = subscriptionService
+						.findRetailCustomerId(subscriptionId, usagePointId);
 				
 				if (null != resourceService.findIdByXPath(retailCustomerId,
 						usagePointId, electricPowerQualitySummaryId,
@@ -294,16 +285,14 @@ public class ElectricPowerQualitySummaryRESTController {
 
 	@RequestMapping(value = Routes.ELECTRIC_POWER_QUALITY_SUMMARY_MEMBER, method = RequestMethod.DELETE)
 	public void delete(HttpServletResponse response,
-			@PathVariable Long subscriptionId,
-			@PathVariable Long usagePointId,
+			@PathVariable Long subscriptionId, @PathVariable Long usagePointId,
 			@PathVariable Long electricPowerQualitySummaryId,
 			@RequestParam Map<String, String> params, InputStream stream)
 			throws IOException, FeedException {
+
 		try {
-			Subscription subscription = subscriptionService.findById(subscriptionId);
-			Authorization authorization = subscription.getAuthorization();
-			RetailCustomer retailCustomer = authorization.getRetailCustomer();
-			Long retailCustomerId = retailCustomer.getId();
+			Long retailCustomerId = subscriptionService.findRetailCustomerId(
+					subscriptionId, usagePointId);
 			
 			resourceService.deleteByXPathId(retailCustomerId, usagePointId,
 					electricPowerQualitySummaryId,
@@ -334,50 +323,59 @@ public class ElectricPowerQualitySummaryRESTController {
 		return subscriptionId;
 
 	}
-	
-    public void setElectricPowerQualitySummaryService(ElectricPowerQualitySummaryService electricPowerQualitySummaryService) {
+
+	public void setElectricPowerQualitySummaryService(
+			ElectricPowerQualitySummaryService electricPowerQualitySummaryService) {
         this.electricPowerQualitySummaryService = electricPowerQualitySummaryService;
    }
 
-   public ElectricPowerQualitySummaryService getElectricPowerQualitySummaryService () {
-        return this.electricPowerQualitySummaryService;
-   }
-   public void setUsagePointService(UsagePointService usagePointService) {
-        this.usagePointService = usagePointService;
-   }
+	public ElectricPowerQualitySummaryService getElectricPowerQualitySummaryService() {
+		return this.electricPowerQualitySummaryService;
+	}
 
-   public UsagePointService getUsagePointService () {
-        return this.usagePointService;
-   }
-   public void setRetailCustomerService(RetailCustomerService retailCustomerService) {
+	public void setUsagePointService(UsagePointService usagePointService) {
+		this.usagePointService = usagePointService;
+	}
+
+	public UsagePointService getUsagePointService() {
+		return this.usagePointService;
+	}
+
+	public void setRetailCustomerService(
+			RetailCustomerService retailCustomerService) {
         this.retailCustomerService = retailCustomerService;
    }
 
-   public RetailCustomerService getRetailCustomerService () {
-        return this.retailCustomerService;
-   }
-   public void setExportService(ExportService exportService) {
-        this.exportService = exportService;
-   }
+	public RetailCustomerService getRetailCustomerService() {
+		return this.retailCustomerService;
+	}
 
-   public ExportService getExportService () {
-        return this.exportService;
-   }
-   public void setResourceService(ResourceService resourceService) {
-        this.resourceService = resourceService;
-   }
+	public void setExportService(ExportService exportService) {
+		this.exportService = exportService;
+	}
 
-   public ResourceService getResourceService () {
-        return this.resourceService;
-   }
-   public void setSubscriptionService(SubscriptionService subscriptionService) {
-        this.subscriptionService = subscriptionService;
-   }
+	public ExportService getExportService() {
+		return this.exportService;
+	}
 
-   public SubscriptionService getSubscriptionService () {
-        return this.subscriptionService;
-   }
-   public void setAuthorizationService(AuthorizationService authorizationService) {
+	public void setResourceService(ResourceService resourceService) {
+		this.resourceService = resourceService;
+	}
+
+	public ResourceService getResourceService() {
+		return this.resourceService;
+	}
+
+	public void setSubscriptionService(SubscriptionService subscriptionService) {
+		this.subscriptionService = subscriptionService;
+	}
+
+	public SubscriptionService getSubscriptionService() {
+		return this.subscriptionService;
+	}
+
+	public void setAuthorizationService(
+			AuthorizationService authorizationService) {
         this.authorizationService = authorizationService;
    }
 
