@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.energyos.espi.common.domain.Authorization;
+import org.energyos.espi.common.domain.IdentifiedObject;
 import org.energyos.espi.common.domain.RetailCustomer;
 import org.energyos.espi.common.domain.Routes;
 import org.energyos.espi.common.domain.Subscription;
@@ -261,9 +262,9 @@ public class UsagePointRESTController {
 		try {
 			Long retailCustomerId = subscriptionService.findRetailCustomerId(
 					subscriptionId, usagePointId);
-			Long id = resourceService.findIdByXPath(retailCustomerId,
+			IdentifiedObject id = resourceService.findIdByXPath(retailCustomerId,
 					usagePointId, UsagePoint.class);
-			UsagePoint usagePoint = resourceService.findById(id,
+			UsagePoint usagePoint = resourceService.findById(id.getId(),
 					UsagePoint.class);
 			UsagePoint newUsagePoint = usagePointService.importResource(stream);
 			usagePoint.merge(newUsagePoint);

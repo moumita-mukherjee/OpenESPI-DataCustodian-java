@@ -365,7 +365,7 @@ public class MeterReadingRESTController {
 
 			MeterReading mr = meterReadingService.findByUUID(UUID.fromString(uuid));
 
-			System.err.print(" mr ...." + mr);
+			System.err.println(" mr ...." + mr);
 			exportService.exportMeterReadingFull(subscriptionId, mr.getId(), mr.getUsagePoint().getId(), mr
 					.getUsagePoint().getRetailCustomer().getId(), response.getOutputStream(), new ExportFilter(params));
 

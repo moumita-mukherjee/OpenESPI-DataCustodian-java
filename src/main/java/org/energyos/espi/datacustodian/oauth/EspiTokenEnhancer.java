@@ -12,6 +12,7 @@ import javax.persistence.NoResultException;
 import org.energyos.espi.common.domain.ApplicationInformation;
 import org.energyos.espi.common.domain.Authorization;
 import org.energyos.espi.common.domain.DateTimeInterval;
+import org.energyos.espi.common.domain.IdentifiedObject;
 import org.energyos.espi.common.domain.RetailCustomer;
 import org.energyos.espi.common.domain.Routes;
 import org.energyos.espi.common.domain.Subscription;
@@ -190,10 +191,10 @@ public class EspiTokenEnhancer implements TokenEnhancer {
 					up.setSubscription(subscription);
 					resourceService.persist(up); // maybe not needed??
 				} else {
-					List<Long> usagePointIds = resourceService.findAllIdsByXPath(retailCustomer.getId(),UsagePoint.class);
-					Iterator<Long> it = usagePointIds.iterator();
+					List<IdentifiedObject> usagePointIds = resourceService.findAllIdsByXPath(retailCustomer.getId(),UsagePoint.class);
+					Iterator<IdentifiedObject> it = usagePointIds.iterator();
 					while (it.hasNext()) {
-						UsagePoint up = resourceService.findById(it.next(), UsagePoint.class);
+						UsagePoint up = resourceService.findById(it.next().getId(), UsagePoint.class);
 						up.setSubscription(subscription);
 						resourceService.persist(up);  // maybe not needed??
 					}
