@@ -19,12 +19,14 @@ package org.energyos.espi.datacustodian.web.api;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.energyos.espi.common.domain.Authorization;
 import org.energyos.espi.common.domain.IdentifiedObject;
+import org.energyos.espi.common.domain.MeterReading;
 import org.energyos.espi.common.domain.RetailCustomer;
 import org.energyos.espi.common.domain.Routes;
 import org.energyos.espi.common.domain.Subscription;
@@ -118,6 +120,34 @@ public class UsagePointRESTController {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
 	}
+	
+	@RequestMapping(value = Routes.ROOT_USAGE_POINT_UUID, method = RequestMethod.GET, produces = "application/atom+xml")
+	@ResponseBody
+	public void show(HttpServletRequest request, HttpServletResponse response,
+			 @PathVariable String uuid,
+			@RequestParam Map<String, String> params) throws IOException,
+			FeedException {
+	 	System.err.println("**** ResourceService show1 ****"+uuid);
+		Long subscriptionId = getSubscriptionId(request);
+
+		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
+		try {
+			UsagePoint usagePoint = usagePointService.findByUUID(UUID.fromString(uuid));
+			System.err.println("**** ResourceService usagePoint ****"+usagePoint);
+			System.err.println("**** ResourceService usageid ****"+usagePoint.getId());
+			System.err.println("**** ResourceService RetailCustomer ****"+usagePoint.getRetailCustomer().getId());
+			exportService.exportUsagePointFull(subscriptionId,usagePoint.getId(), usagePoint.getRetailCustomer().getId(),
+					response.getOutputStream(), new ExportFilter(params));
+		} catch (Exception e) {
+			System.err.println("**** ResourceService exception ****"+e);
+			log.warn("Exception", e);
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		}
+	}
+	
+	
+	
+	
 
 	@RequestMapping(value = Routes.ROOT_USAGE_POINT_COLLECTION, method = RequestMethod.POST, consumes = "application/atom+xml", produces = "application/atom+xml")
 	@ResponseBody
