@@ -127,19 +127,17 @@ public class UsagePointRESTController {
 			 @PathVariable String uuid,
 			@RequestParam Map<String, String> params) throws IOException,
 			FeedException {
-	 	System.err.println("**** ResourceService show1 ****"+uuid);
+	 
 		Long subscriptionId = getSubscriptionId(request);
 
 		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
 		try {
 			UsagePoint usagePoint = usagePointService.findByUUID(UUID.fromString(uuid));
-			System.err.println("**** ResourceService usagePoint ****"+usagePoint);
-			System.err.println("**** ResourceService usageid ****"+usagePoint.getId());
-			System.err.println("**** ResourceService RetailCustomer ****"+usagePoint.getRetailCustomer().getId());
+		
 			exportService.exportUsagePointFull(subscriptionId,usagePoint.getId(), usagePoint.getRetailCustomer().getId(),
 					response.getOutputStream(), new ExportFilter(params));
 		} catch (Exception e) {
-			System.err.println("**** ResourceService exception ****"+e);
+		
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
