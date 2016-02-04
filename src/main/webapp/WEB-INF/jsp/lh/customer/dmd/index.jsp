@@ -1,7 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-
 <%--
   ~ Copyright 2013, 2014 EnergyOS.org
   ~
@@ -135,20 +134,20 @@
 														href="#services_account" data-toggle="tab">Account</a> <a
 														class="badge" href="#services_service" data-toggle="tab">Service</a>
 												</p>
-												<div class="tab-content">
+												<div  class="tab-content table-responsive" >
 													<div class="tab-pane active" id="services_all">
 														<table class="table table-striped table-hover">
-															<thead>
+															<tbody>
 																<tr>
 
 																	<th>Address</th>
 																	<th>Billing Number</th>
 																	<th>Service Number</th>
 																	<th>Meter</th>
-																	<th>Status</th>
-																	<th></th>
+																	<th class="tab-status">Status</th>
+																	<th><div class="tab-status-resposive">Status</div></th>
 																</tr>
-															</thead>
+															</tbody>
 															<tfoot>
 																<tr>
 																	<td colspan=6><c:if test="${empty usagePoints}">
@@ -186,7 +185,8 @@
 																		<td><c:out
 																				value="${usagePoint.usagePointDetail.meterNumber}"
 																				default="-" /></td>
-																		<td><c:choose>
+																		<td class="meter-stat">
+																		<c:choose>
 																				<c:when
 																					test="${usagePoint.usagePointDetail.status=='Active'}">
 																					<span class="status-active"> <c:out
@@ -200,8 +200,26 @@
 																							value="${usagePoint.usagePointDetail.endDate}"
 																							pattern="MMM dd, yyyy" /></span>
 																				</c:otherwise>
-																			</c:choose></td>
+																			</c:choose>
+																			</td>
 																		<td>
+																		<div class="meter-stat-resposive">
+																		<c:choose>
+																				<c:when
+																					test="${usagePoint.usagePointDetail.status=='Active'}">
+																					<span class="status-active"> <c:out
+																							value="${usagePoint.usagePointDetail.status}"
+																							default="-" />
+																					</span>
+																				</c:when>
+																				<c:otherwise>
+																					<span class="status-inactive"> Ended on <br />
+																						<fmt:formatDate
+																							value="${usagePoint.usagePointDetail.endDate}"
+																							pattern="MMM dd, yyyy" /></span>
+																				</c:otherwise>
+																			</c:choose>
+																			</div>
 																			<div class="btn-group">
 																				<button type="button"
 																					class="btn btn-success dropdown-toggle"
@@ -255,27 +273,26 @@
 													<div class="tab-pane " id="services_account">
 														<c:forEach var="vAccount" items="${accountList}">
 															<div class="bill-section">
-																<div class="title">
-																	<dl class="dl-horizontal">
-																		<dt>Billing Number:</dt>
-																		<dd>
-																			<c:out value="${vAccount}" default="-" />
-																		</dd>
-																	</dl>
-																</div>
-
+																
 																<table class="table table-striped table-hover">
-																	<thead>
+																<tbody>
+																	
+																	<tr>																	
+																		<th colspan="5" class="dl-horizontal title">
+																		Billing Number:																		
+																			<c:out value="${vAccount}" default="-" />																		
+																		</th>	
+																	</tr>
 																		<tr>
 
 																			<th>Address</th>
-																			<th>Billing Number</th>
+																			<th class="grp_bill">Billing Number</th>
 																			<th>Service Number</th>
 																			<th>Meter</th>
 																			<th>Status</th>
 																			<th></th>
 																		</tr>
-																	</thead>
+																	</tbody>
 																	<tfoot>
 																		<tr>
 																			<td colspan=6><c:if test="${empty usagePoints}">
@@ -284,7 +301,6 @@
 																		</tr>
 																	</tfoot>
 																	<tbody>
-
 																		<c:forEach var="usagePoint"
 																			items="${usagePointListGroupByAccount[vAccount]}">
 																			<tr>
@@ -293,7 +309,7 @@
 																							value="${usagePoint.usagePointDetail.streetUnit}" />
 																						<c:if
 																							test="${not empty usagePoint.usagePointDetail.streetUnit}">
-																		- </c:if> <c:out
+																					- </c:if>  <c:out
 																							value="${usagePoint.usagePointDetail.streetNumber}" />
 																						<c:out
 																							value="${usagePoint.usagePointDetail.streetName}" /></strong><br />
@@ -304,7 +320,7 @@
 																					<c:out
 																						value="${usagePoint.usagePointDetail.streetProvince}" /></td>
 
-																				<td><c:out
+																				<td  class="grp_bill"><c:out
 																						value="${usagePoint.usagePointDetail.accountId}"
 																						default="-" /></td>
 																				<td><spring:message
@@ -380,26 +396,26 @@
 
 														<c:forEach var="vKind" items="${serviceKindList}">
 															<div class="bill-section">
-																<div class="title">
-																	<dl class="dl-horizontal">
-																		<dt>
-																			<spring:message code="service.name.${vKind}" />
-																		</dt>
-
-																	</dl>
-																</div>
+																
 																<table class="table table-striped table-hover">
-																	<thead>
+																	<tbody>
+																	
+																		<th colspan="5" class="dl-horizontal title">
+																			Service Name:
+																			<spring:message code="service.name.${vKind}" />
+																		</th>
+																	
 																		<tr>
 
 																			<th>Address</th>
 																			<th>Billing Number</th>
 																			<th>Service Number</th>
 																			<th>Meter</th>
-																			<th>Status</th>
+																			<th class="tab-status">Status</th>
+																			<th><div class="tab-status-resposive">Status</div></th>
 																			<th></th>
 																		</tr>
-																	</thead>
+																	<tbody>
 																	<tfoot>
 																		<tr>
 																			<td colspan=6><c:if test="${empty usagePoints}">
@@ -407,7 +423,7 @@
 																				</c:if></td>
 																		</tr>
 																	</tfoot>
-																	<tbody>
+																	
 
 																		<c:forEach var="usagePoint"
 																			items="${usagePointListGroupByService[vKind]}">
@@ -438,7 +454,8 @@
 																				<td><c:out
 																						value="${usagePoint.usagePointDetail.meterNumber}"
 																						default="-" /></td>
-																				<td><c:choose>
+																				<td class="meter-stat">
+																				<c:choose>
 																						<c:when
 																							test="${usagePoint.usagePointDetail.status=='Active'}">
 																							<span class="status-active"> <c:out
@@ -454,7 +471,24 @@
 																						</c:otherwise>
 																					</c:choose></td>
 																				<td>
-																					<div class="btn-group">
+																				<div class="meter-stat-resposive">
+																					<c:choose>
+																						<c:when
+																							test="${usagePoint.usagePointDetail.status=='Active'}">
+																							<span class="status-active"> <c:out
+																									value="${usagePoint.usagePointDetail.status}"
+																									default="-" />
+																							</span>
+																						</c:when>
+																						<c:otherwise>
+																							<span class="status-inactive"> Ended on <br />
+																								<fmt:formatDate
+																									value="${usagePoint.usagePointDetail.endDate}"
+																									pattern="MMM dd, yyyy" /></span>
+																						</c:otherwise>
+																					</c:choose>
+																				</div>
+																				<div class="btn-group">
 																						<button type="button"
 																							class="btn btn-success dropdown-toggle"
 																							data-toggle="dropdown">

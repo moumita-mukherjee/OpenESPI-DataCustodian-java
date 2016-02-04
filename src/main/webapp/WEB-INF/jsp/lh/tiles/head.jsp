@@ -45,11 +45,13 @@
     <link href="<c:url value='/resources/css/application.css' />" rel="stylesheet" type="text/css"/>
 	<link href="/resources/css/eternicode/datepicker3.css" rel="stylesheet">
 
-    <link href="<c:url value='/resources/css/myaccount/affsys.css' />" rel="stylesheet" type="text/css"/>
-    <link href="<c:url value='/resources/css/myaccount/base.css' />" rel="stylesheet" type="text/css"/>
+    <!-- <link href="<c:url value='/resources/css/myaccount/affsys.css' />" rel="stylesheet" type="text/css"/>-->
+    <!-- <link href="<c:url value='/resources/css/myaccount/base.css' />" rel="stylesheet" type="text/css"/>-->
     <link href="<c:url value='/resources/css/myaccount/fancybox.css' />" rel="stylesheet" type="text/css"/>
-    <link href="<c:url value='/resources/css/myaccount/myaccount.css' />" rel="stylesheet" type="text/css"/>
+ <!--    <link href="<c:url value='/resources/css/myaccount/myaccount.css' />" rel="stylesheet" type="text/css"/>-->
     <link href="<c:url value='/resources/css/myaccount/overlays.css' />" rel="stylesheet" type="text/css"/>
+    
+     <link href="<c:url value='/resources/css/myaccount/common.css' />" rel="stylesheet" type="text/css"/>
     <!-- 
     <link href="<c:url value='/resources/css/myaccount/popup1.css' />" rel="stylesheet" type="text/css"/>
  -->

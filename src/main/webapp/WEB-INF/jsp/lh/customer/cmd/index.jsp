@@ -542,7 +542,7 @@ table.bor td {
 						<div class="heading big">
 							<h1>Applications</h1>
 						</div>
-						<div class="balance-section ">
+						<div class="balance-section" id="cmd"> 
 
 
 							<article>

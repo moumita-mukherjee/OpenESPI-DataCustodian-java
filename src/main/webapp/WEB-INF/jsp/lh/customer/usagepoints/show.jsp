@@ -37,7 +37,7 @@
 
 						<div class="balance-section">
 
-							<div class="row">
+							<div class="table-responsive">
 								<div class="span12">
 									<h4>
 										<c:out value="${usagePoint.usagePointDetail.streetUnit}" />

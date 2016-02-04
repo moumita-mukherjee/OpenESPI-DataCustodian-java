@@ -116,12 +116,13 @@
 
 								</div>
 							</div>
+							<div id="access-info">
 							<span class="nowrap"> You are authorizing the service
 								shown below until <strong><fmt:formatDate
 										value="${authorizationEndDate}" pattern="MMM dd, yyyy" /></strong> <a
 								class="btn btn-primary" href="#" data-toggle="modal"
 								data-target="#dateSelectionModal">Change </a>
-							</span>
+							</span></div>
 							<br />
 							<br />
 							<c:if test="${selectedUsagePoint ==null}">
@@ -295,8 +296,9 @@
 										target="_new">Privacy Policy.</a></li>
 								</ul>
 								 -->
+								 <div id="access-confirm">
 								<div class="table-responsive">
-									<table class="table    table-striped table-hover">
+									<table class="table  table-striped table-hover">
 										<thead>
 
 										</thead>
@@ -355,6 +357,7 @@
 
 
 
+								</div>
 								</div>
 							</form>
 						</authz:authorize>
