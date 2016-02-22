@@ -99,7 +99,7 @@ table.bor td {
 								<div class="heading big">
 									<h1>Authorized Applications</h1>
 								</div>
-								<div class="balance-section">
+								<div class="balance-section  table-responsive">
 
 
 									<p>
@@ -419,7 +419,7 @@ table.bor td {
 																		<table class="table table-striped" id="authorizations">
 																			<thead>
 																				<tr>
-																					<th>Address</th>
+																					<th id="authorizations_address">Address</th>
 																					<th>Billing Number</th>
 																					<th>Service</th>
 																					<th>Usage Point</th>
@@ -436,7 +436,7 @@ table.bor td {
 																					<c:forEach var="usagePoint"
 																						items="${subscription.usagePoints}">
 																						<tr>
-																							<td><strong><c:out
+																							<td id="authorizations_address"><strong><c:out
 																										value="${usagePoint.usagePointDetail.streetUnit}" />
 																									<c:if
 																										test="${not empty usagePoint.usagePointDetail.streetUnit}">
@@ -542,7 +542,7 @@ table.bor td {
 						<div class="heading big">
 							<h1>Applications</h1>
 						</div>
-						<div class="balance-section ">
+						<div class="balance-section" id="cmd"> 
 
 
 							<article>

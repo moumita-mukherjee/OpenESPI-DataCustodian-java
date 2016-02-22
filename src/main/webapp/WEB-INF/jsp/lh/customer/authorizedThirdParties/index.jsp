@@ -52,7 +52,7 @@
 					<div class="heading big">
 						<h1>Authorizations</h1>
 					</div>
-					<div class="balance-section">
+					<div class="balance-section table-responsive">
 
 
 						<form id="revokeform"

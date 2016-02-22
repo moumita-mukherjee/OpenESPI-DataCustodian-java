@@ -52,11 +52,12 @@
 							<br> <br> <br>
 							<div class="login-area">
 								<div class="register-area"></div>
-								<form name="f"
+								<form name="f" class="form-inline"
 									action="<c:url value='/j_spring_security_check'/>"
 									method="POST" class="login-form form-inline">
 									<fieldset>
-										<strong class="title">Login</strong>
+									<div class="form-group" style="padding-top: 35px;">
+										<strong class="title">Login</strong></div>
 										<div class="form-group">
 											<label for="login">Email Address</label>
 											<div class="clearfix">

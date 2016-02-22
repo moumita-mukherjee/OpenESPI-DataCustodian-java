@@ -37,7 +37,7 @@
 
 						<div class="balance-section">
 
-							<div class="row">
+							<div class="table-responsive service-detail">
 								<div class="span12">
 									<h4>
 										<c:out value="${usagePoint.usagePointDetail.streetUnit}" />
@@ -83,7 +83,7 @@
 									</div>
 									<br />
 
-									<table class="table table-striped table-hover">
+									<table class="table table-striped table-hover service-table">
 										<thead>
 											<tr>
 												<th>Reading Type</th>
@@ -123,7 +123,7 @@
 															pattern="MMM dd, yyyy HH:mm z" timeZone="EST" /></td>
 													<td><spring:message
 															code="readingtype.${meterReading['ReadingType'].description}" /></td>
-													<td><a class="btn btn-primary"
+													<td><a class="btn btn-primary btn-responsive"
 														href="${pageContext.request.contextPath}${meterReading['uriTail']}?period=1&usagetime-min=0&usagetime-max=0">
 															<span class="glyphicon glyphicon-stats"></span> View My
 															Data
