@@ -37,7 +37,7 @@
 						<div class="heading big">
 							<h1>SERVICES</h1>
 						</div>
-						<div class="balance-section ">
+						<div class="balance-section table-responsive ">
 
 							<c:forEach var="usagePoint" items="${usagePointList}">
 								<div class="panel panel-default">

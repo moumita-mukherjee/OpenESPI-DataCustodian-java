@@ -896,6 +896,12 @@ form,fieldset {
 	#cmd .nowrap,#access-info .nowrap {
 		white-space: normal !important;
 	}
+	.media>.pull-left{
+   		 float: inherit !important;   		
+	}
+	.media {    	
+    	margin-left: 5px;
+	}
 }
 
 @media only screen and (max-width: 567px) {
@@ -932,6 +938,46 @@ form,fieldset {
 	}
 	.table th {
 		font-size: 13px;
+	}
+	.media>.pull-left{
+   		 float: inherit !important;   		
+	}
+	.media {    	
+    	margin-left: 10px;
+	}
+	.btn-responsive
+	{
+		font-size: 11px;
+    	padding: 2px 2px 2px 2px;
+    	min-width: 50px;
+  		white-space: normal;
+	}
+	.service-table th {
+		font-size: 11px;
+	}
+	.service-detail
+	{
+		padding-left: 5px;
+	}
+	.ss-form-container
+	{
+		width: inherit !important;
+	}
+	table#authorizations th
+	{
+		font-size: 11px;
+	}
+	.img-rounded-2
+	{
+		width: 50px !important;
+	}
+	.panel-body 
+	{
+  		padding: 2px !important;
+	}
+	#authorizations_usagepoint , #authorizations_address
+	{
+	    display: none;
 	}
 }
 
