@@ -117,7 +117,7 @@
 						<key>
 							<util:constant static-field="javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT" />
 						</key>
-						<value type="java.lang.Boolean">true</value>
+						<value type="java.lang.Boolean">false</value>
 					</entry>
 					<entry>
 						<key>

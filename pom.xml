@@ -868,8 +868,8 @@
 			<properties>
 				<datacustodian.base.url>https://londonhydro-espi-prod.appspot.com</datacustodian.base.url>
 				<appengine.application.name>londonhydro-espi-prod</appengine.application.name>
-				<appengine.application.module>api3</appengine.application.module>
-				<appengine.application.version>1</appengine.application.version>
+				<appengine.application.module>api</appengine.application.module>
+				<appengine.application.version>bidgely</appengine.application.version>
 				<profile>googlecloudprod</profile>
 				<spring.profile>resourceserver</spring.profile>
 				<web.allowOrigin>*</web.allowOrigin>
@@ -922,12 +922,12 @@
 			</dependencies>
 		</profile>
 		<profile>
-			<id>googlecloudprod-adminapi-bidgely</id>
+			<id>googlecloudprod-api-lhapps</id>
 			<properties>
 				<datacustodian.base.url>https://londonhydro-espi-prod.appspot.com</datacustodian.base.url>
 				<appengine.application.name>londonhydro-espi-prod</appengine.application.name>
-				<appengine.application.module>adminapi2</appengine.application.module>
-				<appengine.application.version>1</appengine.application.version>
+				<appengine.application.module>api</appengine.application.module>
+				<appengine.application.version>lhapps</appengine.application.version>
 				<profile>googlecloudprod</profile>
 				<spring.profile>resourceserver</spring.profile>
 				<web.allowOrigin>*</web.allowOrigin>
@@ -940,7 +940,7 @@
 				<corporateUrl>https://www.londonhydro.com</corporateUrl>
 				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
 				<appengine.threadsafe>false</appengine.threadsafe>
-				<appengine.instance-class>F2</appengine.instance-class>
+				<appengine.instance-class>F4</appengine.instance-class>
 				<appengine.min-idle-instances>automatic</appengine.min-idle-instances>
 				<appengine.max-idle-instances>1</appengine.max-idle-instances>
 				<appengine.min-pending-latency>50ms</appengine.min-pending-latency>
