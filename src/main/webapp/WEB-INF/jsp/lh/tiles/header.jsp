@@ -16,6 +16,11 @@
   ~    See the License for the specific language governing permissions and
   ~    limitations under the License.
   --%>
+<script>
+function myFunction() {
+	$("nav").toggleClass("in");
+}
+</script>
 
 <header id="header">
 	<div class="lh-panel">
@@ -42,11 +47,39 @@
 		<div class="holder " data-ng-controller="SearchController">
 			<h1 class="logo">
 				<a href="/site/myaccount/..">London Hydro</a>
-			</h1>
-
-
+			</h1>	
+				<c:if test="${currentCustomer!=null}">		
+		<button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#bs-navbar" onclick="myFunction()"> 
+		<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> 
+		</button>
+		</c:if>
+		</div>	
+		<c:if test="${currentCustomer!=null}">
+		<nav id="bs-navbar" class="navbar-collapse collapse"> 
+		<ul class="nav navbar-nav"> 
+		<security:authorize access="isAuthenticated()">
+							<li class="${menu=='home'?'active':''}"><a id="menuconectMyData" class="icon-home"
+								href="<c:url value='/RetailCustomer/${currentCustomer.id}/home'/>">
+									Home </a></li>
+							<li class="${menu=='cmd'?'active':''}"><a id="menuconectMyData" class="icon-cmd" 
+								href="<c:url value='/RetailCustomer/${currentCustomer.id}/cmd'/>">
+									Connect<br /> My Data
+							</a></li>
+							<li class="${menu=='dmd'?'active':''}"><a id="menudownloadMyData" class="icon-dmd"
+								href="<c:url value='/RetailCustomer/${currentCustomer.id}/dmd'/>">
+									Download<br /> My Data
+							</a></li>
+							<li class="${menu=='feedback'?'active':''}"><a id="menudownloadMyData" class="icon-feedback"
+								href="<c:url value='/RetailCustomer/${currentCustomer.id}/feedback'/>">
+									Your Feedback </a></li>
+		</security:authorize>
+		 </ul>		   
+		 </nav>	
+		 </c:if>	 
+		 
+		  </div>
 
 
 		</div>
-	</div>
+	
 </header>
