@@ -57,7 +57,7 @@ body {
 }
 
 .feedback {
-	background: url("../images/gallery/letmeevaluate_april7.png") no-repeat
+	background: url("/resources/images/gallery/letmeevaluate_april7.png") no-repeat
 		scroll;
 	height: 90px;
 	line-height: 0;
@@ -67,7 +67,7 @@ body {
 }
 
 body>a#feedbackright {
-	background: url("../images/gallery/letmeevaluate_april7.png") no-repeat
+	background: url("/resources/images/gallery/letmeevaluate_april7.png") no-repeat
 		scroll;
 	display: block;
 	height: 90px;
@@ -87,12 +87,12 @@ body>a#feedbackright {
 	height: 50px;
 	left: 9px;
 	/* background-position:-2px -144px; */
-	background: url("../images/navigation/home.png") no-repeat;
+	background: url("/resources/images/navigation/home.png") no-repeat;
 }
 
 .menu .icon-home:hover:before,.menu .active .icon-home:before {
 	/* background-position:-34px -144px; */
-	background: url("../images/navigation/home_active.png") no-repeat;
+	background: url("/resources/images/navigation/home_active.png") no-repeat;
 }
 
 .menu .icon-home:hover,.menu .active .icon-home {
@@ -104,12 +104,12 @@ body>a#feedbackright {
 	height: 50px;
 	left: 9px;
 	/* background-position:-2px -144px; */
-	background: url("../images/navigation/cmd.png") no-repeat;
+	background: url("/resources/images/navigation/cmd.png") no-repeat;
 }
 
 .menu .icon-cmd:hover:before,.menu .active .icon-cmd:before {
 	/* background-position:-34px -144px; */
-	background: url("../images/navigation/cmd_active.png") no-repeat;
+	background: url("/resources/images/navigation/cmd_active.png") no-repeat;
 	background-color: transparent;
 }
 
@@ -122,12 +122,12 @@ body>a#feedbackright {
 	height: 24px;
 	left: 9px;
 	/* background-position:-2px -144px; */
-	background: url("../images/navigation/dmd.png") no-repeat;
+	background: url("/resources/images/navigation/dmd.png") no-repeat;
 }
 
 .menu .icon-dmd:hover:before,.menu .active .icon-dmd:before {
 	/*background-position:-34px -144px;*/
-	background: url("../images/navigation/dmd_active.png") no-repeat;
+	background: url("/resources/images/navigation/dmd_active.png") no-repeat;
 }
 
 .menu .icon-dmd:hover,.menu .active .icon-dmd {
@@ -142,12 +142,12 @@ body>a#feedbackright {
 	height: 50px;
 	left: 9px;
 	/* background-position:-2px -144px; */
-	background: url("../images/navigation/feedback.png") no-repeat;
+	background: url("/resources/images/navigation/feedback.png") no-repeat;
 }
 
 .menu .icon-feedback:hover:before,.menu .active .icon-feedback:before {
 	/*background-position:-34px -144px;*/
-	background: url("../images/navigation/feedback_active.png") no-repeat;
+	background: url("/resources/images/navigation/feedback_active.png") no-repeat;
 	background-color: transparent;
 }
 
@@ -156,7 +156,7 @@ body>a#feedbackright {
 }
 
 .banner {
-	background: url("../images/navigation/mcirositebanner.png");
+	background: url("/resources/images/navigation/mcirositebanner.png");
 	width: 60px;
 	width: 100%;
 }
@@ -186,7 +186,7 @@ body>a#feedbackright {
 
 .logo {
 	float: left;
-	background: url(../../images/lh-logo-106.png) no-repeat;
+	background: url(/resources/images/lh-logo-106.png) no-repeat;
 	background-size: 53px 92px;
 	width: 53px;
 	height: 92px;
@@ -214,7 +214,7 @@ body {
 	font: 14px/21px Arial, Helvetica, sans-serif;
 	color: #565f5f;
 	min-width: 320px;
-	background: #e4e4e4 url(../../images/bg-body.png);
+	background: #e4e4e4 url(/resources/images/bg-body.png);
 	-webkit-text-size-adjust: 100%;
 	-ms-text-size-adjust: none;
 	line-height: 2.42857143;
@@ -234,33 +234,33 @@ a {
 }
 
 .nav .icon-home {
-	background: url("../../images/navigation/home.png") no-repeat;
+	background: url("/resources/images/navigation/home.png") no-repeat;
 	padding-left: 23px;
 }
 
 .nav .icon-cmd {
-	background: url("../../images/navigation/cmd.png") no-repeat;
+	background: url("/resources/images/navigation/cmd.png") no-repeat;
 	padding-left: 23px;
 }
 
 .nav .icon-dmd {
-	background: url("../../images/navigation/dmd.png") no-repeat;
+	background: url("/resources/images/navigation/dmd.png") no-repeat;
 	padding-left: 23px;
 }
 
 .nav .icon-feedback {
-	background: url("../../images/navigation/feedback.png") no-repeat;
+	background: url("/resources/images/navigation/feedback.png") no-repeat;
 	padding-left: 23px;
 }
 
 .nav .icon-home:hover {
-	background: #bd4045 url("../../images/navigation/home_active.png")
+	background: #bd4045 url("/resources/images/navigation/home_active.png")
 		no-repeat;
 	padding-left: 23px;
 }
 
 .nav .icon-cmd:hover {
-	background: #45ad9b url("../../images/navigation/cmd_active.png")
+	background: #45ad9b url("/resources/images/navigation/cmd_active.png")
 		no-repeat;
 	padding-left: 23px;
 }
@@ -268,13 +268,13 @@ a {
 .nav .icon-dmd:hover {
 	color: #3f9c25;
 	border: 1px solid #3f9c25;
-	background: #ffffff url("../../images/navigation/dmd_active.png")
+	background: #ffffff url("/resources/images/navigation/dmd_active.png")
 		no-repeat;
 	padding-left: 23px;
 }
 
 .nav .icon-feedback:hover {
-	background: #3399c9 url("../../images/navigation/feedback_active.png")
+	background: #3399c9 url("/resources/images/navigation/feedback_active.png")
 		no-repeat;
 	padding-left: 23px;
 }
@@ -416,7 +416,7 @@ form,fieldset {
 }
 
 #footer {
-	background: #3b3e44 url(../../images/bg-footer.png);
+	background: #3b3e44 url(/resources/images/bg-footer.png);
 	width: 100%;
 	overflow: hidden;
 	position: relative;
@@ -448,13 +448,13 @@ form,fieldset {
 	font-size: 17px;
 	line-height: 23px;
 	text-align: center;
-	background: #373a40 url(../../images/bg-logo-box.png) repeat-y 100% 0;
+	background: #373a40 url(/resources/images/bg-logo-box.png) repeat-y 100% 0;
 }
 
 .logo2 {
 	display: block;
 	margin: 0 auto 23px;
-	background: url(../../images/lh-logo2-104.png) no-repeat;
+	background: url(/resources/images/lh-logo2-104.png) no-repeat;
 	background-size: 52px 93px;
 	width: 52px;
 	height: 93px;
@@ -473,7 +473,7 @@ form,fieldset {
 	line-height: 17px;
 	color: #fdfdfd;
 	padding: 38px 0 119px;
-	background: url(../../images/bg-text-section.png);
+	background: url(/resources/images/bg-text-section.png);
 }
 
 #footer .text-box {
@@ -606,13 +606,13 @@ form,fieldset {
 	color: #000;
 	width: 11px;
 	height: 9px;
-	background: url('../../images/myaccount/sprite.png') no-repeat -79px
+	background: url('/resources/images/myaccount/sprite.png') no-repeat -79px
 		-55px;
 	font: 15px/17px 'Merriweather Sans', Arial, Helvetica, sans-serif;
 }
 
 .slide-menu.active .btnclose-sidenav:before {
-	background: url('../../images/myaccount/sprite.png') no-repeat -81px
+	background: url('/resources/images/myaccount/sprite.png') no-repeat -81px
 		-36px;
 	width: 9px;
 	height: 12px;
@@ -759,7 +759,7 @@ form,fieldset {
 }
 
 .list .name:after {
-	background: url(../../images/ico-name.png) no-repeat;
+	background: url(/resources/images/ico-name.png) no-repeat;
 	width: 18px;
 	height: 16px;
 	overflow: hidden;
@@ -793,7 +793,7 @@ form,fieldset {
 	padding: 15px 0 13px 43px;
 	text-decoration: none;
 	color: #666b7a;
-	background: url(../../images/icos.png) no-repeat 9999px 0;
+	background: url(/resources/images/icos.png) no-repeat 9999px 0;
 }
 
 .menu a:hover,.menu .active a,.nav a:hover {
@@ -813,7 +813,7 @@ form,fieldset {
 	overflow: hidden;
 	text-indent: -9999px;
 	content: "";
-	background: url(../../images/icos.png) no-repeat 9999px 0;
+	background: url(/resources/images/icos.png) no-repeat 9999px 0;
 }
 
 .menu .ico1:before {
@@ -940,7 +940,7 @@ form,fieldset {
 		padding: 19px 28px 7px 20px;
 	}
 	.logo {
-		background: url(../../images/lh-logo-96.png) no-repeat;
+		background: url(/resources/images/lh-logo-96.png) no-repeat;
 		background-size: 48px 83px;
 		width: 48px;
 		height: 83px;
