@@ -22,7 +22,7 @@
 				<div class="holder">
 					<ul>
 						<li class="mobile"><a href="#">Back to home</a></li>
-						<li><a href="/site/myaccount/../#/contact_us">Contact Us</a></li>
+						<li><a href="http://www.festivalhydro.com/site/#!/contact_us" target="_new">Contact Us</a></li>
 						<security:authorize access="isAuthenticated()">
                         <li class="alt"><a id="logout" class="my-london-hydro" href="<c:url value='/logout.do'/>">Logout</a></li>
                     </security:authorize>

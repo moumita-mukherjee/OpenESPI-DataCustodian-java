@@ -22,7 +22,7 @@
 
 <jsp:include page="../tiles/head.jsp" />
 <c:set var="menu" scope="session" value="home" />
-<body>
+<body onload="initOpenCloseFooter()">
 	<div id="wrapper">
 		<jsp:include page="../tiles/header.jsp" />
 

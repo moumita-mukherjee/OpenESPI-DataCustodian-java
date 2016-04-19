@@ -20,7 +20,7 @@ e ~
 				<div class="holder">
 					<ul>
 						<li class="mobile"><a href="#">Back to home</a></li>
-						<li><a href="/site/myaccount/../#/contact_us">Contact Us</a></li>
+						<li><a href="http://www.festivalhydro.com/site/#!/contact_us" target="_new">Contact Us</a></li>
 						<security:authorize access="isAuthenticated()">
                         <li class="alt"><a id="logout" class="my-london-hydro" href="<c:url value='/logout.do'/>">Logout</a></li>
                     </security:authorize>
@@ -35,7 +35,7 @@ e ~
 			<div class="section">
 				<div class="holder" data-ng-controller="SearchController">
 					<h1 class="logo"><a href="/site/myaccount/..">London Hydro</a></h1>
-					<a href="/site/myaccount/.." class="back">&lt; Back to home</a>
+					<a href="http://www.festivalhydro.com" class="back">&lt; Back to home</a>
 					<a href="#" class="btn-menu">menu</a>
 					<form class="search-form"  data-ng-submit="search();">
 						<fieldset>

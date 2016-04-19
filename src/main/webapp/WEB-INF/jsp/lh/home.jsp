@@ -25,7 +25,7 @@
 
 <jsp:include page="tiles/head.jsp" />
 
-<body>
+<body onload="initOpenCloseFooter()">
 
 	<jsp:include page="tiles/header.jsp" />
 	<div id="main">

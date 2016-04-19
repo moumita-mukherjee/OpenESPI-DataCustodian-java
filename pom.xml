@@ -39,7 +39,7 @@
 				<database>hsql</database>
 				<hbm2ddl_auto>create-drop</hbm2ddl_auto>
 				<api.base.url>http://localhost:8080/lh</api.base.url>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 			</properties>
 		</profile>
 
@@ -53,7 +53,7 @@
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<appengine.target.version>1.9.34</appengine.target.version>
 				<api.base.url>http://localhost:8080/lh</api.base.url>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 			</properties>
 		</profile>
 
@@ -66,7 +66,7 @@
 				<database>mysql</database>
 				<hbm2ddl_auto>create-drop</hbm2ddl_auto>
 				<api.base.url>http://localhost:8080/lh</api.base.url>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 			</properties>
 		</profile>
 
@@ -79,7 +79,7 @@
 				<database>postgresql</database>
 				<hbm2ddl_auto>create-drop</hbm2ddl_auto>
 				<api.base.url>http://localhost:8080/lh</api.base.url>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 			</properties>
 		</profile>
 
@@ -92,7 +92,7 @@
 				<database>mysql</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<api.base.url>http://localhost:8080/lh</api.base.url>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 			</properties>
 		</profile>
 
@@ -105,26 +105,26 @@
 				<database>hsql</database>
 				<hbm2ddl_auto>create-drop</hbm2ddl_auto>
 				<api.base.url>http://localhost:8080/lh</api.base.url>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 			</properties>
 		</profile>
 		<profile>
 			<id>googleclouddev</id>
 			<properties>
-				<datacustodian.base.url>https://londonhydro-espi-dev.appspot.com</datacustodian.base.url>
-				<appengine.application.name>londonhydro-espi-dev</appengine.application.name>
+				<datacustodian.base.url>https://festivalhydro-espi-dev.appspot.com</datacustodian.base.url>
+				<appengine.application.name>festivalhydro-espi-dev</appengine.application.name>
 				<appengine.application.module>default</appengine.application.module>
 				<appengine.application.version>1</appengine.application.version>
 				<profile>googleclouddev</profile>
 				<spring.profile>authserver</spring.profile>
-				<web.allowOrigin>https://londonhydro-espi-dev.appspot.com/</web.allowOrigin>
+				<web.allowOrigin>https://festivalhydro-espi-dev.appspot.com/</web.allowOrigin>
 				<database>googleclouddev</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<ga_code>UA-52133006-1</ga_code>
 				<appengine.target.version>1.9.34</appengine.target.version>
-				<api.base.url>https://lh-myaccount-dev.appspot.com</api.base.url>
+				<api.base.url>https://festivalhydro-myacct-dev.appspot.com</api.base.url>
 				<cms.section>greenbutton</cms.section>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 				<excludedfiles>**/*.none</excludedfiles>
 				<appengine.scaling>
 				<![CDATA[
@@ -170,8 +170,8 @@
 		<profile>
 			<id>googleclouddev-api</id>
 			<properties>
-				<datacustodian.base.url>https://londonhydro-espi-dev.appspot.com</datacustodian.base.url>
-				<appengine.application.name>londonhydro-espi-dev</appengine.application.name>
+				<datacustodian.base.url>https://festivalhydro-espi-dev.appspot.com</datacustodian.base.url>
+				<appengine.application.name>festivalhydro-espi-dev</appengine.application.name>
 				<appengine.application.module>api</appengine.application.module>
 				<appengine.application.version>1</appengine.application.version>
 				<profile>googleclouddev</profile>
@@ -181,9 +181,9 @@
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<ga_code>UA-52133006-1</ga_code>
 				<appengine.target.version>1.9.34</appengine.target.version>
-				<api.base.url>https://lh-myaccount-dev.appspot.com</api.base.url>
+				<api.base.url>https://festivalhydro-myacct-dev.appspot.com</api.base.url>
 				<cms.section>greenbutton</cms.section>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
 				<appengine.scaling>
 				<![CDATA[
@@ -234,8 +234,8 @@
 		<profile>
 			<id>googleclouddev-adminapi</id>
 			<properties>
-				<datacustodian.base.url>https://londonhydro-espi-dev.appspot.com</datacustodian.base.url>
-				<appengine.application.name>londonhydro-espi-dev</appengine.application.name>
+				<datacustodian.base.url>https://festivalhydro-espi-dev.appspot.com</datacustodian.base.url>
+				<appengine.application.name>festivalhydro-espi-dev</appengine.application.name>
 				<appengine.application.module>adminapi</appengine.application.module>
 				<appengine.application.version>1</appengine.application.version>
 				<profile>googleclouddev</profile>
@@ -245,9 +245,9 @@
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<ga_code>UA-52133006-1</ga_code>
 				<appengine.target.version>1.9.34</appengine.target.version>
-				<api.base.url>https://lh-myaccount-dev.appspot.com</api.base.url>
+				<api.base.url>https://festivalhydro-myacct-dev.appspot.com</api.base.url>
 				<cms.section>greenbutton</cms.section>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
 				<appengine.scaling>
 				<![CDATA[
@@ -309,9 +309,9 @@
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<ga_code>UA-52133006-1</ga_code>
 				<appengine.target.version>1.9.34</appengine.target.version>
-				<api.base.url>https://lh-myaccount-qa.appspot.com</api.base.url>
+				<api.base.url>https://festivalhydro-myacct-qa.appspot.com</api.base.url>
 				<cms.section>greenbutton</cms.section>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 				<excludedfiles>**/*.none</excludedfiles>
 				<appengine.scaling>
 				<![CDATA[
@@ -370,9 +370,9 @@
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<ga_code>UA-52133006-1</ga_code>
 				<appengine.target.version>1.9.34</appengine.target.version>
-				<api.base.url>https://lh-myaccount-dev.appspot.com</api.base.url>
+				<api.base.url>https://festivalhydro-myacct-dev.appspot.com</api.base.url>
 				<cms.section>greenbutton</cms.section>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
 				<appengine.scaling>
 				<![CDATA[
@@ -423,20 +423,20 @@
 		<profile>
 			<id>googlecloudqa</id>
 			<properties>
-				<datacustodian.base.url>https://londonhydro-espi-qa.appspot.com</datacustodian.base.url>
-				<appengine.application.name>londonhydro-espi-qa</appengine.application.name>
+				<datacustodian.base.url>https://festivalhydro-espi-qa.appspot.com</datacustodian.base.url>
+				<appengine.application.name>festivalhydro-espi-qa</appengine.application.name>
 				<appengine.application.module>default</appengine.application.module>
 				<appengine.application.version>1</appengine.application.version>
 				<profile>googlecloudqa</profile>
 				<spring.profile>authserver</spring.profile>
-				<web.allowOrigin>https://londonhydro-espi-qa.appspot.com/</web.allowOrigin>
+				<web.allowOrigin>https://festivalhydro-espi-qa.appspot.com/</web.allowOrigin>
 				<database>googlecloudqa</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<ga_code>UA-52133006-1</ga_code>
 				<appengine.target.version>1.9.34</appengine.target.version>
-				<api.base.url>https://lh-myaccount-qa.appspot.com</api.base.url>
+				<api.base.url>https://festivalhydro-myacct-qa.appspot.com</api.base.url>
 				<cms.section>greenbutton</cms.section>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 				<excludedfiles>**/*.none</excludedfiles>
 				<appengine.scaling>
 				<![CDATA[
@@ -487,8 +487,8 @@
 		<profile>
 			<id>googlecloudqa-api</id>
 			<properties>
-				<datacustodian.base.url>https://londonhydro-espi-qa.appspot.com</datacustodian.base.url>
-				<appengine.application.name>londonhydro-espi-qa</appengine.application.name>
+				<datacustodian.base.url>https://festivalhydro-espi-qa.appspot.com</datacustodian.base.url>
+				<appengine.application.name>festivalhydro-espi-qa</appengine.application.name>
 				<appengine.application.module>api</appengine.application.module>
 				<appengine.application.version>1</appengine.application.version>
 				<profile>googlecloudqa</profile>
@@ -498,9 +498,9 @@
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<ga_code>UA-52133006-1</ga_code>
 				<appengine.target.version>1.9.34</appengine.target.version>
-				<api.base.url>https://lh-myaccount-qa.appspot.com</api.base.url>
+				<api.base.url>https://festivalhydro-myacct-qa.appspot.com</api.base.url>
 				<cms.section>greenbutton</cms.section>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
 					<appengine.scaling>
 				<![CDATA[
@@ -551,8 +551,8 @@
 		<profile>
 			<id>googlecloudqa-adminapi</id>
 			<properties>
-				<datacustodian.base.url>https://londonhydro-espi-qa.appspot.com</datacustodian.base.url>
-				<appengine.application.name>londonhydro-espi-qa</appengine.application.name>
+				<datacustodian.base.url>https://festivalhydro-espi-qa.appspot.com</datacustodian.base.url>
+				<appengine.application.name>festivalhydro-espi-qa</appengine.application.name>
 				<appengine.application.module>adminapi</appengine.application.module>
 				<appengine.application.version>1</appengine.application.version>
 				<profile>googlecloudqa</profile>
@@ -562,9 +562,9 @@
 				<hbm2ddl_auto>none</hbm2ddl_auto>
 				<ga_code>UA-52133006-1</ga_code>
 				<appengine.target.version>1.9.34</appengine.target.version>
-				<api.base.url>https://lh-myaccount-qa.appspot.com</api.base.url>
+				<api.base.url>https://festivalhydro-myacct-qa.appspot.com</api.base.url>
 				<cms.section>greenbutton</cms.section>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
 				<appengine.scaling>
 				<![CDATA[
@@ -617,7 +617,7 @@
 			<id>googlecloudprod</id>
 			<properties>
 				<datacustodian.base.url>https://greenbutton.londonhydro.com</datacustodian.base.url>
-				<appengine.application.name>londonhydro-espi-prod</appengine.application.name>
+				<appengine.application.name>festivalhydro-espi-prod</appengine.application.name>
 				<appengine.application.module>default</appengine.application.module>
 				<appengine.application.version>1</appengine.application.version>
 				<profile>googlecloudprod</profile>
@@ -625,11 +625,11 @@
 				<web.allowOrigin>https://greenbutton.londonhydro.com/</web.allowOrigin>
 				<database>googlecloudprod</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
-				<ga_code>UA-52133007-1</ga_code>
+				<ga_code>UA-********-1</ga_code>
 				<appengine.target.version>1.9.34</appengine.target.version>
-				<api.base.url>https://lh-myaccount-prod.appspot.com</api.base.url>
+				<api.base.url>https://festivalhydro-myacct-prod.appspot.com</api.base.url>
 				<cms.section>greenbutton</cms.section>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 				<excludedfiles>**/*.none</excludedfiles>
 				<appengine.scaling>
 				<![CDATA[
@@ -680,8 +680,8 @@
 		<profile>
 			<id>googlecloudprod-api</id>
 			<properties>
-				<datacustodian.base.url>https://londonhydro-espi-prod.appspot.com</datacustodian.base.url>
-				<appengine.application.name>londonhydro-espi-prod</appengine.application.name>
+				<datacustodian.base.url>https://festivalhydro-espi-prod.appspot.com</datacustodian.base.url>
+				<appengine.application.name>festivalhydro-espi-prod</appengine.application.name>
 				<appengine.application.module>api</appengine.application.module>
 				<appengine.application.version>1</appengine.application.version>
 				<profile>googlecloudprod</profile>
@@ -689,11 +689,11 @@
 				<web.allowOrigin>*</web.allowOrigin>
 				<database>googlecloudprod</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
-				<ga_code>UA-52133007-1</ga_code>
+				<ga_code>UA-********-1</ga_code>
 				<appengine.target.version>1.9.34</appengine.target.version>
-				<api.base.url>https://lh-myaccount-prod.appspot.com</api.base.url>
+				<api.base.url>https://festivalhydro-myacct-prod.appspot.com</api.base.url>
 				<cms.section>greenbutton</cms.section>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
 				<appengine.scaling>
 				<![CDATA[
@@ -744,8 +744,8 @@
 		<profile>
 			<id>googlecloudprod-api-beta</id>
 			<properties>
-				<datacustodian.base.url>https://londonhydro-espi-prod.appspot.com</datacustodian.base.url>
-				<appengine.application.name>londonhydro-espi-prod</appengine.application.name>
+				<datacustodian.base.url>https://festivalhydro-espi-prod.appspot.com</datacustodian.base.url>
+				<appengine.application.name>festivalhydro-espi-prod</appengine.application.name>
 				<appengine.application.module>api</appengine.application.module>
 				<appengine.application.version>beta</appengine.application.version>
 				<profile>googlecloudprod</profile>
@@ -753,11 +753,11 @@
 				<web.allowOrigin>*</web.allowOrigin>
 				<database>googlecloudprod</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
-				<ga_code>UA-52133007-1</ga_code>
+				<ga_code>UA-********-1</ga_code>
 				<appengine.target.version>1.9.34</appengine.target.version>
-				<api.base.url>https://lh-myaccount-prod.appspot.com</api.base.url>
+				<api.base.url>https://festivalhydro-myacct-prod.appspot.com</api.base.url>
 				<cms.section>greenbutton</cms.section>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
 				<appengine.scaling>
 				<![CDATA[
@@ -808,8 +808,8 @@
 		<profile>
 			<id>googlecloudprod-adminapi</id>
 			<properties>
-				<datacustodian.base.url>https://londonhydro-espi-prod.appspot.com</datacustodian.base.url>
-				<appengine.application.name>londonhydro-espi-prod</appengine.application.name>
+				<datacustodian.base.url>https://festivalhydro-espi-prod.appspot.com</datacustodian.base.url>
+				<appengine.application.name>festivalhydro-espi-prod</appengine.application.name>
 				<appengine.application.module>adminapi</appengine.application.module>
 				<appengine.application.version>1</appengine.application.version>
 				<profile>googlecloudprod</profile>
@@ -817,11 +817,11 @@
 				<web.allowOrigin>*</web.allowOrigin>
 				<database>googlecloudprod</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
-				<ga_code>UA-52133007-1</ga_code>
+				<ga_code>UA-********-1</ga_code>
 				<appengine.target.version>1.9.34</appengine.target.version>
-				<api.base.url>https://lh-myaccount-prod.appspot.com</api.base.url>
+				<api.base.url>https://festivalhydro-myacct-prod.appspot.com</api.base.url>
 				<cms.section>greenbutton</cms.section>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
 				<appengine.scaling>
 				<![CDATA[
@@ -872,8 +872,8 @@
 		<profile>
 			<id>googlecloudprod-api-bidgely</id>
 			<properties>
-				<datacustodian.base.url>https://londonhydro-espi-prod.appspot.com</datacustodian.base.url>
-				<appengine.application.name>londonhydro-espi-prod</appengine.application.name>
+				<datacustodian.base.url>https://festivalhydro-espi-prod.appspot.com</datacustodian.base.url>
+				<appengine.application.name>festivalhydro-espi-prod</appengine.application.name>
 				<appengine.application.module>api</appengine.application.module>
 				<appengine.application.version>bidgely</appengine.application.version>
 				<profile>googlecloudprod</profile>
@@ -881,11 +881,11 @@
 				<web.allowOrigin>*</web.allowOrigin>
 				<database>googlecloudprod</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
-				<ga_code>UA-52133007-1</ga_code>
+				<ga_code>UA-********-1</ga_code>
 				<appengine.target.version>1.9.34</appengine.target.version>
-				<api.base.url>https://lh-myaccount-prod.appspot.com</api.base.url>
+				<api.base.url>https://festivalhydro-myacct-prod.appspot.com</api.base.url>
 				<cms.section>greenbutton</cms.section>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
 				<appengine.scaling>
 				<![CDATA[
@@ -934,22 +934,22 @@
 			</dependencies>
 		</profile>
 		<profile>
-			<id>googlecloudprod-api-lhapps</id>
+			<id>googlecloudprod-api-apps</id>
 			<properties>
-				<datacustodian.base.url>https://londonhydro-espi-prod.appspot.com</datacustodian.base.url>
-				<appengine.application.name>londonhydro-espi-prod</appengine.application.name>
+				<datacustodian.base.url>https://festivalhydro-espi-prod.appspot.com</datacustodian.base.url>
+				<appengine.application.name>festivalhydro-espi-prod</appengine.application.name>
 				<appengine.application.module>api</appengine.application.module>
-				<appengine.application.version>lhapps</appengine.application.version>
+				<appengine.application.version>apps</appengine.application.version>
 				<profile>googlecloudprod</profile>
 				<spring.profile>resourceserver</spring.profile>
 				<web.allowOrigin>*</web.allowOrigin>
 				<database>googlecloudprod</database>
 				<hbm2ddl_auto>none</hbm2ddl_auto>
-				<ga_code>UA-52133007-1</ga_code>
+				<ga_code>UA-********-1</ga_code>
 				<appengine.target.version>1.9.34</appengine.target.version>
-				<api.base.url>https://lh-myaccount-prod.appspot.com</api.base.url>
+				<api.base.url>https://festivalhydro-myacct-prod.appspot.com</api.base.url>
 				<cms.section>greenbutton</cms.section>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
 				<appengine.scaling>
 				<![CDATA[
@@ -999,7 +999,7 @@
 			<id>appenginedev</id>
 			<properties>
 				<datacustodian.base.url>http://localhost:8080</datacustodian.base.url>
-				<appengine.application.name>londonhydro-espi-dev</appengine.application.name>
+				<appengine.application.name>festivalhydro-espi-dev</appengine.application.name>
 				<appengine.application.module>default</appengine.application.module>
 				<appengine.application.version>1</appengine.application.version>
 				<profile>appenginedev</profile>
@@ -1011,7 +1011,7 @@
 				<appengine.target.version>1.9.34</appengine.target.version>
 				<api.base.url>http://localhost:8080/lh</api.base.url>
 				<cms.section>greenbutton</cms.section>
-				<corporateUrl>https://www.londonhydro.com</corporateUrl>
+				<corporateUrl>http://www.festivalhydro.com</corporateUrl>
 				<excludedfiles>**/*.none</excludedfiles>
 			</properties>
 			<dependencies>

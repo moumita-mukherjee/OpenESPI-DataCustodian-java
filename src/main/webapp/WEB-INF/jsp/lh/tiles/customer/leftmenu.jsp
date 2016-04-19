@@ -31,7 +31,7 @@
 								href="<c:url value='/RetailCustomer/${currentCustomer.id}/dmd'/>">
 									Download<br /> My Data
 							</a></li>
-							<li class="${menu=='feedback'?'active':''}"><a id="menudownloadMyData" class="icon-feedback"
+							<li class="${menu=='feedback'?'active':''}" style="display: none;"><a id="menudownloadMyData" class="icon-feedback"
 								href="<c:url value='/RetailCustomer/${currentCustomer.id}/feedback'/>">
 									Your Feedback </a></li>
 

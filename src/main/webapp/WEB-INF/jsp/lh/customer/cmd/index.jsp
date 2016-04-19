@@ -43,7 +43,7 @@ table.bor td {
 
 
 <c:set var="menu" scope="session" value="cmd" />
-<body>
+<body onload="initOpenCloseFooter()">
 
 	<script type="text/javascript">
 		$('table').on('click', 'tr', function(e) {

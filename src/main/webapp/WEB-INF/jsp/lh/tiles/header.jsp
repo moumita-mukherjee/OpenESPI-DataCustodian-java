@@ -26,9 +26,9 @@ function myFunction() {
 	<div class="lh-panel">
 		<div class="holder">
 			<ul>
-				<li class="mobile"><a href="https://www.londonhydro.com/site">Back
+				<li class="mobile"><a href="http://www.festivalhydro.com/site">Back
 						to home</a></li>
-				<li><a href="https://www.londonhydro.com/site/#!/contact_us">Contact
+				<li><a href="http://www.festivalhydro.com/site/#!/contact_us" target="_new">Contact
 						Us</a></li>
 				<security:authorize access="isAuthenticated()">
 					<li class="alt"><a id="logout" class="my-london-hydro"
@@ -46,7 +46,7 @@ function myFunction() {
 	<div class="section">
 		<div class="holder " data-ng-controller="SearchController">
 			<h1 class="logo">
-				<a href="/site/myaccount/..">London Hydro</a>
+				<a href="http://www.festivalhydro.com/site">London Hydro</a>
 			</h1>	
 				<c:if test="${currentCustomer!=null}">		
 		<button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#bs-navbar" onclick="myFunction()"> 
@@ -69,7 +69,7 @@ function myFunction() {
 								href="<c:url value='/RetailCustomer/${currentCustomer.id}/dmd'/>">
 									Download<br /> My Data
 							</a></li>
-							<li class="${menu=='feedback'?'active':''}"><a id="menudownloadMyData" class="icon-feedback"
+							<li class="${menu=='feedback'?'active':''}" style="display: none;"><a id="menudownloadMyData" class="icon-feedback"
 								href="<c:url value='/RetailCustomer/${currentCustomer.id}/feedback'/>">
 									Your Feedback </a></li>
 		</security:authorize>

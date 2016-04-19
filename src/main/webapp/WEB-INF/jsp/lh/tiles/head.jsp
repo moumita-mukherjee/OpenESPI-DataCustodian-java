@@ -17,7 +17,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>LondonHydro</title>
+    <title>FestivalHydro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -36,7 +36,10 @@
     <link href="<c:url value='/resources/css/eternicode/datepicker3.css?v=${buildVersion}' />" rel="stylesheet" type="text/css"/>
     <link href="<c:url value='/resources/css/myaccount/fancybox.css?v=${buildVersion}' />" rel="stylesheet" type="text/css"/>
     <link href="<c:url value='/resources/css/myaccount/overlays.css?v=${buildVersion}' />" rel="stylesheet" type="text/css"/>    
-  
+  	
+  	
+  	<!-- Added for footer -->
+  	<link href="<c:url value='/resources/css/footer.css?v=${buildVersion}' />" rel="stylesheet" type="text/css"/>
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -46,9 +49,11 @@
 	<!-- Latest compiled and minified JavaScript -->	
 	<script src="<c:url value='/resources/js/bootstrap/3.1.1/bootstrap.min.js'/>"></script>
 	
+	
     <script src="<c:url value='/resources/js/jquery.min.js'/>"></script>
     
-    
+    <!--  For footer accordion in the menu -->
+	<script src="<c:url value='/resources/js/jquery.main.js?v=${buildVersion}'/>"></script>
      
     <script src="/resources/js/eternicode/bootstrap-datepicker.js"></script>
     

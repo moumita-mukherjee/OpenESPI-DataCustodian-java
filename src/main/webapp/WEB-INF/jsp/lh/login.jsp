@@ -21,7 +21,7 @@
 
 <jsp:include page="tiles/head.jsp" />
 
-<body>
+<body onload="initOpenCloseFooter()">
 	<div id="wrapper">
 
 		<jsp:include page="tiles/header.jsp" />
@@ -85,7 +85,7 @@
 								</form>
 								<br><br>
 								<p>
-								Please use your current MyLondonHydro login identification and password to login to the Green Button microsite.
+								Please use your current MyFestivalHydro login identification and password to login to the Green Button microsite.
 								</p>
 							</div>
 						</section>

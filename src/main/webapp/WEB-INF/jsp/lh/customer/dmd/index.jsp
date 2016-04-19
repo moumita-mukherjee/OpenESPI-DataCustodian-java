@@ -44,7 +44,7 @@
 	});
 </script>
 <c:set var="menu" scope="session" value="dmd" />
-<body>
+<body onload="initOpenCloseFooter()">
 	<div id="wrapper">
 		<jsp:include page="../../tiles/header.jsp" />
 
