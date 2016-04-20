@@ -34,37 +34,21 @@
 
 			<!-- Main hero unit for a primary marketing message or call to action -->
 			<div class="balance-section" srckey="greenbuttonlandingpage">
-				<!-- 				<h2>Welcome to the London Hydro Green Button Portal</h2>
-				<br> <br>
-				<div class="row">
-					<div class="col-xs-6 col-md-3">
+			<div class="balance-section" srckey="greenbuttonlandingpage">
+			<p>
+				<img alt="GB Landing Page" width="100%" src="<c:url value='/resources/images/gb-landing-promo.png' />">
+			</p>
 
-						<article>
-							<p>
-								If you have already registered with London Hydro you may login
-								to our GreenButton Portal using your MyLondonHydro email address
-								and password. If you have not yet registered with MyLondonHydro
-								please click on <a type="button" class="btn btn-primary"
-									href="https://www.londonhydro.com/site/#!/login">REGISTER NOW</a>.
-							</p>
-						</article>
-					</div>
-					<div class="col-xs-6 col-md-3"></div>
-					<div class="col-xs-6 col-md-3">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+.<a href="http://mygreenbutton.ca/" target="_new">
+<img alt="Educate Me" width="32%" align="middle" src="/resources/images/educateme_april7.png">
+</a> <a href="<c:url value='/login'/>">
+<img alt="Let Me Participate" width="32%" align="middle" src="/resources/images/letmeparticipate_april7.png">
+</a></p>
 
-						<article>
-							<p>
-								If you have an innovative application and would like to register
-								with us. Please click below.<br> <a
-									href="/DataCustodian/thirdparty/registration"
-									class="btn btn-primary btn-lg" role="button">Register your
-									Application</a>
-							</p>
 
-						</article>
-					</div>
-				</div>
- -->
+</div>
+
 			</div>
 			<br> <br>
 		</div>
