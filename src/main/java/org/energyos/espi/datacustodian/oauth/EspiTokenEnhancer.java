@@ -225,6 +225,11 @@ public class EspiTokenEnhancer implements TokenEnhancer {
 				authorizationService.merge(authorization);
 			}
 
+		} else if (grantType.contentEquals("password")) {
+		
+			result = passwordBasedTokenEnhancer(clientId,accessToken,authentication,usagePointId,authPeriod, currentTimeSec);
+			
+
 		} else {
 
 			System.out.printf("EspiTokenEnhancer: Invalid Grant_Type processed by Spring Security OAuth2 Framework:\n"
@@ -233,6 +238,59 @@ public class EspiTokenEnhancer implements TokenEnhancer {
 		}
 
 		return result;
+   }
+   private DefaultOAuth2AccessToken passwordBasedTokenEnhancer(String clientId,OAuth2AccessToken accessToken,OAuth2Authentication authentication,Long usagePointId,Long authPeriod,long currentTimeSec) {
+	 			
+		 DefaultOAuth2AccessToken result = new DefaultOAuth2AccessToken(accessToken); 
+		
+		ApplicationInformation ai = applicationInformationService.findByClientId(clientId);
+		Subscription subscription = subscriptionService.createSubscription(authentication,usagePointId);   
+		result.getAdditionalInformation().put("resourceURI", ai.getDataCustodianResourceEndpoint() + Routes.BATCH_SUBSCRIPTION.replace("espi/1_1/resource/", "").replace("{subscriptionId}", subscription.getId().toString()));        
+
+		
+		Authorization authorization = authorizationService.createAuthorization(subscription, result.getValue());           
+		result.getAdditionalInformation().put("authorizationURI", ai.getDataCustodianResourceEndpoint() + Routes.DATA_CUSTODIAN_AUTHORIZATION.replace("espi/1_1/resource/", "").replace("{authorizationId}", authorization.getId().toString()));        	
+		
+		subscription.setAuthorization(authorization);
+		subscription.setUpdated(new GregorianCalendar());
+		subscriptionService.merge(subscription);
+		
+		RetailCustomer retailCustomer = ((User) authentication.getPrincipal()).getRetailCustomer();
+		
+			List<IdentifiedObject> usagePointIds = resourceService.findAllIdsByXPath(retailCustomer.getId(),UsagePoint.class);
+			Iterator<IdentifiedObject> it = usagePointIds.iterator();
+			while (it.hasNext()) {
+				UsagePoint up = resourceService.findById(it.next().getId(), UsagePoint.class);
+				up.setSubscription(subscription);
+				resourceService.persist(up);  
+			}
+		
+		
+		authorization.setApplicationInformation(applicationInformationService.findByClientId(authentication.getOAuth2Request().getClientId()));
+		authorization.setThirdParty(authentication.getOAuth2Request().getClientId());
+		authorization.setRetailCustomer(retailCustomer);
+		authorization.setAccessToken(accessToken.getValue());
+		authorization.setTokenType(accessToken.getTokenType());
+		authorization.setExpiresIn((long) accessToken.getExpiresIn());
+		
+		if (accessToken.getRefreshToken() != null) {
+			authorization.setRefreshToken(accessToken.getRefreshToken().toString());
+		}
+		
+		
+		authorization.setScope(accessToken.getScope().toString().substring(1, (accessToken.getScope().toString().length()-1)));
+		authorization.setAuthorizationURI(ai.getDataCustodianResourceEndpoint() + Routes.DATA_CUSTODIAN_AUTHORIZATION.replace("espi/1_1/resource/", "").replace("{authorizationId}", authorization.getId().toString()));
+		authorization.setResourceURI(ai.getDataCustodianResourceEndpoint() + Routes.BATCH_SUBSCRIPTION.replace("espi/1_1/resource/", "").replace("{subscriptionId}", subscription.getId().toString()));
+		authorization.setUpdated(new GregorianCalendar());
+		authorization.setStatus("1"); 	// Set authorization record status as "Active"
+		authorization.setSubscription(subscription);
+		authorization.setAuthorizedPeriod(new DateTimeInterval(authPeriod, currentTimeSec));
+		authorization.setPublishedPeriod(new DateTimeInterval(authPeriod, currentTimeSec));
+		
+		authorizationService.merge(authorization);	
+		return result;
+		
+	   
    }
    
    public void setApplicationInformationService(ApplicationInformationService applicationInformationService) {

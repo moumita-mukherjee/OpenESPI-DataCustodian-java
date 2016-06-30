@@ -23,6 +23,7 @@
 		<oauth:authorization-code/>
 		<oauth:refresh-token />
 		<oauth:client-credentials />
+		<oauth:password />
 	</oauth:authorization-server>
 
 
@@ -106,12 +107,15 @@
 		<intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY" />
 		<anonymous enabled="false" />
 		<http-basic entry-point-ref="clientAuthenticationEntryPoint" />
+	 <custom-filter ref="clientCredentialsTokenEndpointFilter" before="BASIC_AUTH_FILTER" />
 		<access-denied-handler ref="oauthAccessDeniedHandler" />
 		
 	</http>
 
 
-
+  <bean id="clientCredentialsTokenEndpointFilter" class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
+        <property name="authenticationManager" ref="clientAuthenticationManager" />
+    </bean>
 
 
 	<!-- Override the default mappings for approval and error pages -->
