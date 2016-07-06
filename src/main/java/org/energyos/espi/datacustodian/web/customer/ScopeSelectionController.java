@@ -97,7 +97,15 @@ public class ScopeSelectionController extends BaseController {
 			}
 		}
 
-		if (applicableUsagePoints.size() == 1) {
+		if(("DC-APP").equals(thirdParty.getKind()))	{
+			//Datacustodian acts as thirdparty sandbox
+			model.put("thirdParty", thirdParty);
+			model.put("authorization", authorizations);
+			model.put("usagePoints", usagePoints);			
+			model.put("retailCustomerId",(currentCustomer(principal).getId()));
+			return "/customer/authorizedThirdParties/authorization";			
+			
+		}else if (applicableUsagePoints.size() == 1) {
 			sessionObj.setAttribute("usagePointId", applicableUsagePoints.get(0).getId());
 
 			return "redirect:" + thirdParty.getThirdPartyScopeSelectionScreenURI() + "?"
