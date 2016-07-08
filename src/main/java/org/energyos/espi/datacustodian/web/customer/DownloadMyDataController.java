@@ -45,11 +45,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sun.syndication.io.FeedException;
 
-import org.energyos.espi.common.domain.ApplicationInformation;
-import org.energyos.espi.common.domain.Authorization;
-import org.energyos.espi.common.service.ApplicationInformationService;
-import org.energyos.espi.common.service.AuthorizationService;
-
 @Controller
 public class DownloadMyDataController extends BaseController {
 
@@ -61,12 +56,6 @@ public class DownloadMyDataController extends BaseController {
 
 	@Autowired
 	private ExportService exportService;
-	
-	 @Autowired
-	 private ApplicationInformationService applicationInformationService;
-	 
-	 @Autowired
-		private AuthorizationService authorizationService;
 
 	public void setExportService(ExportService exportService) {
 		this.exportService = exportService;
@@ -145,26 +134,6 @@ public class DownloadMyDataController extends BaseController {
 		}
 		model.put("serviceKindList", serviceKindList);
 		model.put("usagePointListGroupByService", usagePointListGroupByService);
-		
-		Map<Long, String> authorizationTokenList = new HashMap<Long, String>();
-
-		List<ApplicationInformation> thirdParty = applicationInformationService.findByKind("DC-APP");
-		String status = "1";//only fetching the active access token
-		List<Authorization> authorizationList = null;
-
-		if (thirdParty != null) {		
-			for (ApplicationInformation ResourceUser : thirdParty) {					
-				authorizationList = authorizationService.findByApplicationInformationStatus(
-								currentCustomer(principal).getId(),ResourceUser.getClientId(), status);		
-
-			}
-			if (authorizationList != null) {
-			for (Authorization authorization : authorizationList) {				
-				model.put("authorization", authorization.getAccessToken());				
-			}
-
-			}
-		}
 
 		return "/customer/dmd/index";
 	}

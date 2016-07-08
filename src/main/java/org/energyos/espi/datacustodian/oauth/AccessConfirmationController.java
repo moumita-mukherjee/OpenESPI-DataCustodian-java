@@ -209,7 +209,7 @@ public class AccessConfirmationController extends BaseController {
 			return "redirect:/oauth/error";
 		}		
 		
-			return "redirect:/RetailCustomer/" + currentCustomer(principal).getId()+ "/dmd";
+			return "redirect:/RetailCustomer/" + currentCustomer(principal).getId()+ "/cmd";
 		
 	}
 	
