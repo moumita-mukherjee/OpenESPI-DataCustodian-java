@@ -57,6 +57,39 @@
 						<form:form
 							action="${pageContext.request.contextPath}/RetailCustomer/${currentCustomer.id}/AuthorizedThirdParties/${authorization.id}"
 							method="POST" class="form-inline">
+							<div id="accessTokenModal" class="modal fade" tabindex="-1"
+										role="dialog" aria-labelledby="myModalLabel"
+										aria-hidden="true" style="display: none;">
+										<div class="modal-dialog">
+											<div class="modal-content" style="width: 780px;">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal"
+														aria-hidden="true">&times;</button>
+													<h4 class="modal-title">Data Access Details</h4>
+												</div>
+												<div class="modal-body">
+													<div>
+														<fieldset>
+															<div class="form-group" style="white-space: nowrap;">
+																<label>Data URL : </label>
+																	<c:out value="${authorization.resourceURI}"/>
+															</div>	
+															<div class="form-group">
+															<label>Access Token : </label>
+																<c:out value="${authorization.accessToken}"/>
+															</div>															
+														</fieldset>
+													</div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-default"
+														data-dismiss="modal">Close</button>													
+												</div>
+											</div>
+											<!-- /.modal-content -->
+										</div>
+										<!-- /.modal-dialog -->
+							</div>
 							<input type="hidden" name="_method" value="PUT" />
 							<div class="media">
 								<a class="pull-left" href="#"> <img class="media-object"
@@ -151,7 +184,15 @@
 											<td><spring:message
 													code="service.name.${usagePoint.serviceCategory.kind}" /><br />
 												<c:out value="${usagePoint.usagePointDetail.serviceId}" /></td>
-											<td><c:out value="${usagePoint.id}" /></td>	
+											<td Style="white-space: nowrap;"><c:out value="${usagePoint.id}" /><br/>
+											<c:if test="${authorization.applicationInformation.kind=='DC-APP'}">
+												<a href="#" class="a-modal"
+													data-toggle="modal"
+													data-target="#accessTokenModal"
+													data-usagepoint="${usagePoint.id}">Access Details
+												 </a>
+												</c:if>
+											</td>
 											<td><c:out
 													value="${usagePoint.usagePointDetail.meterNumber}" /></td>
 
@@ -211,7 +252,15 @@
 													<td><spring:message
 															code="service.name.${usagePoint.serviceCategory.kind}" /><br />
 														<c:out value="${usagePoint.usagePointDetail.serviceId}" /></td>
-													<td><c:out value="${usagePoint.id}" /></td>															
+													<td Style="white-space: nowrap;"><c:out value="${usagePoint.id}" /><br/>
+														<c:if test="${authorization.applicationInformation.kind=='DC-APP'}">
+															<a href="#" class="a-modal"
+																data-toggle="modal"
+																data-target="#accessTokenModal"
+																data-usagepoint="${usagePoint.id}">Access Details
+															 </a>
+															</c:if>
+													</td>														
 													<td><c:out
 															value="${usagePoint.usagePointDetail.meterNumber}" /></td>
 

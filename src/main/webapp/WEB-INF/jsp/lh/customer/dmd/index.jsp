@@ -144,11 +144,6 @@
 																	<th>Billing Number</th>
 																	<th>Service Number</th>
 																	<th>Meter</th>
-																	<c:if
-																					test="${not empty authorization}">
-																						<th>Access Token</th>
-																	</c:if>		
-																		
 																	<th class="tab-status">Status</th>
 																	<th><div class="tab-status-resposive">Status</div></th>
 																</tr>
@@ -190,11 +185,6 @@
 																		<td><c:out
 																				value="${usagePoint.usagePointDetail.meterNumber}"
 																				default="-" /></td>
-																		<c:if
-																					test="${not empty authorization}">
-																					<td class="access_token"><c:out value="${authorization}"/></td>
-																		 </c:if>		
-																		   
 																		<td class="meter-stat">
 																		<c:choose>
 																				<c:when
@@ -298,10 +288,6 @@
 																			<th>Address</th>
 																			<th class="grp_bill">Billing Number</th>
 																			<th>Service Number</th>
-																			<c:if
-																					test="${not empty authorization}">
-																						<th>Access Token</th>
-																			</c:if>	
 																			<th>Meter</th>
 																			<th>Status</th>
 																			<th></th>
@@ -345,10 +331,6 @@
 																				<td><c:out
 																						value="${usagePoint.usagePointDetail.meterNumber}"
 																						default="-" /></td>
-																					<c:if
-																					test="${not empty authorization}">
-																					<td class="access_token"><c:out value="${authorization}"/></td>
-																					 </c:if>		
 																				<td><c:choose>
 																						<c:when
 																							test="${usagePoint.usagePointDetail.status=='Active'}">
@@ -429,10 +411,6 @@
 																			<th>Billing Number</th>
 																			<th>Service Number</th>
 																			<th>Meter</th>
-																			<c:if
-																					test="${not empty authorization}">
-																						<th>Access Token</th>
-																			</c:if>	
 																			<th class="tab-status">Status</th>
 																			<th><div class="tab-status-resposive">Status</div></th>
 																			<th></th>
@@ -476,10 +454,6 @@
 																				<td><c:out
 																						value="${usagePoint.usagePointDetail.meterNumber}"
 																						default="-" /></td>
-																					<c:if
-																					test="${not empty authorization}">
-																					<td class="access_token"><c:out value="${authorization}"/></td>
-																					 </c:if>		
 																				<td class="meter-stat">
 																				<c:choose>
 																						<c:when
