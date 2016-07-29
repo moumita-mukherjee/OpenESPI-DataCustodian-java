@@ -20,19 +20,27 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.energyos.espi.common.domain.AccessToken;
 import org.energyos.espi.common.domain.ApplicationInformation;
-import org.energyos.espi.common.domain.ApplicationInformationScope;
+import org.energyos.espi.common.domain.Authorization;
 import org.energyos.espi.common.domain.UsagePoint;
 import org.energyos.espi.common.repositories.UsagePointDetailRepository;
+import org.energyos.espi.common.repositories.UserRepository;
 import org.energyos.espi.common.service.ApplicationInformationService;
+import org.energyos.espi.common.service.AuthorizationService;
 import org.energyos.espi.common.service.UsagePointService;
-import org.energyos.espi.datacustodian.utils.DateUtil;
 import org.energyos.espi.datacustodian.utils.UsagePointHelper;
 import org.energyos.espi.datacustodian.web.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.oauth2.common.util.OAuth2Utils;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -40,15 +48,18 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.approval.Approval;
 import org.springframework.security.oauth2.provider.approval.Approval.ApprovalStatus;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
-
 /**
  * Controller for retrieving the model for and displaying the confirmation page for access to a protected resource.
  * 
@@ -61,6 +72,15 @@ public class AccessConfirmationController extends BaseController {
 	private ClientDetailsService clientDetailsService;
 	
 	private ApprovalStore approvalStore;	//Spring Security OAuth2 2.0.0.M2 change
+	
+	@Autowired
+	private AuthorizationService authorizationService;
+	
+	 @Autowired
+		private UserRepository userRepository;	
+	 
+	 @Autowired
+	    private TokenStore tokenStore;
 
 	@RequestMapping("/oauth/confirm_access")
 	public ModelAndView getAccessConfirmation(ModelMap model, Principal principal, HttpSession sessionObj)
@@ -144,6 +164,55 @@ public class AccessConfirmationController extends BaseController {
 		return new ModelAndView("/access_confirmation", model);
 	}
 
+	@RequestMapping(value = "/oauth/accesstoken", method = RequestMethod.POST)
+	public String getOauthToken(HttpServletRequest request, ModelMap model,
+			Principal principal, HttpSession sessionObj) throws Exception {
+		
+		String thirdPartyClientId = request.getParameter("client_id");
+
+		String userName = principal.getName();
+
+		String userPassword = userRepository.findByUsername(principal.getName()).getPassword();
+		
+		try {			
+
+			ApplicationInformation thirdParty = applicationInformationService
+					.findByClientId(thirdPartyClientId);
+			
+			List<Authorization> authorizationList = authorizationService.findByApplicationInformationStatus(
+					currentCustomer(principal).getId(),thirdPartyClientId, "1");
+		
+			
+			if(authorizationList.size()==0)	{
+
+			String url = thirdParty.getAuthorizationServerTokenEndpoint();			
+			
+			MultiValueMap<String,Object> parameters = new LinkedMultiValueMap<String,Object>();
+			parameters.add("grant_type", "password");
+			parameters.add("username", userName);
+			parameters.add("password", userPassword);			
+			
+			DefaultHttpClient httpClient = new DefaultHttpClient();
+            BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+            credentialsProvider.setCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
+                            new UsernamePasswordCredentials(thirdPartyClientId,thirdParty.getClientSecret()));
+            httpClient.setCredentialsProvider(credentialsProvider);
+            HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
+           
+            RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory);          			
+			AccessToken token = restTemplate.postForObject(url,parameters,AccessToken.class);	
+       		
+				
+			}
+
+		} catch (Exception e) {			
+			return "redirect:/oauth/error";
+		}		
+		
+			return "redirect:/RetailCustomer/" + currentCustomer(principal).getId()+ "/cmd";
+		
+	}
+	
 	@RequestMapping("oauth/error")
 	public String handleError(Map<String,Object> model) throws Exception {
 		// We can add more stuff to the model here for JSP rendering.  If the client was a machine then

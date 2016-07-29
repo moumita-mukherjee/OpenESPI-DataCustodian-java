@@ -577,6 +577,7 @@ table.bor td {
 									<tbody>
 										<c:forEach var="applicationInformation"
 											items="${applicationInformationList}" varStatus="vStatus">
+										<c:if test="${applicationInformation.kind=='THIRD_PARTY'|| applicationInformation.kind=='DC-APP'}">
 											<tr>
 												<td>
 
@@ -665,6 +666,7 @@ table.bor td {
 
 
 											</tr>
+											</c:if>
 										</c:forEach>
 									</tbody>
 
