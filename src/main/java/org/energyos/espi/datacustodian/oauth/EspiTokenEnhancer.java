@@ -31,7 +31,6 @@ import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.common.util.OAuth2Utils;
-import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
@@ -122,6 +121,7 @@ public class EspiTokenEnhancer implements TokenEnhancer {
 		}
 		System.err.println(" authorizationEndDate " + authorizationEndDate);
 		System.err.println(" authPeriod " + authPeriod);
+		System.err.println(" grantType " + grantType);
 		// Is this a "client_credentials" access token grant_type request?
 		if (grantType.contentEquals("client_credentials")) {
 			// Processing a "client_credentials" access token grant_type request.
@@ -211,6 +211,12 @@ public class EspiTokenEnhancer implements TokenEnhancer {
 				// Yes, update access token
 				authorization.setAccessToken(accessToken.getValue());
 				authorizationService.merge(authorization);
+				
+				// Add ResourceURI and AuthorizationURI to access_token response
+				result.getAdditionalInformation().put("resourceURI",
+						authorization.getResourceURI());
+				result.getAdditionalInformation().put("authorizationURI",
+						authorization.getAuthorizationURI());
 
 			} catch (NoResultException | EmptyResultDataAccessException e) {
 				// No, process as initial access token request
