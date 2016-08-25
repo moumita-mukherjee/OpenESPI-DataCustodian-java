@@ -619,7 +619,7 @@
 				<datacustodian.base.url>https://greenbutton.londonhydro.com</datacustodian.base.url>
 				<appengine.application.name>londonhydro-espi-prod</appengine.application.name>
 				<appengine.application.module>default</appengine.application.module>
-				<appengine.application.version>1</appengine.application.version>
+				<appengine.application.version>usercredential</appengine.application.version>
 				<profile>googlecloudprod</profile>
 				<spring.profile>authserver</spring.profile>
 				<web.allowOrigin>https://greenbutton.londonhydro.com/</web.allowOrigin>
@@ -683,7 +683,7 @@
 				<datacustodian.base.url>https://londonhydro-espi-prod.appspot.com</datacustodian.base.url>
 				<appengine.application.name>londonhydro-espi-prod</appengine.application.name>
 				<appengine.application.module>api</appengine.application.module>
-				<appengine.application.version>1</appengine.application.version>
+				<appengine.application.version>usercredential</appengine.application.version>
 				<profile>googlecloudprod</profile>
 				<spring.profile>resourceserver</spring.profile>
 				<web.allowOrigin>*</web.allowOrigin>
