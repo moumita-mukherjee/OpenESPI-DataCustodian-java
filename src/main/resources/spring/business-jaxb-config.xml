@@ -121,6 +121,12 @@
 					</entry>
 					<entry>
 						<key>
+							<util:constant static-field="javax.xml.bind.Marshaller.JAXB_SCHEMA_LOCATION" />
+						</key>
+						<value type="java.lang.String">http://naesb.org/espi espiDerived.xsd</value>
+					</entry>
+					<entry>
+						<key>
 							<util:constant static-field="javax.xml.bind.Marshaller.JAXB_FRAGMENT" />
 						</key>
 						<value type="java.lang.Boolean">true</value>
