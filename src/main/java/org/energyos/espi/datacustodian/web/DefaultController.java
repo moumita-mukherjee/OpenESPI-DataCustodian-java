@@ -17,21 +17,29 @@
 package org.energyos.espi.datacustodian.web;
 
 import java.security.Principal;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.energyos.espi.common.domain.Routes;
 import org.energyos.espi.common.domain.User;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class DefaultController extends BaseController {
 
 	@RequestMapping(Routes.DEFAULT)
-	public String defaultAfterLogin(HttpServletRequest request, Principal principal) {
+	public String defaultAfterLogin(HttpServletRequest request,
+			Principal principal) {
 
-		try {
+			try {
 			if (request.isUserInRole(User.ROLE_CUSTODIAN)) {
 				return "redirect:/custodian/home";
 			} else if (request.isUserInRole(User.ROLE_USER)) {
@@ -39,11 +47,41 @@ public class DefaultController extends BaseController {
 					return "/customer/nongbhome";
 				}
 
-				return "redirect:/RetailCustomer/" + currentCustomer(principal).getId() + "/home";
+				return "redirect:/RetailCustomer/"
+						+ currentCustomer(principal).getId() + "/home";
 			}
-		} catch (Exception ignore) {
+		} catch (Exception ignore) {		
 			return "redirect:/login";
 		}
 		return "redirect:/home";
+
+	}
+	@RequestMapping(value = "/dmd", method = RequestMethod.GET)
+	public String downloadMyDatawithToken(HttpServletRequest request,Principal principal) {
+		
+		if (request.isUserInRole(User.ROLE_USER)) {
+			if (currentCustomer(principal) == null) {
+				return "/customer/nongbhome";
+			}
+
+			return "redirect:/RetailCustomer/"
+					+ currentCustomer(principal).getId() + "/dmd";
+		}
+		return "redirect:"+request.getContextPath()+"/site/#!/login";
+		
+	}
+	@RequestMapping(value = "/cmd", method = RequestMethod.GET)
+	public String connectMyDatawithToken(HttpServletRequest request,Principal principal) {
+		
+		if (request.isUserInRole(User.ROLE_USER)) {
+			if (currentCustomer(principal) == null) {
+				return "/customer/nongbhome";
+			}
+
+			return "redirect:/RetailCustomer/"
+					+ currentCustomer(principal).getId() + "/cmd";
+		}
+		return "redirect:https://dev.londonhydro.com/site/#!/login";
+		
 	}
 }
