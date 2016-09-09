@@ -51,14 +51,13 @@ public class CustomPreAuthenticaionProcessingFilter extends
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
 				
-				//System.out.println("cookie.getName()" + cookie.getName());
+				
+				System.err.println(" ::: cookie max age ::: " + cookie.getMaxAge());
 
 				if (cookie.getName().equalsIgnoreCase("JSESSIONID")) {
 					//System.out.println("cookie.getValue()" + cookie.getValue());
-
 				}
 				if (cookie.getName().contains("user-token")) {
-					
 					System.err.println(" :::: name check :::: " + cookie.getName());
 					cookieValues = cookie.getValue();
 				}
