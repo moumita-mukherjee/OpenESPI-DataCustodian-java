@@ -32,7 +32,7 @@ function myFunction() {
 						Us</a></li>
 				<security:authorize access="isAuthenticated()">
 					<li class="alt"><a id="logout" class="my-london-hydro"
-						href="<c:url value='/logout.do'/>">Logout</a></li>
+						href="<c:url value='/site/myaccount'/>">MYLONDONHYDRO</a></li>
 				</security:authorize>
 				<security:authorize access="isAnonymous()">
 					<li class="active alt"><a id="login" class="my-london-hydro"

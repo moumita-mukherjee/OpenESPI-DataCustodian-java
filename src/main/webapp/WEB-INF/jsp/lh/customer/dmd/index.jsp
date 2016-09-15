@@ -257,11 +257,7 @@
 																							Period to <br />Download Usage
 																					</a></li>
 																				</ul>
-																			</div> <a
-																			href="<c:url value='/RetailCustomer/${currentCustomer.id}/UsagePoint/${usagePoint.id}/show' />"
-																			class="btn btn-primary"> <span
-																				class="glyphicon glyphicon-stats"></span> Usage
-																		</a>
+																			</div> 
 																		</td>
 
 																	</tr>
