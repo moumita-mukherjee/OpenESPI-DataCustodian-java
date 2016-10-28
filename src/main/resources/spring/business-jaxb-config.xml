@@ -106,9 +106,16 @@
 					<value>org.energyos.espi.common.domain.SummaryMeasurement</value>
 					<value>org.energyos.espi.common.domain.TimeConfiguration</value>
 					<value>org.energyos.espi.common.domain.TokenType</value>
-					<value>org.energyos.espi.common.domain.UsagePoint</value>
+					<value>org.energyos.espi.common.domain.UsagePoint</value>	
+						
+					<value>org.energyos.espi.common.domain.Customer</value>
+					<value>org.energyos.espi.common.domain.CustomerAccount</value>
+					<value>org.energyos.espi.common.domain.CustomerAgreement</value>
+					<value>org.energyos.espi.common.domain.ServiceLocation</value>
+					<value>org.energyos.espi.common.domain.EndDevice</value>
+					<value>org.energyos.espi.common.domain.ServiceSupplier</value>
 					
-
+					
 				</list>
 			</property>
 			<property name="marshallerProperties">
@@ -125,6 +132,73 @@
 						</key>
 						<value type="java.lang.Boolean">true</value>
 					</entry>
+					
+					<entry key="com.sun.xml.bind.namespacePrefixMapper">
+						<bean id="NamespacePrefixMapperImpl" class="org.energyos.espi.common.utils.NamespacePrefixMapperImpl" />
+					</entry>
+					
+				</map>
+			</property>
+		</bean>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<bean id="custAtomMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller"
+			lazy-init="true">
+			<property name="classesToBeBound">
+				<list>
+					<value>org.energyos.espi.common.models.atom.CategoryType</value>
+					<value>org.energyos.espi.common.models.atom.ContentType</value>
+					<value>org.energyos.espi.common.models.atom.DateTimeType</value>
+					<value>org.energyos.espi.common.models.atom.EntryType</value>
+					<value>org.energyos.espi.common.models.atom.FeedType</value>
+					<value>org.energyos.espi.common.models.atom.GeneratorType</value>
+					<value>org.energyos.espi.common.models.atom.IconType</value>
+					<value>org.energyos.espi.common.models.atom.IdType</value>
+					<value>org.energyos.espi.common.models.atom.LinkType</value>
+					<value>org.energyos.espi.common.models.atom.LogoType</value>
+					<value>org.energyos.espi.common.models.atom.ObjectFactory</value>
+					<value>org.energyos.espi.common.models.atom.PersonType</value>
+					<value>org.energyos.espi.common.models.atom.SourceType</value>
+					<value>org.energyos.espi.common.models.atom.TextType</value>
+					<value>org.energyos.espi.common.models.atom.UriType</value>
+					
+					<value>org.energyos.espi.common.domain.ObjectFactory</value>
+					
+					<value>org.energyos.espi.common.domain.IdentifiedObject</value>
+					<value>org.energyos.espi.common.domain.Customer</value>
+					<value>org.energyos.espi.common.domain.CustomerAccount</value>
+					<value>org.energyos.espi.common.domain.CustomerAgreement</value>
+					<value>org.energyos.espi.common.domain.ServiceLocation</value>
+					<value>org.energyos.espi.common.domain.EndDevice</value>
+					<value>org.energyos.espi.common.domain.ServiceSupplier</value>
+				</list>
+			</property>
+			<property name="marshallerProperties">
+				<map>
+					<entry>
+						<key>
+							<util:constant static-field="javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT" />
+						</key>
+						<value type="java.lang.Boolean">true</value>
+					</entry>
+					<entry>
+						<key>
+							<util:constant static-field="javax.xml.bind.Marshaller.JAXB_FRAGMENT" />
+						</key>
+						<value type="java.lang.Boolean">true</value>
+					</entry>
+					
+					<!-- <entry key="com.sun.xml.bind.namespacePrefixMapper">
+						<bean id="NamespacePrefixMapperImpl" class="org.energyos.espi.retailcommon.utils.NamespacePrefixMapperImpl" />
+					</entry> -->
+					
 				</map>
 			</property>
 		</bean>
@@ -170,6 +244,8 @@
 			class="org.springframework.web.client.RestTemplate"
 			autowire-candidate="true" lazy-init="true"/>
 	</beans>
+
+	
 
 	<beans profile="dev">
 		<bean id="seedDataGenerator" class="org.energyos.espi.common.SeedDataGenerator"

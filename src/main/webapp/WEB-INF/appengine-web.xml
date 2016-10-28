@@ -7,13 +7,17 @@
 	<use-google-connector-j>true</use-google-connector-j>
 	<sessions-enabled>true</sessions-enabled>	
 	<instance-class>${appengine.instance-class}</instance-class>
-	<automatic-scaling>
+	 <automatic-scaling>
 		<min-idle-instances>${appengine.min-idle-instances}</min-idle-instances>
 		<max-idle-instances>${appengine.max-idle-instances}</max-idle-instances>
 		<min-pending-latency>${appengine.min-pending-latency}</min-pending-latency>
 		<max-pending-latency>${appengine.max-pending-latency}</max-pending-latency>
 		<max-concurrent-requests>${appengine.max-concurrent-requests}</max-concurrent-requests>
-	</automatic-scaling>
+	</automatic-scaling> 
+	<!-- <basic-scaling>
+		<max-instances>20</max-instances>
+    	<idle-timeout>10m</idle-timeout>
+	</basic-scaling>-->
 	<admin-console>
 		<page name="Appstats" url="/appstats" />
 	</admin-console>

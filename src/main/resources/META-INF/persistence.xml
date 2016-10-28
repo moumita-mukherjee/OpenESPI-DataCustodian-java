@@ -10,10 +10,7 @@
 		<class>org.energyos.espi.common.domain.ElectricPowerQualitySummary
 		</class>
 		<class>org.energyos.espi.common.domain.ElectricPowerUsageSummary
-		</class>
-
-
-
+		</class>		
 		<class>org.energyos.espi.common.domain.LineItem</class>
 		<class>org.energyos.espi.common.domain.MeterReading</class>
 
@@ -90,6 +87,35 @@
 				value="false" />
 			<property name="javax.persistence.validation.mode" value="none" />
 			<property name="hibernate.connection.release_mode" value="after_transaction" />
+		</properties>
+	</persistence-unit>
+	<persistence-unit name="pu-retailCustomer">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<class>org.energyos.espi.common.domain.Customer</class>	
+		<class>org.energyos.espi.common.domain.CustomerAccount</class>	
+		<class>org.energyos.espi.common.domain.CustomerAgreement</class>	
+		<class>org.energyos.espi.common.domain.ServiceLocation</class>
+		<class>org.energyos.espi.common.domain.EndDevice</class>
+		<class>org.energyos.espi.common.domain.ServiceSupplier</class>
+		
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		<properties> 
+			<property name="javax.persistence.jdbc.url" value="${jdbc.rc.url}" />
+			<property name="javax.persistence.jdbc.driver" value="${jdbc.rc.driverClassName}" />
+			<property name="hibernate.default_schema" value="${jdbc.rc.schema}" />
+			<property name="javax.persistence.jdbc.user" value="${jdbc.rc.username}" />
+			<property name="javax.persistence.jdbc.password" value="${jdbc.rc.password}" />
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.hbm2ddl.auto" value="none" />
+			<property name="hibernate.connection.autocommit" value="true" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+			<property name="hibernate.connection.driver_class" value="${jdbc.hibernate.driver}" />
+			<property name="hibernate.validator.apply_to_ddl" value="false" />
+			<property name="hibernate.validator.autoregister_listeners"
+				value="false" />
+			<property name="javax.persistence.validation.mode" value="none" />
+			<property name="hibernate.connection.release_mode" value="after_transaction" />
+
 		</properties>
 	</persistence-unit>
 </persistence>

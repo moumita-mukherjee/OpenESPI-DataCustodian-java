@@ -24,6 +24,21 @@
 	<beans>
 
 
+		<bean id="customerEntityManagerFactory"
+			class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+			p:dataSource-ref="custdbDataSource">
+			<property name="persistenceUnitName" value="pu-retailCustomer" />
+
+		</bean>
+		<bean name="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+			<property name="entityManagerFactory" ref="customerEntityManagerFactory" />
+		</bean>
+
+		<bean
+			class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+	</beans>
+	<beans>
+
 		<bean id="entityManagerFactory"
 			class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
 			p:dataSource-ref="appldbDataSource">

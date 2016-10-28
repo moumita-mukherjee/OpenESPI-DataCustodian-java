@@ -44,7 +44,7 @@
 				<datacustodian.base.url>http://localhost:8080/DataCustodian</datacustodian.base.url>
 				<profile>dev</profile>
 				<spring.profile>dev</spring.profile>
-				<database>hsql</database>
+				<database>mysql</database>
 				<hbm2ddl_auto>create-drop</hbm2ddl_auto>
 				<api.base.url>http://localhost:8080/lh</api.base.url>
 				<corporateUrl>https://www.londonhydro.com</corporateUrl>
@@ -122,7 +122,7 @@
 				<datacustodian.base.url>https://londonhydro-espi-dev.appspot.com</datacustodian.base.url>
 				<appengine.application.name>londonhydro-espi-dev</appengine.application.name>
 				<appengine.application.module>default</appengine.application.module>
-				<appengine.application.version>1</appengine.application.version>
+				<appengine.application.version>2</appengine.application.version>
 				<profile>googleclouddev</profile>
 				<spring.profile>authserver</spring.profile>
 				<web.allowOrigin>https://londonhydro-espi-dev.appspot.com/</web.allowOrigin>
@@ -171,12 +171,12 @@
 		</profile>
 		<profile>
 			<id>googleclouddev-api</id>
-			<properties>
+			<properties> 
 				<datacustodian.base.url>https://londonhydro-espi-dev.appspot.com</datacustodian.base.url>
 				<appengine.application.name>londonhydro-espi-dev</appengine.application.name>
 				<appengine.application.module>api</appengine.application.module>
-				<appengine.application.version>1</appengine.application.version>
-				<profile>googleclouddev</profile>
+				<appengine.application.version>retailcustomer</appengine.application.version>
+				<profile>googleclouddev-api</profile>
 				<spring.profile>resourceserver</spring.profile>
 				<web.allowOrigin>*</web.allowOrigin>
 				<database>googleclouddev</database>
@@ -1121,6 +1121,7 @@
 		<maven.build.timestamp.format>yyyy/MM/dd hh:mm:ss a,z</maven.build.timestamp.format>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<database>mysql</database>
 	</properties>
 
 	<repositories>
@@ -1163,7 +1164,13 @@
 			<version>${appengine.target.version}</version>
 			<!-- <scope>test</scope> -->
 		</dependency>
-
+		
+		<!-- <dependency>
+			<groupId>org.energyos</groupId>
+			<artifactId>RetailCommon</artifactId>
+			<version>1.2-RC1</version>
+		</dependency> -->
+		
 		<dependency>
 			<groupId>org.energyos</groupId>
 			<artifactId>Common</artifactId>

@@ -17,7 +17,7 @@
 	<context:property-placeholder
 		location="classpath:spring/${database}-oauth-access.properties" />
 
-
+	<!-- <import resource="classpath:spring/persistence.xml" /> -->
 
 	<import resource="classpath:spring/business-config.xml" />
 
@@ -135,6 +135,31 @@
 	<bean id="resourceRepository"
 		class="org.energyos.espi.common.repositories.jpa.ResourceRepositoryImpl"
 		lazy-init="true" />
+	<!-- <bean id="customerResourceRepository"
+		class="org.energyos.espi.retailcommon.repositories.jpa.ResourceRepositoryImpl"
+		lazy-init="true" />	 -->
+		
+		<bean id="customerRepository"
+		class="org.energyos.espi.common.repositories.jpa.CustomerRepositoryImpl"
+		lazy-init="true" />	
+		<bean id="customerAccountRepository"
+		class="org.energyos.espi.common.repositories.jpa.CustomerAccountRepositoryImpl"
+		lazy-init="true" />	
+		
+	<bean id="customerAgreementRepository"
+		class="org.energyos.espi.common.repositories.jpa.CustomerAgreementRepositoryImpl"
+		lazy-init="true" />	
+
+	<bean id="serviceLocationRepository"
+		class="org.energyos.espi.common.repositories.jpa.ServiceLocationRepositoryImpl"
+		lazy-init="true" />	
+	<bean id="endDeviceRepository"
+		class="org.energyos.espi.common.repositories.jpa.EndDeviceRepositoryImpl"
+		lazy-init="true" />	
+	<bean id="serviceSupplierRepository"
+		class="org.energyos.espi.common.repositories.jpa.ServiceSupplierRepositoryImpl"
+		lazy-init="true" />	
+			
 	<bean id="retailCustomerRepository"
 		class="org.energyos.espi.common.repositories.jpa.RetailCustomerRepositoryImpl"
 		lazy-init="true" />
@@ -183,6 +208,29 @@
 		lazy-init="true" />
 	<bean id="exportService" class="org.energyos.espi.common.service.impl.ExportServiceImpl"
 		lazy-init="true" />
+	<!-- <bean id="retailExportService" class="org.energyos.espi.retailcommon.service.impl.ExportServiceImpl"
+		lazy-init="true" />	 -->
+	<bean id="customerService" class="org.energyos.espi.common.service.impl.CustomerServiceImpl"
+		lazy-init="true" />	
+	
+	<bean id="customerAccountService" class="org.energyos.espi.common.service.impl.CustomerAccountServiceImpl"
+		lazy-init="true" />	
+		
+	<bean id="customerAgreementService" class="org.energyos.espi.common.service.impl.CustomerAgreementServiceImpl"
+		lazy-init="true" />
+		
+	<bean id="serviceLocationService" class="org.energyos.espi.common.service.impl.ServiceLocationServiceImpl"
+		lazy-init="true" />
+			
+	<bean id="endDeviceService" class="org.energyos.espi.common.service.impl.EndDeviceServiceImpl"
+		lazy-init="true" />
+		
+	<bean id="serviceSupplierService" class="org.energyos.espi.common.service.impl.ServiceSupplierServiceImpl"
+		lazy-init="true" />
+		
+	<bean id="retailCustomerUnmarshallService" class="org.energyos.espi.common.service.impl.RetailCustomerUnmarshallServiceImpl"
+		lazy-init="true" />		
+		
 	<bean id="importService" class="org.energyos.espi.common.service.impl.ImportServiceImpl"
 		lazy-init="true" />
 	<bean id="intervalBlockService"
@@ -200,6 +248,9 @@
 	<bean id="resourceService"
 		class="org.energyos.espi.common.service.datastore.ResourceServiceImpl"
 		lazy-init="true" />
+	<!-- <bean id="retailResourceService"
+		class="org.energyos.espi.retailcommon.service.impl.ResourceServiceImpl"
+		lazy-init="true" /> -->
 	<bean id="retailCustomerService"
 		class="org.energyos.espi.common.service.impl.RetailCustomerServiceImpl"
 		lazy-init="true" />
@@ -359,6 +410,10 @@
 		<bean id="usagePointRESTController"
 			class="org.energyos.espi.datacustodian.web.api.UsagePointRESTController"
 			lazy-init="true" />
+			
+		<bean id="CustomerRESTController"
+			class="org.energyos.espi.datacustodian.web.api.CustomerRESTController"
+			lazy-init="true" />	
 
 
 		<bean id="meterReadingRESTController"

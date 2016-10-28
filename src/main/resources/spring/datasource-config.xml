@@ -60,4 +60,22 @@
 
 		</bean>
 	</beans>
+	
+	<beans >
+		<bean id="custdbDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+			destroy-method="close">
+			<property name="driverClassName" value="${jdbc.rc.driverClassName}" />
+			<property name="url" value="${jdbc.rc.url}" />
+			<property name="username" value="${jdbc.rc.username}" />
+			<property name="password" value="${jdbc.rc.password}" />
+			<property name="initialSize" value="1" />
+			<property name="maxActive" value="5" />
+			<property name="maxIdle" value="1" />
+			<property name="testWhileIdle" value="true" />
+			<property name="testOnBorrow" value="true" />
+			<property name="validationQuery" value="select 1" />
+
+
+		</bean>
+	</beans>
 </beans>
