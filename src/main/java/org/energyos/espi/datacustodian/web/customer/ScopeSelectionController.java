@@ -106,6 +106,7 @@ public class ScopeSelectionController extends BaseController {
 			return "/customer/authorizedThirdParties/authorization";			
 			
 		}else if (applicableUsagePoints.size() == 1) {
+			System.err.print("Single usage point "+applicableUsagePoints);
 			sessionObj.setAttribute("usagePointId", applicableUsagePoints.get(0).getId());
 
 			return "redirect:" + thirdParty.getThirdPartyScopeSelectionScreenURI() + "?"

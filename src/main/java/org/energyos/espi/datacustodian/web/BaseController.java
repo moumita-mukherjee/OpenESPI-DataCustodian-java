@@ -18,11 +18,16 @@ package org.energyos.espi.datacustodian.web;
 
 import java.security.Principal;
 
+
+
+
 import org.energyos.espi.common.domain.RetailCustomer;
 import org.energyos.espi.common.domain.User;
 import org.energyos.espi.common.service.RetailCustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -30,15 +35,22 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public class BaseController {
     @ModelAttribute("currentCustomer")
     public RetailCustomer currentCustomer(Principal principal) {
+    	if(principal==null) {
+    		return null;
+    	}
     	try {
 			User user = (User) ((Authentication) principal).getPrincipal();
 			if (user.getRetailCustomer() == null) {
+				System.err.println(" :::: User selfLink :::: "+user.getSelfLink());
 				user.setRetailCustomer(retailCustomerService.findByLink(user.getSelfLink()));
 			}
+			System.err.println(" :::: RetailCustomer :::: "+user.getRetailCustomer());
 			return user.getRetailCustomer();
 
 		} catch (Exception e) {
-			return null;
+			e.printStackTrace(System.err);
+			throw new UsernameNotFoundException("User not found") ;  
+			//return null;
 		}
 	}
 
@@ -52,10 +64,15 @@ public class BaseController {
 	}
 	@ModelAttribute("currentUser")
 	public User currentUser(Principal principal) {
+		if(principal==null) {
+    		return null;
+    	}
 		try {
 			return (User) ((Authentication) principal).getPrincipal();
         	} catch (Exception e) {
-			return null;
+        		e.printStackTrace(System.err);
+    			throw   new UsernameNotFoundException("User not found") ;  
+			//return null;
 		}
 	}
 }

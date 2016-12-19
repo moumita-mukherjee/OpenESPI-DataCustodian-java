@@ -27,6 +27,7 @@
 <script type="text/javascript">
 	var usagePointId = 0;
 	$(function() {
+		//alert( Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') );
 		$('.nav-group a').on('click', function(event) {
 			$('.nav-group a').removeClass('active'); // remove active class from tabs
 			$(this).addClass('active'); // add active class to clicked tab
@@ -232,7 +233,7 @@
 																						href="<c:url value='/RetailCustomer/${currentCustomer.id}/UsagePoint/${usagePoint.id}/dmd?usage-min=${dateController.dayBeginUtc}&usage-max=${dateController.nowUtc}'/> ">Today's
 																							Usage</a></li>
 																					<li><a
-																						href="<c:url value='/RetailCustomer/${currentCustomer.id}/UsagePoint/${usagePoint.id}/dmd?usage-min=${dateController.previousdayBeginUtc}&usage-max=${dateController.nowUtc}'/> ">Yesterday's
+																						href="<c:url value='/RetailCustomer/${currentCustomer.id}/UsagePoint/${usagePoint.id}/dmd?usage-min=${dateController.previousdayBeginUtc}&usage-max=${dateController.nowUtc}'/>">Yesterday's
 																							Usage</a></li>
 																					<li><a
 																						href="<c:url value='/RetailCustomer/${currentCustomer.id}/UsagePoint/${usagePoint.id}/dmd?usage-min=${dateController.weekBeginUtc}&usage-max=${dateController.nowUtc}'/> ">Current

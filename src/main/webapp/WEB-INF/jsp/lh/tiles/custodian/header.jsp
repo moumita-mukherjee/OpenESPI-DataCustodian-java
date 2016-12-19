@@ -27,7 +27,7 @@
                         <li class="alt"><a id="logout" class="my-london-hydro" href="<c:url value='/logout.do'/>">Logout</a></li>
                     </security:authorize>
 <security:authorize access="isAnonymous()">
-                        <li class="active alt"><a id="login" class="my-london-hydro" href="<c:url value='/login'/>">Login</a></li>
+                        <li class="active alt"><a id="login" class="my-london-hydro" href="<c:url value='/login'/>">Login_LHCustodian</a></li>
                     </security:authorize>
 					</ul>
 				</div>

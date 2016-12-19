@@ -25,9 +25,8 @@
 <%
 
 // New location to be redirected
-String site = new String("/site/#!/login");
-response.setStatus(response.SC_MOVED_TEMPORARILY);
-response.setHeader("Location", site); 
+
+
 
 %>
 	<div id="wrapper">

@@ -77,6 +77,7 @@ public class DownloadMyDataController extends BaseController {
 			throws IOException, FeedException {
 
 		response.addHeader("Content-Disposition", "attachment; filename=GreenButtonDownload.xml");
+		response.addHeader("Content-Type", "application/octet-stream");
 		try {
 			exportService.exportUsagePointFull(0L, usagePointId, currentCustomer(principal).getId(),
 					response.getOutputStream(), new ExportFilter(params));

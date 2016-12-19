@@ -95,7 +95,7 @@
 		<intercept-url pattern="/RetailCustomer/**" access="ROLE_USER" />
 		<intercept-url pattern="/**" />
 		<form-login authentication-failure-url="/login?authentication_error=true"
-			default-target-url="/default" login-page="/login" />
+			default-target-url="/default" login-page="/login"   authentication-failure-handler-ref="authenticationFailureHandler" />
 		<logout logout-success-url="/api/v1/public/logout" invalidate-session="true"
         delete-cookies="true" logout-url="/logout.do" />
 		<anonymous />
@@ -103,6 +103,7 @@
 		<!--<custom-filter ref="autoLoginFilter" position="FORM_LOGIN_FILTER" />-->
 
 	 </http>
+	 <bean id="authenticationFailureHandler" class="org.energyos.espi.datacustodian.web.filter.LoginFailureHandler" />
 	
 	<authentication-manager
 		alias="authenticationManager" xmlns="http://www.springframework.org/schema/security" erase-credentials="false">
