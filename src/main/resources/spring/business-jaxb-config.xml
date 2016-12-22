@@ -111,6 +111,7 @@
 					<value>org.energyos.espi.common.domain.Customer</value>
 					<value>org.energyos.espi.common.domain.CustomerAccount</value>
 					<value>org.energyos.espi.common.domain.CustomerAgreement</value>
+					<value>org.energyos.espi.common.domain.Address</value>
 					<value>org.energyos.espi.common.domain.ServiceLocation</value>
 					<value>org.energyos.espi.common.domain.EndDevice</value>
 					<value>org.energyos.espi.common.domain.ServiceSupplier</value>
@@ -175,6 +176,7 @@
 					<value>org.energyos.espi.common.domain.Customer</value>
 					<value>org.energyos.espi.common.domain.CustomerAccount</value>
 					<value>org.energyos.espi.common.domain.CustomerAgreement</value>
+					<value>org.energyos.espi.common.domain.Address</value>
 					<value>org.energyos.espi.common.domain.ServiceLocation</value>
 					<value>org.energyos.espi.common.domain.EndDevice</value>
 					<value>org.energyos.espi.common.domain.ServiceSupplier</value>

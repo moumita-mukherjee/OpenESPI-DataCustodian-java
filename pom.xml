@@ -175,7 +175,7 @@
 				<datacustodian.base.url>https://londonhydro-espi-dev.appspot.com</datacustodian.base.url>
 				<appengine.application.name>londonhydro-espi-dev</appengine.application.name>
 				<appengine.application.module>api</appengine.application.module>
-				<appengine.application.version>retailcustomer</appengine.application.version>
+				<appengine.application.version>moumita</appengine.application.version>
 				<profile>googleclouddev-api</profile>
 				<spring.profile>resourceserver</spring.profile>
 				<web.allowOrigin>*</web.allowOrigin>
@@ -187,13 +187,16 @@
 				<cms.section>greenbutton</cms.section>
 				<corporateUrl>https://www.londonhydro.com</corporateUrl>
 				<excludedfiles>**/*.jsp,**/*.js,**/*.css,**/*.png,**/*.gif,**/*.jpeg,**/*.jpg,**/*.html</excludedfiles>
-				<appengine.threadsafe>false</appengine.threadsafe>
-				<appengine.instance-class>F2</appengine.instance-class>
-				<appengine.min-idle-instances>automatic</appengine.min-idle-instances>
-				<appengine.max-idle-instances>automatic</appengine.max-idle-instances>
-				<appengine.min-pending-latency>2s</appengine.min-pending-latency>
-				<appengine.max-pending-latency>automatic</appengine.max-pending-latency>
-				<appengine.max-concurrent-requests>1</appengine.max-concurrent-requests>
+				<appengine.scaling>
+				<![CDATA[
+					<threadsafe>false</threadsafe>
+					<instance-class>B2</instance-class>
+					<basic-scaling>
+							<max-instances>100</max-instances>
+							<idle-timeout>10m</idle-timeout>
+					</basic-scaling>					
+				]]>
+				</appengine.scaling>
 			</properties>
 			<dependencies>
 				<!-- Compile/runtime dependencies -->
@@ -462,7 +465,7 @@
 				<datacustodian.base.url>https://londonhydro-espi-qa.appspot.com</datacustodian.base.url>
 				<appengine.application.name>londonhydro-espi-qa</appengine.application.name>
 				<appengine.application.module>api</appengine.application.module>
-				<appengine.application.version>1</appengine.application.version>
+				<appengine.application.version>antara</appengine.application.version>
 				<profile>googlecloudqa</profile>
 				<spring.profile>resourceserver</spring.profile>
 				<web.allowOrigin>*</web.allowOrigin>

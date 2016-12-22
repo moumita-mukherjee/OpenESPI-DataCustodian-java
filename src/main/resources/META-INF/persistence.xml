@@ -93,7 +93,8 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>org.energyos.espi.common.domain.Customer</class>	
 		<class>org.energyos.espi.common.domain.CustomerAccount</class>	
-		<class>org.energyos.espi.common.domain.CustomerAgreement</class>	
+		<class>org.energyos.espi.common.domain.CustomerAgreement</class>
+		<class>org.energyos.espi.common.domain.Address</class>	
 		<class>org.energyos.espi.common.domain.ServiceLocation</class>
 		<class>org.energyos.espi.common.domain.EndDevice</class>
 		<class>org.energyos.espi.common.domain.ServiceSupplier</class>

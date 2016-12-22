@@ -47,6 +47,7 @@ import org.energyos.espi.common.service.EndDeviceService;
 import org.energyos.espi.common.service.ExportService;
 import org.energyos.espi.common.service.ImportService;
 import org.energyos.espi.common.service.ResourceService;
+import org.energyos.espi.common.service.RetailCustomerService;
 import org.energyos.espi.common.service.ServiceLocationService;
 import org.energyos.espi.common.service.ServiceSupplierService;
 import org.energyos.espi.common.service.SubscriptionService;
@@ -113,6 +114,9 @@ public class CustomerRESTController {
 	
 	@Autowired
 	private UsagePointService usagePointService;
+	
+	@Autowired
+	private RetailCustomerService retailCustomerService;
 
 	@Autowired
 	private org.energyos.espi.common.service.RetailCustomerUnmarshallService retailCustomerUnmarshallService;
@@ -125,6 +129,26 @@ public class CustomerRESTController {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public void handleGenericException() {
 	}
+	
+	
+
+	@RequestMapping(value = Routes.RETAIL_ALL_CUSTOMER_INFORMATION, method = RequestMethod.GET, produces = "application/atom+xml")
+	public void showAllCustomers(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable Long retailCustomerID,
+			@RequestParam Map<String, String> params) throws IOException,
+			FeedException {
+		response.setContentType(MediaType.APPLICATION_ATOM_XML_VALUE);
+		try {
+			exportService.exportAllCustomerDetailsByRetailCustId(retailCustomerID,
+					response.getOutputStream(), new ExportFilter(params));
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+			log.warn("Exception", e);
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		}
+	}
+	
+	
 
 	@RequestMapping(value = Routes.RETAIL_CUSTOMER_INFORMATION, method = RequestMethod.GET, produces = "application/atom+xml")
 	public void show(HttpServletRequest request, HttpServletResponse response,
@@ -136,6 +160,7 @@ public class CustomerRESTController {
 			exportService.exportCustomerDetails(retailCustomerId, customerId,
 					response.getOutputStream(), new ExportFilter(params));
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -156,6 +181,7 @@ public class CustomerRESTController {
 			exportService.exportCustomerDetailsForBatch(retailCustomerId,
 					response.getOutputStream(), new ExportFilter(params));
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -172,6 +198,7 @@ public class CustomerRESTController {
 			exportService.exportCustomerAccountDetails(retailCustomerId,
 					customerId, response.getOutputStream(), new ExportFilter(params));
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -188,7 +215,8 @@ public class CustomerRESTController {
 			exportService.exportCustomerSpecificAccountDetails(
 					retailCustomerId, customerId, accountId,
 					response.getOutputStream(), new ExportFilter(params));
-		} catch (Exception e) {
+		}  catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -207,6 +235,7 @@ public class CustomerRESTController {
 					response.getOutputStream(), new ExportFilter(params));
 
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -227,6 +256,7 @@ public class CustomerRESTController {
 					customerAgreementId, response.getOutputStream(),
 					new ExportFilter(params));
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -247,6 +277,7 @@ public class CustomerRESTController {
 					customerAgreementId, response.getOutputStream(),
 					new ExportFilter(params));
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -271,6 +302,7 @@ public class CustomerRESTController {
 							new ExportFilter(params));
 
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -294,6 +326,7 @@ public class CustomerRESTController {
 					new ExportFilter(params));
 
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -318,6 +351,7 @@ public class CustomerRESTController {
 							new ExportFilter(params));
 
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -342,6 +376,7 @@ public class CustomerRESTController {
 					response.getOutputStream(), new ExportFilter(params));
 
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -367,6 +402,7 @@ public class CustomerRESTController {
 							new ExportFilter(params));
 
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -379,8 +415,9 @@ public class CustomerRESTController {
 			HttpServletResponse response, @PathVariable Long retailCustomerId,
 			@PathVariable Long customerId) throws IOException,FeedException {
 		try{
-			customerService.deleteById(customerId);
+			customerService.delete(retailCustomerId, customerId);
 	} catch (Exception e) {
+		e.printStackTrace(System.err);
 		log.warn("Exception", e);
 		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	}
@@ -393,8 +430,9 @@ public class CustomerRESTController {
 			@PathVariable Long customerId,
 			@PathVariable Long customerAccountId) throws IOException,FeedException {
 		try {
-			customerAccountService.deleteById(customerAccountId);
+			customerAccountService.delete(retailCustomerId, customerId, customerAccountId);
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -407,8 +445,9 @@ public class CustomerRESTController {
 			@PathVariable Long customerAccountId,
 			@PathVariable Long customerAgreementId) throws IOException,FeedException {
 		try {
-			customerAgreementService.deleteById(customerAgreementId);
+			customerAgreementService.delete(retailCustomerId, customerId, customerAccountId, customerAgreementId);
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -422,8 +461,10 @@ public class CustomerRESTController {
 			@PathVariable Long customerAgreementId,
 			@PathVariable Long serviceLocationId) throws IOException,FeedException {
 		try {
-			serviceLocationService.deleteById(serviceLocationId);
+			//ServiceLocation serv = serviceLocationService.findByRetailCustomerIdCustomerIdAccountIdAgreementIdServiceLocationId(retailCustomerId, customerId, customerAccountId, customerAgreementId, serviceLocationId);
+			serviceLocationService.delete(retailCustomerId, customerId, customerAccountId, customerAgreementId, serviceLocationId);
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -437,8 +478,10 @@ public class CustomerRESTController {
 			@PathVariable Long customerAgreementId,
 			@PathVariable Long serviceSupplierId) throws IOException,FeedException {
 		try {
-			serviceSupplierService.deleteById(serviceSupplierId);
+			ServiceSupplier sup = serviceSupplierService.findByRetailCustomerIdCustomerIdAccountIdAgreementIdServiceSupplierId(retailCustomerId, customerId, customerAccountId, customerAgreementId, serviceSupplierId);
+			serviceSupplierService.delete(retailCustomerId, customerId, customerAccountId, customerAgreementId, serviceSupplierId);
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -454,8 +497,10 @@ public class CustomerRESTController {
 			@PathVariable Long serviceLocationId,
 			@PathVariable Long endDeviceId) throws IOException,FeedException {
 		try {
-			endDeviceService.deleteById(endDeviceId);
+			//EndDevice ed = endDeviceService.findByRetailCustomerIdCustomerIdAccountIdAgreementIdServiceLocationIdEndDeviceId(retailCustomerId, customerId, customerAccountId, customerAgreementId, serviceLocationId, endDeviceId);
+			endDeviceService.delete(retailCustomerId, customerId, customerAccountId, customerAgreementId, serviceLocationId, endDeviceId);
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -479,10 +524,19 @@ public class CustomerRESTController {
 			}
 			if (customer != null) {
 				customer.setUUID(UUID.randomUUID());
-				customer.setRetailCustomerId(retailCustomerId);
+				if(retailCustomerService.findById(retailCustomerId)!=null)
+					customer.setRetailCustomerId(retailCustomerId);
+				else{
+					throw new Exception("Invalid retailcustomer id");
+				}
+				
+				if(customer.getSupplierId()<0l){
+					customer.setSupplierId(0l);
+				}
 				customerService.createCustomer(customer);
 			}
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -505,11 +559,12 @@ public class CustomerRESTController {
 			}
 			if (custAcc != null) {
 				custAcc.setUUID(UUID.randomUUID());
-				Customer customer= customerService.findById(customerID);
+				Customer customer= customerService.findByRetailCustomerIdCustomerId(retailCustomerId, customerID);
 				custAcc.setCustomer(customer);
 				customerAccountService.createCustomerAccount(custAcc);
 			}
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -533,12 +588,13 @@ public class CustomerRESTController {
 				custAgreement = (CustomerAgreement) identifiedObject;
 			}
 			if (custAgreement != null) {
-				CustomerAccount customerAccount= customerAccountService.findById(customerAccountID);
+				CustomerAccount customerAccount= customerAccountService.findByRetailCustomerIdCustomerIdCustomerAccountId(retailCustomerId, customerID, customerAccountID);
 				custAgreement.setCustomerAccount(customerAccount);
 				custAgreement.setUUID(UUID.randomUUID());
 				customerAgreementService.createCustomerAgreement(custAgreement);
 			}
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -563,7 +619,7 @@ public class CustomerRESTController {
 				serviceLocation = (ServiceLocation) identifiedObject;
 			}
 			if (serviceLocation != null) {
-				CustomerAgreement custAgreement= customerAgreementService.findById(customerAgreementID);
+				CustomerAgreement custAgreement= customerAgreementService.findByRetailCustomerIdCustomerIdAccountIdAgreementId(retailCustomerId, customerID, customerAccountID, customerAgreementID);
 				serviceLocation.setCustomerAgreement(custAgreement);
 				serviceLocation.setUUID(UUID.randomUUID());
 				serviceLocationService.createServiceLocation(serviceLocation);
@@ -594,12 +650,14 @@ public class CustomerRESTController {
 				serviceSupplier = (ServiceSupplier) identifiedObject;
 			}
 			if (serviceSupplier != null) {
-				CustomerAgreement custAgreement= customerAgreementService.findById(customerAgreementID);
+				//CustomerAgreement custAgreement= customerAgreementService.findById(customerAgreementID);
+				CustomerAgreement custAgreement= customerAgreementService.findByRetailCustomerIdCustomerIdAccountIdAgreementId(retailCustomerId, customerID, customerAccountID, customerAgreementID);
 				serviceSupplier.setCustomerAgreement(custAgreement);
 				serviceSupplier.setUUID(UUID.randomUUID());
 				serviceSupplierService.createServiceSupplier(serviceSupplier);
 			}
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			
@@ -626,12 +684,13 @@ public class CustomerRESTController {
 				endDevice = (EndDevice) identifiedObject;
 			}
 			if (endDevice != null) {
-				ServiceLocation serviceLocation = serviceLocationService.findById(serviceLocationId);
+				ServiceLocation serviceLocation = serviceLocationService.findByRetailCustomerIdCustomerIdAccountIdAgreementIdServiceLocationId(retailCustomerId, customerID, customerAccountId, customerAgreementId, serviceLocationId);
 				endDevice.setServiceLocation(serviceLocation);
 				endDevice.setUUID(UUID.randomUUID());
 				endDeviceService.createEndDevice(endDevice);;
 			}
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -650,9 +709,10 @@ public class CustomerRESTController {
 			for (IdentifiedObject customerObject : customerList) {
 				customer=(Customer) customerObject;
 			}
-			if (customer != null) {
+			Customer existingCustomer = customerService.findByRetailCustomerIdCustomerId(retailCustomerId, customerID);
+			if (customer != null && existingCustomer!=null) {
 				customer.setId(customerID);
-				customerService.mergeCustomer(customer);
+				customerService.mergeCustomer(customer,existingCustomer);
 				log.info("Successful");
 			}
 		} catch (Exception e) {
@@ -677,13 +737,15 @@ public class CustomerRESTController {
 			for (IdentifiedObject identifiedObject : ibList) {
 				custAcc = (CustomerAccount) identifiedObject;
 			}
-			if (custAcc != null) {
+			CustomerAccount existingCustAcc =  customerAccountService.findByRetailCustomerIdCustomerIdCustomerAccountId(retailCustomerId, customerID, customerAccountID);
+			if (custAcc != null && existingCustAcc!=null) {
 				log.info("--CustomerAccount Details--" + custAcc.getName());
 				custAcc.setId(customerAccountID);
-				customerAccountService.mergeCustomerAccount(custAcc);
+				customerAccountService.mergeCustomerAccount(custAcc,existingCustAcc);
 			}
 			
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -706,9 +768,10 @@ public class CustomerRESTController {
 			for (IdentifiedObject identifiedObject : ibList) {
 				custAgreement = (CustomerAgreement) identifiedObject;
 			}
-			if (custAgreement != null) {
+			CustomerAgreement existingCustAgg = customerAgreementService.findByRetailCustomerIdCustomerIdAccountIdAgreementId(retailCustomerId, customerID, customerAccountID, customerAggreementID);
+			if (custAgreement != null && existingCustAgg!=null) {
 				custAgreement.setId(customerAggreementID);
-			customerAgreementService.mergeCustomerAgreement(custAgreement);
+			customerAgreementService.mergeCustomerAgreement(custAgreement, existingCustAgg);
 			}
 		} catch (Exception e) {
 			log.warn("Exception", e);
@@ -734,9 +797,10 @@ public class CustomerRESTController {
 			for (IdentifiedObject identifiedObject : ibList) {
 				serviceLocation = (ServiceLocation) identifiedObject;
 			}
-			if (serviceLocation != null) {
+			ServiceLocation existingServiceLocation = serviceLocationService.findByRetailCustomerIdCustomerIdAccountIdAgreementIdServiceLocationId(retailCustomerId, customerID, customerAccountID, customerAgreementID, serviceLocationID);
+			if (serviceLocation != null && existingServiceLocation!=null) {
 				serviceLocation.setId(serviceLocationID);
-				serviceLocationService.mergeServiceLocation(serviceLocation);
+				serviceLocationService.mergeServiceLocation(serviceLocation,existingServiceLocation);
 			}
 		} catch (Exception e) {
 			log.warn("Exception", e);
@@ -762,11 +826,15 @@ public class CustomerRESTController {
 			for (IdentifiedObject identifiedObject : ibList) {
 				serviceSupplier = (ServiceSupplier) identifiedObject;
 			}
-			if (serviceSupplier != null) {
+			
+			ServiceSupplier existingSupplier = serviceSupplierService.findByRetailCustomerIdCustomerIdAccountIdAgreementIdServiceSupplierId(retailCustomerId, customerID, customerAccountID, customerAgreementID, serviceSupplierID);
+			if (serviceSupplier != null && existingSupplier!=null) {
+				
 				serviceSupplier.setId(serviceSupplierID);
-				serviceSupplierService.mergeServiceSupplier(serviceSupplier);
+				serviceSupplierService.mergeServiceSupplier(serviceSupplier,existingSupplier);
 			}
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
@@ -791,11 +859,17 @@ public class CustomerRESTController {
 			for (IdentifiedObject identifiedObject : ibList) {
 				endDevice = (EndDevice) identifiedObject;
 			}
-			if (endDevice != null) {
+			EndDevice existingEndDevice=null;
+			
+			existingEndDevice = endDeviceService.findByRetailCustomerIdCustomerIdAccountIdAgreementIdServiceLocationIdEndDeviceId(retailCustomerId,
+					customerId,customerAccountId,customerAgreementId,serviceLocationId,endDeviceId);
+			
+			if (endDevice != null && existingEndDevice!=null) {
 				endDevice.setId(endDeviceId);
-				endDeviceService.mergeEndDevice(endDevice);
+				endDeviceService.mergeEndDevice(endDevice, existingEndDevice);
 			}
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			log.warn("Exception", e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
