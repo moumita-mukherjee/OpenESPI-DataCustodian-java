@@ -51,7 +51,10 @@ public class ResourceValidationFilter implements Filter {
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException,
 			ServletException {
 
-		
+		/*if(true){
+			chain.doFilter(req, res);
+			return;
+		}*/
 
 		Boolean invalid = true;
 		Boolean hasBearer = false;
@@ -69,13 +72,19 @@ public class ResourceValidationFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) res;		
 		String uri = request.getRequestURI();
 		String service = request.getMethod();
-
+		System.err.println("uri: "+uri);
 		System.err.println(" ResourceValidationFilter: start of doFilter messageid= "+request.getHeader("x_lh_messageid"));
+		//replace customerbatch with batch
+		if(uri.contains("CustomerBatch")){
+		uri = uri.replace("CustomerBatch", "Batch");
+		System.err.println("New URI for CustomerBatch: "+uri);
+		}
 		
 		// see if any authentication has happened
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication != null) {
 			roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+			System.err.println("Role:::: "+roles.toString());
 			
 		}	else {
 			System.err.println("1 ResourceValidationFilter: doFilter - Access Not Authorized:"+request.getHeader("authorization"));
@@ -218,7 +227,7 @@ public class ResourceValidationFilter implements Filter {
 				String[] tokens = uri.split("/");
 
 				// only GET for this ROLE permitted
-				if (!service.equals("GET")) {
+				if (!service.equals("GET") ) {
 					System.err.printf("ResourceValidationFilter: doFilter - ROLE_USER attempted a RESTful %s Request -- Only GET Request are allowed\n", service);					
 					throw new AccessDeniedException(String.format("Access Not Authorized"));
 				}
@@ -238,6 +247,31 @@ public class ResourceValidationFilter implements Filter {
 						System.err.printf("3 ResourceValidationFilter: doFilter - Access Not Authorized\n");
 						throw new AccessDeniedException(String.format("Access Not Authorized"));
 					}
+				}
+				
+				// must be  /resource/CustomerBatch/Subscription/{subscriptionId}
+				/*if (invalid && uri.contains("/resource/CustomerBatch/Subscription")) {
+					if (resourceUri.startsWith("/resource/Batch/Subscription")) { 
+						invalid = false;
+					} else {
+						System.err.println("URI: "+uri);
+						System.err.println("ResourceURI: "+resourceUri);
+						// not authorized for this resource
+						System.err.printf("3 ResourceValidationFilter: doFilter - Access Not Authorized\n");
+						throw new AccessDeniedException(String.format("Access Not Authorized"));
+					}
+				}*/
+				
+				if (invalid && uri.contains("/resource/RetailCustomer")) 
+				{
+					//validate retail customer id from authorization
+					
+					String key = "RetailCustomer";
+					String requestRetailCustomerId=uri.substring(uri.indexOf(key)+key.length()+1,uri.indexOf("/Customer"));
+					System.err.println("Request Retail:::"+requestRetailCustomerId+" DB::: "+authorizationFromToken.getRetailCustomer().getId());
+					
+					if(authorizationFromToken.getRetailCustomer().getId().toString().equals(requestRetailCustomerId))
+						invalid = false;
 				}
 
 				// or /resource/Batch/Subscription/{subscriptionId}/**
@@ -335,6 +369,7 @@ public class ResourceValidationFilter implements Filter {
 				}
 				
 				
+				
 				// sftp
 				// TODO:
 
@@ -428,7 +463,9 @@ public class ResourceValidationFilter implements Filter {
 				}
 			}
 		}
-
+		/*if (uri.contains("/resource/RetailCustomer")) {
+			invalid = false;
+		}*/
 		//anonymous role should not access any espi api resource
 		if (((roles.contains("ROLE_ANONYMOUS")) & (uri.indexOf("/espi") >= 0))) {
 			invalid = true;
@@ -473,4 +510,11 @@ public class ResourceValidationFilter implements Filter {
         return this.usagePointService;
    }
 
+   
+   public static void main(String[] args) {
+	String uri="https://retailcustomer-dot-api-dot-londonhydro-espi-dev.appspot.com/espi/1_1/resource/RetailCustomer/1000000033/Customer";
+	String key = "RetailCustomer";
+	String requestRetailCustomerId=uri.substring(uri.indexOf(key)+key.length()+1,uri.indexOf("/Customer"));
+	System.out.println(requestRetailCustomerId);
+}
 }
